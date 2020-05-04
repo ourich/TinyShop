@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'gasId',
             'gasName',
-            'gasType',
+            // 'gasType',
             //'gasLogoBig',
             //'gasLogoSmall',
             'gasAddress',

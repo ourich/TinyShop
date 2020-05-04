@@ -130,5 +130,6 @@ class Application extends Service
         'nice' => 'addons\TinyShop\services\common\NiceService',
         'helper' => 'addons\TinyShop\services\common\HelperService',
         'adv' => 'addons\TinyShop\services\common\AdvService',
+        'oil' => 'addons\TinyShop\services\common\OilService',
     ];
 }
