@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Oil Stations';
+$this->title = '油站列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -45,10 +45,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'provinceName',
             'cityName',
             'countyName',
-            'isInvoice',
+            // 'isInvoice',
             //'companyId',
-            'created_at',
-            'status',
+            'created_at:datetime',
+            // 'status',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '操作',

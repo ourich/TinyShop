@@ -43,7 +43,7 @@ class OilStations extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gasId', 'gasName', 'gasLogoBig', 'gasLogoSmall', 'gasAddress', 'gasAddressLongitude', 'gasAddressLatitude', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId', 'created_at', 'status'], 'required'],
+            [['gasId', 'gasName', 'gasLogoBig', 'gasLogoSmall', 'gasAddress', 'gasAddressLongitude', 'gasAddressLatitude', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId'], 'required'],
             [['gasType', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId', 'created_at', 'status'], 'integer'],
             [['gasAddressLongitude', 'gasAddressLatitude'], 'number'],
             [['gasId'], 'string', 'max' => 30],
@@ -60,10 +60,10 @@ class OilStations extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => '自增ID',
+            'id' => 'ID',
             'gasId' => '油站 id',
             'gasName' => '油站名称',
-            'gasType' => '油站类型:1 中石油，2 中石化，3 壳牌，4 其他',
+            'gasType' => '油站类型',
             'gasLogoBig' => '大 logo 图片链接',
             'gasLogoSmall' => '小 logo 图片链接',
             'gasAddress' => '加油站详情地址',
@@ -75,10 +75,21 @@ class OilStations extends \yii\db\ActiveRecord
             'provinceName' => '省份',
             'cityName' => '城市',
             'countyName' => '区县',
-            'isInvoice' => '是否能开发票 0 不能开 1 能开',
+            'isInvoice' => '发票',
             'companyId' => '公司代码',
             'created_at' => '创建时间',
             'status' => '状态',
         ];
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        $this->created_at = time();
+
+        return parent::beforeSave($insert);
     }
 }
