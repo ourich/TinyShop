@@ -1,6 +1,6 @@
 <?php
 
-namespace addons\TinyShop\services\common;
+namespace addons\TinyShop\services\oil;
 
 use common\components\Service;
 use common\enums\StatusEnum;

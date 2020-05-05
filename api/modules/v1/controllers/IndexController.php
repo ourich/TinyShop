@@ -61,10 +61,7 @@ class IndexController extends OnAuthController
                 AdvLocalEnum::INDEX_NEW,
                 AdvLocalEnum::INDEX_RECOMMEND
             ]), // 广告
-            'oil' => Yii::$app->tinyShopService->oil->getListByLocals([
-                AdvLocalEnum::INDEX_TOP,
-                AdvLocalEnum::INDEX_HOT
-            ]), // 油站
+            'oil' => Yii::$app->tinyShopService->oil->getListByLocals('30.530587684990884', '114.31723779052734'), // 油站
             'cate' => Yii::$app->tinyShopService->productCate->findIndexBlock(), // 首页推荐分类
             'product_hot' => Yii::$app->tinyShopService->product->getListBySearch($product_hot), // 热门
             'product_recommend' => Yii::$app->tinyShopService->product->getListBySearch($product_recommend), // 推荐

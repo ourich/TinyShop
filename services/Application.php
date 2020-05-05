@@ -115,6 +115,9 @@ class Application extends Service
             'class' => 'addons\TinyShop\services\member\CartItemService',
             'drive' => 'mysql',
         ],
+        // ------------------------ 加油站 ------------------------ //
+        'czb' => 'addons\TinyShop\services\oil\CzbService',
+        'oil' => 'addons\TinyShop\services\oil\OilService',
         // ------------------------ 营销 ------------------------ //
         'marketing' => 'addons\TinyShop\services\marketing\MarketingService',
         'marketingPointConfig' => 'addons\TinyShop\services\marketing\PointConfigService',
@@ -130,6 +133,5 @@ class Application extends Service
         'nice' => 'addons\TinyShop\services\common\NiceService',
         'helper' => 'addons\TinyShop\services\common\HelperService',
         'adv' => 'addons\TinyShop\services\common\AdvService',
-        'oil' => 'addons\TinyShop\services\common\OilService',
     ];
 }
