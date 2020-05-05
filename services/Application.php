@@ -117,7 +117,6 @@ class Application extends Service
         ],
         // ------------------------ 加油站 ------------------------ //
         'czb' => 'addons\TinyShop\services\oil\CzbService',
-        'oil' => 'addons\TinyShop\services\oil\OilService',
         // ------------------------ 营销 ------------------------ //
         'marketing' => 'addons\TinyShop\services\marketing\MarketingService',
         'marketingPointConfig' => 'addons\TinyShop\services\marketing\PointConfigService',

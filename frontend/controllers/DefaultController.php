@@ -4,6 +4,10 @@ namespace addons\TinyShop\frontend\controllers;
 
 use Yii;
 use common\controllers\AddonsController;
+use common\enums\StatusEnum;
+use yii\rest\Serializer;
+use common\helpers\ArrayHelper;
+use yii\data\ArrayDataProvider;
 use addons\TinyShop\common\models\common\OilStations;
 
 /**
@@ -21,10 +25,34 @@ class DefaultController extends BaseController
     */
     public function actionIndex()
     {
-        $data = Yii::$app->tinyShopService->oil->getListByLocals('30.530587684990884', '114.31723779052734');
+        // $data = Yii::$app->tinyShopService->oil->getListByLocals('30.530587684990884', '114.31723779052734');
+        $dataByLocal = OilStations::find()
+            ->select('gasId,gasAddressLongitude,gasAddressLatitude')
+            ->where(['status' => StatusEnum::ENABLED])
+            ->orderBy('id desc')
+            ->cache(60)
+            ->asArray()
+            ->all();
+
+        $data = new ArrayDataProvider([
+            'allModels' => $dataByLocal,
+            'pagination' => [
+                'pageSize' => 5,
+                'validatePage' => false,// 超出分页不返回data
+            ],
+        ]);
+        $models = (new Serializer())->serialize($data);
+        $gasIds = ArrayHelper::getColumn($models, 'gasId');
+        $gasIds=implode(',',$gasIds);
+        $prices = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, '13098878085');
+
+
+
+
+
         print_r('<pre>');
-        print_r($data);
-        // die();
+        print_r($prices);
+        die();
 
 
 

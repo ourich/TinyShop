@@ -13,6 +13,7 @@ use common\helpers\ArrayHelper;
 use api\controllers\OnAuthController;
 use yii\web\NotFoundHttpException;
 use addons\TinyShop\common\models\common\OilStations;
+use common\models\member\Member;
 
 /**
  * 优惠券领取列表
@@ -42,16 +43,24 @@ class OilController extends OnAuthController
      */
     public function actionIndex()
     {
-        $local = Yii::$app->request->get();
-        // return ResultHelper::json(422, $page);
+        $who = Yii::$app->request->get();
+        $mobile = '13098878085';
+        if (!Yii::$app->user->isGuest) {
+            $member_id = Yii::$app->user->identity->member_id;
+            $member = Member::findone($member_id);
+            $mobile = $member['member_id'];
+        }
+        // return ResultHelper::json(422, $member_id);
         // 取出所有数据并缓存
         $data_all = $this->getAlldata();
         $dataByLocal = [];
         foreach ($data_all as $datum) {
-            $datum['distance'] = $this->getDistance($local['latitude'], $local['longitude'], $datum['gasAddressLatitude'], $datum['gasAddressLongitude']);
+            $datum['distance'] = $this->getDistance($who['latitude'], $who['longitude'], $datum['gasAddressLatitude'], $datum['gasAddressLongitude']);
             $dataByLocal[] = $datum;
         }
+        //按距离排序
         ArrayHelper::multisort($dataByLocal,'distance',SORT_ASC);
+        //只取10条
         $data = new ArrayDataProvider([
             'allModels' => $dataByLocal,
             'pagination' => [
@@ -59,10 +68,34 @@ class OilController extends OnAuthController
                 'validatePage' => false,// 超出分页不返回data
             ],
         ]);
-
         // 主要生成header的page信息
         $models = (new Serializer())->serialize($data);
-        return $models;
+        $gasIds = ArrayHelper::getColumn($models, 'gasId');
+        $gasIds=implode(',',$gasIds);
+        $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, $mobile);
+        $results = $response['result'];
+        foreach ($results as &$result) {
+            $result = $this->regroupShow($result, $who['latitude'], $who['longitude']);
+        }
+        return $results;
+    }
+
+    /**
+     * 重组显示
+     *
+     * @param $model
+     * @return mixed
+     */
+    public function regroupShow($model, $latitude, $longitude)
+    {
+        // 是否可领取 
+        $other = OilStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude')->where(['gasId'=>$model['gasId']])->one();
+        $model['gasAddress'] = $other['gasAddress'];
+        $model['gasAddressLongitude'] = $other['gasAddressLongitude'];
+        $model['gasAddressLatitude'] = $other['gasAddressLatitude'];
+        $model['distance'] = $this->getDistance($latitude, $longitude, $model['gasAddressLatitude'], $model['gasAddressLongitude']);
+
+        return $model;
     }
 
     //计算经纬度距离  km单位
@@ -89,7 +122,7 @@ class OilController extends OnAuthController
     {
         // 取出所有数据并缓存
         $data = $this->modelClass::find()
-            ->select('gasId,gasName,gasAddressLongitude,gasAddressLatitude')
+            ->select('gasId,gasAddressLongitude,gasAddressLatitude')
             ->where(['status' => StatusEnum::ENABLED])
             ->orderBy('id desc')
             ->cache(60)
