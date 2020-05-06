@@ -45,12 +45,14 @@ class OilController extends OnAuthController
     {
         $who = Yii::$app->request->get();
         $mobile = '13098878085';
+        // $who['latitude'] = '39.9';
+        // $who['longitude'] = '116.4';
         if (!Yii::$app->user->isGuest) {
             $member_id = Yii::$app->user->identity->member_id;
             $member = Member::findone($member_id);
             $mobile = $member['member_id'];
         }
-        // return ResultHelper::json(422, $member_id);
+        // return ResultHelper::json(422, $results);
         // 取出所有数据并缓存
         $data_all = $this->getAlldata();
         $dataByLocal = [];
@@ -70,6 +72,7 @@ class OilController extends OnAuthController
         ]);
         // 主要生成header的page信息
         $models = (new Serializer())->serialize($data);
+        // return ResultHelper::json(422, $models);
         $gasIds = ArrayHelper::getColumn($models, 'gasId');
         $gasIds=implode(',',$gasIds);
         $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, $mobile);
@@ -94,6 +97,10 @@ class OilController extends OnAuthController
         $model['gasAddressLongitude'] = $other['gasAddressLongitude'];
         $model['gasAddressLatitude'] = $other['gasAddressLatitude'];
         $model['distance'] = $this->getDistance($latitude, $longitude, $model['gasAddressLatitude'], $model['gasAddressLongitude']);
+        $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
+        $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
+        $model['priceOfficial'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceOfficial');
+        $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
 
         return $model;
     }
