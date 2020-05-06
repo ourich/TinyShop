@@ -50,7 +50,16 @@ class OilController extends OnAuthController
         }
         $mobile = '13098878085';
         // 取出所有数据并缓存
-        $data_all = $this->getAlldata();
+        $fanwei = 5;
+        $data_all = $this->modelClass::find()
+            ->select('gasId,gasAddressLongitude,gasAddressLatitude')
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['between','gasAddressLongitude', $who['longitude'] - $fanwei, $who['longitude'] + $fanwei])
+            ->andFilterWhere(['between','gasAddressLatitude', $who['latitude'] - $fanwei, $who['latitude'] + $fanwei])
+            ->orderBy('id desc')
+            ->asArray()
+            ->all();
+
         $dataByLocal = [];
         foreach ($data_all as $datum) {
             $datum['distance'] = $this->getDistance($who['latitude'], $who['longitude'], $datum['gasAddressLatitude'], $datum['gasAddressLongitude']);
