@@ -44,15 +44,11 @@ class OilController extends OnAuthController
     public function actionIndex()
     {
         $who = Yii::$app->request->get();
-        $mobile = '13098878085';
-        // $who['latitude'] = '39.9';
-        // $who['longitude'] = '116.4';
         if (!Yii::$app->user->isGuest) {
-            $member_id = Yii::$app->user->identity->member_id;
-            $member = Member::findone($member_id);
-            $mobile = $member['member_id'];
+            $member = Member::findone(Yii::$app->user->identity->member_id);
+            $mobile = $member['mobile'];
         }
-        // return ResultHelper::json(422, $results);
+        $mobile = '13098878085';
         // 取出所有数据并缓存
         $data_all = $this->getAlldata();
         $dataByLocal = [];
@@ -63,23 +59,29 @@ class OilController extends OnAuthController
         //按距离排序
         ArrayHelper::multisort($dataByLocal,'distance',SORT_ASC);
         //只取10条
-        $data = new ArrayDataProvider([
+        $provider = new ArrayDataProvider([
             'allModels' => $dataByLocal,
             'pagination' => [
                 'pageSize' => $this->pageSize,
                 'validatePage' => false,// 超出分页不返回data
             ],
         ]);
+        $counts = $provider->getCount();
+        if ($counts == 0) {
+            return ResultHelper::json(200, '到底了');
+        }
+        $data = $provider->getModels();
         // 主要生成header的page信息
-        $models = (new Serializer())->serialize($data);
-        // return ResultHelper::json(422, $models);
-        $gasIds = ArrayHelper::getColumn($models, 'gasId');
+        // $data = (new Serializer())->serialize($data);
+        $gasIds = ArrayHelper::getColumn($data, 'gasId');
         $gasIds=implode(',',$gasIds);
         $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, $mobile);
         $results = $response['result'];
+        // return $results;
         foreach ($results as &$result) {
             $result = $this->regroupShow($result, $who['latitude'], $who['longitude']);
         }
+        ArrayHelper::multisort($results,'distance',SORT_ASC);
         return $results;
     }
 
@@ -93,6 +95,7 @@ class OilController extends OnAuthController
     {
         // 是否可领取 
         $other = OilStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude')->where(['gasId'=>$model['gasId']])->one();
+        $model['gasName'] = mb_substr($model['gasName'], 0, 15, 'utf-8');
         $model['gasAddress'] = $other['gasAddress'];
         $model['gasAddressLongitude'] = $other['gasAddressLongitude'];
         $model['gasAddressLatitude'] = $other['gasAddressLatitude'];

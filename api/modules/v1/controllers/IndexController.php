@@ -61,12 +61,11 @@ class IndexController extends OnAuthController
                 AdvLocalEnum::INDEX_NEW,
                 AdvLocalEnum::INDEX_RECOMMEND
             ]), // 广告
-            // 'oil' => Yii::$app->tinyShopService->oil->getListByLocals('30.530587684990884', '114.31723779052734'), // 油站
-            // 'cate' => Yii::$app->tinyShopService->productCate->findIndexBlock(), // 首页推荐分类
-            // 'product_hot' => Yii::$app->tinyShopService->product->getListBySearch($product_hot), // 热门
-            // 'product_recommend' => Yii::$app->tinyShopService->product->getListBySearch($product_recommend), // 推荐
-            // 'product_new' => Yii::$app->tinyShopService->product->getListBySearch($product_new), // 新品
-            // 'guess_you_like' => Yii::$app->tinyShopService->product->getGuessYouLike($member_id), // 猜你喜欢
+            'cate' => Yii::$app->tinyShopService->productCate->findIndexBlock(), // 首页推荐分类
+            'product_hot' => Yii::$app->tinyShopService->product->getListBySearch($product_hot), // 热门
+            'product_recommend' => Yii::$app->tinyShopService->product->getListBySearch($product_recommend), // 推荐
+            'product_new' => Yii::$app->tinyShopService->product->getListBySearch($product_new), // 新品
+            'guess_you_like' => Yii::$app->tinyShopService->product->getGuessYouLike($member_id), // 猜你喜欢
             'config' => [
                 'web_site_icp' => $config['web_site_icp'] ?? '',
                 'copyright_companyname' => $config['copyright_companyname'] ?? '',
