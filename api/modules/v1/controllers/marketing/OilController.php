@@ -36,7 +36,7 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['index', 'view'];
+    protected $authOptional = ['index', 'view', 'Detail'];
 
     /**
      * @return mixed|ActiveDataProvider
@@ -49,20 +49,23 @@ class OilController extends OnAuthController
             $mobile = $member['mobile'];
         }
         $mobile = '13098878085';
+        //坐标系转换
+        $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($who['longitude'], $who['latitude']);
+        // return ResultHelper::json(422, $zuobiao);
         // 取出所有数据并缓存
         $fanwei = 5;
         $data_all = $this->modelClass::find()
             ->select('gasId,gasAddressLongitude,gasAddressLatitude')
             ->where(['status' => StatusEnum::ENABLED])
-            ->andFilterWhere(['between','gasAddressLongitude', $who['longitude'] - $fanwei, $who['longitude'] + $fanwei])
-            ->andFilterWhere(['between','gasAddressLatitude', $who['latitude'] - $fanwei, $who['latitude'] + $fanwei])
+            ->andFilterWhere(['between','gasAddressLongitude', $zuobiao['lon'] - $fanwei, $zuobiao['lon'] + $fanwei])
+            ->andFilterWhere(['between','gasAddressLatitude', $zuobiao['lat'] - $fanwei, $zuobiao['lat'] + $fanwei])
             ->orderBy('id desc')
             ->asArray()
             ->all();
 
         $dataByLocal = [];
         foreach ($data_all as $datum) {
-            $datum['distance'] = $this->getDistance($who['latitude'], $who['longitude'], $datum['gasAddressLatitude'], $datum['gasAddressLongitude']);
+            $datum['distance'] = $this->getDistance($zuobiao['lat'], $zuobiao['lon'], $datum['gasAddressLatitude'], $datum['gasAddressLongitude']);
             $dataByLocal[] = $datum;
         }
         //按距离排序
@@ -88,7 +91,7 @@ class OilController extends OnAuthController
         $results = $response['result'];
         // return $results;
         foreach ($results as &$result) {
-            $result = $this->regroupShow($result, $who['latitude'], $who['longitude']);
+            $result = $this->regroupShow($result, $zuobiao['lat'], $zuobiao['lon']);
         }
         ArrayHelper::multisort($results,'distance',SORT_ASC);
         return $results;
@@ -152,62 +155,27 @@ class OilController extends OnAuthController
     }
 
     /**
-     * @return mixed|\yii\db\ActiveRecord
-     */
-    public function actionCreate()
-    {
-        $data = Yii::$app->request->post();
-        $model = new CouponTypeForm();
-        $model->attributes = $data;
-        $model->member_id = Yii::$app->user->identity->member_id;
-        if (!$model->validate()) {
-            return ResultHelper::json(422, $this->getError($model));
-        }
-
-        // 事务
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-            $model = Yii::$app->tinyShopService->marketingCoupon->give($model->couponType, $model->member_id);
-            $transaction->commit();
-
-            return ResultHelper::json(200, '领取成功', $model);
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-
-            return ResultHelper::json(422, $e->getMessage());
-        }
-    }
-
-    /**
      * @param $id
      * @return mixed|\yii\db\ActiveRecord
      * @throws NotFoundHttpException
      */
-    public function actionView($id)
+    public function actionDetail($id, $longitude, $latitude)
     {
-        // 关联我已领取的优惠券
-        $with = [];
         if (!Yii::$app->user->isGuest) {
-            $with = ['myGet' => function(ActiveQuery $query) {
-                return $query->andWhere(['member_id' => Yii::$app->user->identity->member_id]);
-            }];
+            $member = Member::findone(Yii::$app->user->identity->member_id);
+            $mobile = $member['mobile'];
         }
-
-        $model = $this->modelClass::find()
-            ->where([
-                'id' => $id,
-                'merchant_id' => $this->getMerchantId(),
-                'status' => StatusEnum::ENABLED,
-            ])
-            ->with(ArrayHelper::merge($with, ['usableProduct']))
-            ->asArray()
-            ->one();
-
-        if (!$model) {
+        $mobile = '13098878085';
+        // $id = 'JY000011413';
+        //坐标系转换
+        $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($longitude, $latitude);
+        // return ResultHelper::json(422, $id);
+        $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($id, $mobile);
+        if ($response['code'] != 200) {
             throw new NotFoundHttpException('请求的数据不存在');
         }
-
-        return Yii::$app->tinyShopService->marketingCouponType->regroupShow($model);
+        $result = $response['result'];
+        return $this->regroupShow($result[0], $zuobiao['lat'], $zuobiao['lon']);
     }
 
     /**

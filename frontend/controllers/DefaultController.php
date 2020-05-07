@@ -26,51 +26,18 @@ class DefaultController extends BaseController
     public function actionIndex()
     {
         print_r('<pre>');
-        // $data = Yii::$app->tinyShopService->oil->getListByLocals('30.530587684990884', '114.31723779052734');
-        $data_all = OilStations::find()
-            ->select('gasId,gasAddressLongitude,gasAddressLatitude')
-            ->where(['status' => StatusEnum::ENABLED])
-            ->orderBy('id desc')
-            ->cache(60)
-            ->asArray()
-            ->all();
+        $mobile = '13098878085';
+        $gasId = 'JY000011413';
 
-        $dataByLocal = [];
-        foreach ($data_all as $datum) {
-            $datum['distance'] = $this->getDistance('39.9', '116.4', $datum['gasAddressLatitude'], $datum['gasAddressLongitude']);
-            $dataByLocal[] = $datum;
-        }
-        //按距离排序
-        ArrayHelper::multisort($dataByLocal,'distance',SORT_ASC);
-
-        $data = new ArrayDataProvider([
-            'allModels' => $dataByLocal,
-            'pagination' => [
-                'pageSize' => 5,
-                'validatePage' => false,// 超出分页不返回data
-            ],
-        ]);
-        $models = (new Serializer())->serialize($data);
-        $gasIds = ArrayHelper::getColumn($models, 'gasId');
-        $gasIds=implode(',',$gasIds);
-        $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, '13098878085');
-
-        $results = $response['result'];
-        foreach ($results as &$result) {
-            $result = $this->regroupShow($result, '39.9', '116.4');
-        }
-
+        $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasId, $mobile);
+        
 
 
 
 
         
-        print_r($results);
+        print_r($response);
         die();
-
-
-
-
         // return $this->render('index',[]);
     }
     /**

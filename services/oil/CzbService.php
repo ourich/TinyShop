@@ -5,6 +5,7 @@ namespace addons\TinyShop\services\oil;
 use common\components\Service;
 use GuzzleHttp\Client;
 use JavaReact\CzbApi\Gas;
+use JavaReact\CzbApi\Tools\GpsTransform;
 
 /**
  * 车主邦接口
@@ -66,6 +67,17 @@ class CzbService extends Service
     public function platformOrderInfoV2($extraParam = [], $pageIndex = 1, $pageSize = 10)
     {
         return $this->gas->platformOrderInfoV2($this->config['channelId'], $pageIndex, $pageSize, $extraParam)->result();
+    }
+
+    /**
+     * 坐标系转换
+     * @param string $lon [description]
+     * @param string $lat [description]
+     */
+    public function WGS84toGCJ02(string $lon, string $lat)
+    {
+        $Trans = new GpsTransform();
+        return $Trans->WGS84toGCJ02($lon, $lat);
     }
     
 
