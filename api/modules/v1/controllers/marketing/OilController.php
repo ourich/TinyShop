@@ -91,7 +91,7 @@ class OilController extends OnAuthController
         $results = $response['result'];
         // return $results;
         foreach ($results as &$result) {
-            $result = $this->regroupShow($result, $zuobiao['lat'], $zuobiao['lon']);
+            $result = $this->regroupShow($result, $zuobiao['lat'], $zuobiao['lon'], $mobile);
         }
         ArrayHelper::multisort($results,'distance',SORT_ASC);
         return $results;
@@ -103,7 +103,7 @@ class OilController extends OnAuthController
      * @param $model
      * @return mixed
      */
-    public function regroupShow($model, $latitude, $longitude)
+    public function regroupShow($model, $latitude, $longitude, $mobile)
     {
         // 是否可领取 
         $other = OilStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude,gasLogoSmall')->where(['gasId'=>$model['gasId']])->one();
@@ -114,10 +114,12 @@ class OilController extends OnAuthController
         $model['gasLogoSmall'] = $other['gasLogoSmall'];
         $model['distance'] = $this->getDistance($latitude, $longitude, $model['gasAddressLatitude'], $model['gasAddressLongitude']);
         $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
-        $model['gunList'] = ArrayHelper::index($model['oilPriceList']['92']['gunNos'], 'gunNo');
+        $model['gunNos'] = ArrayHelper::getColumn($model['oilPriceList'], 'gunNos');
         $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
         $model['priceOfficial'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceOfficial');
         $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
+        $model['mobile'] = $mobile;
+        $model['url'] = 'https://test-open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
 
         return $model;
     }
@@ -177,7 +179,7 @@ class OilController extends OnAuthController
             throw new NotFoundHttpException('请求的数据不存在');
         }
         $result = $response['result'];
-        return $this->regroupShow($result[0], $zuobiao['lat'], $zuobiao['lon']);
+        return $this->regroupShow($result[0], $zuobiao['lat'], $zuobiao['lon'], $mobile);
     }
 
     /**
