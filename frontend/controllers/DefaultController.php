@@ -30,6 +30,7 @@ class DefaultController extends BaseController
         $gasId = 'JY000011413';
 
         $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasId, $mobile);
+        // https://test-open.czb365.com/redirection/todo/?platformType=92652519&platformCode=13098878085&gasId=JY000011413&gunNo=1
         
 
 

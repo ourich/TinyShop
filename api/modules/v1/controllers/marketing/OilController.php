@@ -114,6 +114,7 @@ class OilController extends OnAuthController
         $model['gasLogoSmall'] = $other['gasLogoSmall'];
         $model['distance'] = $this->getDistance($latitude, $longitude, $model['gasAddressLatitude'], $model['gasAddressLongitude']);
         $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
+        $model['gunList'] = ArrayHelper::index($model['oilPriceList']['92']['gunNos'], 'gunNo');
         $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
         $model['priceOfficial'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceOfficial');
         $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
