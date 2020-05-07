@@ -106,11 +106,12 @@ class OilController extends OnAuthController
     public function regroupShow($model, $latitude, $longitude)
     {
         // 是否可领取 
-        $other = OilStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude')->where(['gasId'=>$model['gasId']])->one();
+        $other = OilStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude,gasLogoSmall')->where(['gasId'=>$model['gasId']])->one();
         $model['gasName'] = mb_substr($model['gasName'], 0, 15, 'utf-8');
         $model['gasAddress'] = $other['gasAddress'];
         $model['gasAddressLongitude'] = $other['gasAddressLongitude'];
         $model['gasAddressLatitude'] = $other['gasAddressLatitude'];
+        $model['gasLogoSmall'] = $other['gasLogoSmall'];
         $model['distance'] = $this->getDistance($latitude, $longitude, $model['gasAddressLatitude'], $model['gasAddressLongitude']);
         $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
         $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
