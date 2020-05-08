@@ -77,7 +77,7 @@ class OilStations extends \yii\db\ActiveRecord
             'provinceName' => '省份',
             'cityName' => '城市',
             'countyName' => '区县',
-            'isInvoice' => '是否能开发票 0 不能开 1 能开',
+            'isInvoice' => '发票',
             'companyId' => '公司代码',
             'created_at' => '创建时间',
             'status' => '状态',
