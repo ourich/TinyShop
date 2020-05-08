@@ -10,7 +10,7 @@ use Yii;
  * @property int $id 自增ID
  * @property string $gasId 油站 id
  * @property string $gasName 油站名称
- * @property string $channelId 渠道
+ * @property int $channelId 渠道:0 团油，1 小桔
  * @property int $gasType 油站类型:1 中石油，2 中石化，3 壳牌，4 其他
  * @property string $gasLogoBig 大 logo 图片链接
  * @property string $gasLogoSmall 小 logo 图片链接
@@ -44,8 +44,8 @@ class OilStations extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gasId', 'gasName', 'gasLogoBig', 'gasLogoSmall', 'gasAddress', 'gasAddressLongitude', 'gasAddressLatitude', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId'], 'required'],
-            [['gasType', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId', 'created_at', 'status', 'channelId'], 'integer'],
+            [['gasId', 'gasName'], 'required'],
+            [['channelId', 'gasType', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId', 'created_at', 'status'], 'integer'],
             [['gasAddressLongitude', 'gasAddressLatitude'], 'number'],
             [['gasId'], 'string', 'max' => 30],
             [['gasName'], 'string', 'max' => 60],
@@ -77,21 +77,10 @@ class OilStations extends \yii\db\ActiveRecord
             'provinceName' => '省份',
             'cityName' => '城市',
             'countyName' => '区县',
-            'isInvoice' => '发票',
+            'isInvoice' => '是否能开发票 0 不能开 1 能开',
             'companyId' => '公司代码',
             'created_at' => '创建时间',
             'status' => '状态',
         ];
-    }
-
-    /**
-     * @param bool $insert
-     * @return bool
-     */
-    public function beforeSave($insert)
-    {
-        $this->created_at = time();
-
-        return parent::beforeSave($insert);
     }
 }
