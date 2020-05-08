@@ -96,6 +96,7 @@ class DefaultController extends BaseController
             'isInvoice' => $v['isInvoice'],
             'companyId' => $v['companyId'],
             'created_at' => time(),
+            'channelId' => 0,
             'status' => 1,
           ];
           $count += 1;
@@ -108,7 +109,7 @@ class DefaultController extends BaseController
         if (isset($data)) 
         {
           Yii::$app->db->createCommand()
-               ->batchInsert(OilStations::tableName(),['gasId','gasName','gasType','gasLogoBig','gasLogoSmall','gasAddress','gasAddressLongitude','gasAddressLatitude','provinceCode','cityCode','countyCode','provinceName','cityName','countyName','isInvoice','companyId','created_at','status'],
+               ->batchInsert(OilStations::tableName(),['gasId','gasName','gasType','gasLogoBig','gasLogoSmall','gasAddress','gasAddressLongitude','gasAddressLatitude','provinceCode','cityCode','countyCode','provinceName','cityName','countyName','isInvoice','companyId','created_at','channelId','status'],
                $data)
                ->execute();
         }
