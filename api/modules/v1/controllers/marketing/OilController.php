@@ -173,7 +173,13 @@ class OilController extends OnAuthController
         // $id = 'JY000011413';
         //坐标系转换
         $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($longitude, $latitude);
-        // return ResultHelper::json(422, $id);
+        
+        if ($member['oil_token_time'] < time()) {
+            $token = Yii::$app->tinyShopService->czb->login($mobile);
+            return ResultHelper::json(422, $token);
+            $user = Member::findOne($member['id']);
+            Member::updateAll(['oil_token'=>$token['result']['token'],'oil_token_time'=>time() + 21*24*3600],['id'=>$member['id']]);
+        }
         $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($id, $mobile);
         if ($response['code'] != 200) {
             throw new NotFoundHttpException('请求的数据不存在');

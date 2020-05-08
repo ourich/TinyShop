@@ -23,8 +23,8 @@ class CzbService extends Service
     {
         // $defaultConfig = Yii::$app->debris->backendConfigAll();
         $this->config = [
-            // 'base_uri' => 'https://test-mcs.czb365.com/services/v3/',
-            'base_uri' => 'https://mcs.czb365.com/services/v3/',
+            // 'base_uri' => 'https://mcs.czb365.com/services/v3/',
+            'base_uri' => 'https://test-mcs.czb365.com/services/v3/',
             'apiKey' => 'mingxingshangpin1.0',
             'secret' => '3de902de6887b5838cd1abfce62377cd',
             'channelId' => '92652519',
@@ -55,6 +55,17 @@ class CzbService extends Service
     public function queryPriceByPhone(string $gasIds, string $phone)
     {
         return $this->gas->queryPriceByPhone($gasIds, $this->config['channelId'], $phone)->result();
+    }
+    /**
+     * 平台授权登录
+     *
+     * @param int $platformType 渠道编码，对接时车主邦提供
+     * @param string $platformCode 平台用户唯一标识(手机号)
+     * @return ApiResponse
+     */
+    public function login(string $platformCode)
+    {
+        return $this->gas->login($this->config['channelId'], $platformCode)->result();
     }
 
     /**

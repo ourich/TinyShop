@@ -27,3 +27,6 @@ CREATE TABLE rf_oil_stations (
         PRIMARY KEY (`id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='油站表';
 
+
+ALTER TABLE `rf_member` ADD `oil_token_time` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT 'tk有效期';
+ALTER TABLE `rf_member` ADD `oil_token` varchar(60) DEFAULT '' COMMENT '团油身份';
