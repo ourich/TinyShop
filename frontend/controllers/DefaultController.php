@@ -100,9 +100,9 @@ class DefaultController extends BaseController
             'status' => 1,
           ];
           $count += 1;
-          // if ($count >= 5) {
-          //     break;
-          // }
+          if ($count >= 10) {
+              break;
+          }
         }
 
         //再执行批量插入
