@@ -7,6 +7,7 @@ CREATE TABLE rf_oil_stations (
       `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
         `gasId` varchar(30) NOT NULL COMMENT '油站 id',
         `gasName` varchar(60) NOT NULL COMMENT '油站名称',
+        `channelId` int(3) DEFAULT '0' COMMENT '渠道:0 团油，1 小桔',
         `gasType` int(11) DEFAULT '0' COMMENT '油站类型:1 中石油，2 中石化，3 壳牌，4 其他',
         `gasLogoBig` varchar(250) NOT NULL COMMENT '大 logo 图片链接',
         `gasLogoSmall` varchar(250) NOT NULL COMMENT '小 logo 图片链接',

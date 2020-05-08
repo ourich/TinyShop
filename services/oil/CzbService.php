@@ -23,7 +23,7 @@ class CzbService extends Service
     {
         // $defaultConfig = Yii::$app->debris->backendConfigAll();
         $this->config = [
-            'base_uri' => 'https://test-mcs.czb365.com/services/v3/',
+            'base_uri' => 'https://mcs.czb365.com/services/v3/',
             'apiKey' => 'mingxingshangpin1.0',
             'secret' => '3de902de6887b5838cd1abfce62377cd',
             'channelId' => '92652519',

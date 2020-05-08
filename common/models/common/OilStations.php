@@ -10,6 +10,7 @@ use Yii;
  * @property int $id 自增ID
  * @property string $gasId 油站 id
  * @property string $gasName 油站名称
+ * @property string $channelId 渠道
  * @property int $gasType 油站类型:1 中石油，2 中石化，3 壳牌，4 其他
  * @property string $gasLogoBig 大 logo 图片链接
  * @property string $gasLogoSmall 小 logo 图片链接
@@ -44,7 +45,7 @@ class OilStations extends \yii\db\ActiveRecord
     {
         return [
             [['gasId', 'gasName', 'gasLogoBig', 'gasLogoSmall', 'gasAddress', 'gasAddressLongitude', 'gasAddressLatitude', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId'], 'required'],
-            [['gasType', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId', 'created_at', 'status'], 'integer'],
+            [['gasType', 'provinceCode', 'cityCode', 'countyCode', 'isInvoice', 'companyId', 'created_at', 'status', 'channelId'], 'integer'],
             [['gasAddressLongitude', 'gasAddressLatitude'], 'number'],
             [['gasId'], 'string', 'max' => 30],
             [['gasName'], 'string', 'max' => 60],
@@ -63,6 +64,7 @@ class OilStations extends \yii\db\ActiveRecord
             'id' => 'ID',
             'gasId' => '油站 id',
             'gasName' => '油站名称',
+            'channelId' => '渠道',
             'gasType' => '油站类型',
             'gasLogoBig' => '大 logo 图片链接',
             'gasLogoSmall' => '小 logo 图片链接',

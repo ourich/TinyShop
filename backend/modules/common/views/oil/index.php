@@ -32,7 +32,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'gasId',
-            'gasName',
+            // 'gasName',
+            [
+                'attribute' => 'gasName',
+                'headerOptions' => ['class' => 'col-md-2'],
+            ],
             // 'gasType',
             //'gasLogoBig',
             //'gasLogoSmall',
@@ -47,6 +51,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'countyName',
             // 'isInvoice',
             //'companyId',
+            [
+                'attribute' => 'channelId',
+                // 'headerOptions' => ['class' => 'col-md-1'],
+                'value' => function ($model) {
+                    return empty($model['channelId']) ? '团油' : '其他';
+                },
+            ],
             'created_at:datetime',
             // 'status',
             [
