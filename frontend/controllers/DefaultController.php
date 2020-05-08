@@ -100,7 +100,7 @@ class DefaultController extends BaseController
             'status' => 1,
           ];
           $count += 1;
-          if ($count >= 100) {
+          if ($count >= 10) {
               break;
           }
         }
