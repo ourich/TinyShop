@@ -119,7 +119,7 @@ class OilController extends OnAuthController
         $model['priceOfficial'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceOfficial');
         $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
         $model['mobile'] = $mobile;
-        $model['url'] = 'https://test-open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
+        $model['url'] = 'https://open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
 
         return $model;
     }
@@ -170,13 +170,13 @@ class OilController extends OnAuthController
             $mobile = $member['mobile'];
         }
         $mobile = '13098878085';
-        // $id = 'JY000011413';
+        $id = 'YY998700654';
+        // return ResultHelper::json(422, $id);
         //坐标系转换
         $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($longitude, $latitude);
         
         if ($member['oil_token_time'] < time()) {
             $token = Yii::$app->tinyShopService->czb->login($mobile);
-            // return ResultHelper::json(422, $token);
             $user = Member::findOne($member['id']);
             Member::updateAll(['oil_token'=>$token['result']['token'],'oil_token_time'=>time() + 21*24*3600],['id'=>$member['id']]);
         }
@@ -185,6 +185,7 @@ class OilController extends OnAuthController
             throw new NotFoundHttpException('请求的数据不存在');
         }
         $result = $response['result'];
+        // Yii::$app->debris->p($result);
         return $this->regroupShow($result[0], $zuobiao['lat'], $zuobiao['lon'], $mobile);
     }
 

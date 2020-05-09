@@ -29,15 +29,15 @@ class DefaultController extends BaseController
         $mobile = '13098878085';
         $gasId = 'JY000011413';
 
+
+
         $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasId, $mobile);
-        // https://test-open.czb365.com/redirection/todo/?platformType=92652519&platformCode=13098878085&gasId=JY000011413&gunNo=1
-        
+        Yii::$app->debris->p($response);
 
 
 
 
         
-        print_r($response);
         die();
         // return $this->render('index',[]);
     }
