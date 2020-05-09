@@ -176,7 +176,7 @@ class OilController extends OnAuthController
         
         if ($member['oil_token_time'] < time()) {
             $token = Yii::$app->tinyShopService->czb->login($mobile);
-            return ResultHelper::json(422, $token);
+            // return ResultHelper::json(422, $token);
             $user = Member::findOne($member['id']);
             Member::updateAll(['oil_token'=>$token['result']['token'],'oil_token_time'=>time() + 21*24*3600],['id'=>$member['id']]);
         }
