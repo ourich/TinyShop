@@ -9,6 +9,7 @@ use yii\rest\Serializer;
 use common\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
 use addons\TinyShop\common\models\common\OilStations;
+use addons\TinyShop\common\models\common\OilOrder;
 
 /**
  * 默认控制器
@@ -41,22 +42,30 @@ class DefaultController extends BaseController
         die();
         // return $this->render('index',[]);
     }
-    public function actionTest()
+    public function actionOrder()
     {
-        print_r('<pre>');
-        $mobile = '13098878085';
-        $gasId = 'JY000011413';
+        $response = Yii::$app->tinyShopService->czb->platformOrderInfoV2();
+        Yii::$app->debris->p($response);
+        if ($response['code'] == 200) {
+            $result = $response['result'];
+            foreach ($result as $value) {
+                if (OilOrder::find()->where(['orderId' => $value['orderId']])->one()) {
+                    continue; //如果存在，则跳过
+                }
+                $value['created_at'] = time();
+                $data[] = $value;
+            }
+            //再执行批量插入
+            if (isset($data)) 
+            {
+              Yii::$app->db->createCommand()
+                   ->batchInsert(OilOrder::tableName(),['orderId','paySn','phone','orderTime','payTime','refundTime','gasName','province','city','county','gunNo','oilNo','amountPay','amountGun','amountDiscounts','orderStatusName','couponMoney','couponId','couponCode','litre','payType','priceUnit','priceOfficial','priceGun','orderSource','qrCode4PetroChina','gasId','created_at'],
+                   $data)
+                   ->execute();
+            }
+        }
 
-        $model = new OilStations();
-        $response = $model->find()->where(['gasId' => $gasId])->one();
-
-
-
-
-        echo "------";
-        print_r($response);
-        die();
-        // return $this->render('index',[]);
+        die(count($data));
     }
     
 

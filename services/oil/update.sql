@@ -46,11 +46,11 @@ CREATE TABLE rf_oil_order (
     `city` varchar(15) DEFAULT '' COMMENT '市名称',
     `county` varchar(15) DEFAULT '' COMMENT '县名称',
     `gunNo` int(10) UNSIGNED DEFAULT '0' COMMENT '枪号',
-    `oilNo` int(10) UNSIGNED DEFAULT '0' COMMENT '油号',
+    `oilNo` varchar(15) DEFAULT '' COMMENT '油号',
     `amountPay` decimal(6,2) DEFAULT '0' COMMENT '实付',
     `amountGun` decimal(6,2) DEFAULT '0' COMMENT '总金额',
     `amountDiscounts` decimal(6,2) DEFAULT '0' COMMENT '优惠金额',
-    `orderStatusName` int(3) UNSIGNED DEFAULT '0' COMMENT '订单状态',
+    `orderStatusName` varchar(15) DEFAULT '' COMMENT '订单状态',
     `couponMoney` decimal(6,2) DEFAULT '0' COMMENT '优惠券金额',
     `couponId` int(10) UNSIGNED DEFAULT '0' COMMENT '优惠券编号',
     `couponCode` varchar(30) DEFAULT '' COMMENT '优惠券Code',
@@ -61,6 +61,7 @@ CREATE TABLE rf_oil_order (
     `priceGun` varchar(15) DEFAULT '' COMMENT '枪价',
     `orderSource` varchar(50) DEFAULT '' COMMENT '渠道编码',
     `qrCode4PetroChina` varchar(50) DEFAULT '' COMMENT '渠道编码',
+    `gasId` varchar(50) DEFAULT '' COMMENT '油站ID',
     `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '同步时间',
     PRIMARY KEY (`id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='加油订单';

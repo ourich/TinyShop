@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model) {
                     return "总额：" . $model->amountGun . '<br>' .
                         "实付：" . $model->amountPay . '<br>' .
-                        "优惠：" . $model->amountDiscounts . '<br>'  ;
+                        "优惠：" . ($model->amountDiscounts > 0 ? $model->amountDiscounts : $model->couponMoney ) . '<br>'  ;
                 },
                 'format' => 'raw',
             ],
