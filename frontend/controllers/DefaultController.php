@@ -27,7 +27,7 @@ class DefaultController extends BaseController
     {
         print_r('<pre>');
         $mobile = '13098878085';
-        $gasId = 'JY000011413';
+        $gasId = 'ZG000003987';
 
 
 

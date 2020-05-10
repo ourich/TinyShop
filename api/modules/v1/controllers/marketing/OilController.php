@@ -48,7 +48,7 @@ class OilController extends OnAuthController
             $member = Member::findone(Yii::$app->user->identity->member_id);
             $mobile = $member['mobile'];
         }
-        $mobile = '13098878085';
+        // $mobile = '13098878085';
         //坐标系转换
         $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($who['longitude'], $who['latitude']);
         // return ResultHelper::json(422, $zuobiao);
@@ -169,8 +169,8 @@ class OilController extends OnAuthController
             $member = Member::findone(Yii::$app->user->identity->member_id);
             $mobile = $member['mobile'];
         }
-        $mobile = '13098878085';
-        $id = 'YY998700654';
+        // $mobile = '13098878085';
+        // $id = 'YY998700654';
         // return ResultHelper::json(422, $id);
         //坐标系转换
         $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($longitude, $latitude);
