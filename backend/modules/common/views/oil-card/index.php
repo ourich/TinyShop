@@ -38,14 +38,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'code',
             //'status',
             //'type',
-            // 'member_id',
+            // 'member_id', 
             [
-                'attribute' => 'member_id',
-                'value' => 'member.mobile',
+                'attribute' => 'member.mobile',
+                'label'=> '持有人',
+                'filter' => Html::activeTextInput($searchModel, 'member.mobile', [
+                        'class' => 'form-control'
+                    ]
+                ),
             ],
             [
-                'attribute' => 'user',
-                'value' => 'user.mobile',
+                'attribute' => 'user.mobile',
+                'label'=> '领用人',
+                'filter' => false, //不显示搜索框
+                // 'filter' => Html::activeTextInput($searchModel, 'user.mobile', [
+                //         'class' => 'form-control'
+                //     ]
+                // ),
             ],
             [
                 'attribute' => 'end_at',

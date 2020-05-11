@@ -37,7 +37,8 @@ class OilCardController extends BaseController
         $searchModel = new SearchModel([
             'model' => $this->modelClass,
             'scenario' => 'default',
-            'partialMatchAttributes' => [], // 模糊查询
+            'relations' => ['member' => ['mobile']],
+            'partialMatchAttributes' => ['code', 'member.mobile'], // 模糊查询
             'defaultOrder' => [
                 'id' => SORT_DESC
             ],
@@ -67,12 +68,10 @@ class OilCardController extends BaseController
             ->one();
         
         if ($model->load($request->post())) {
-            if (($model->cardNo) && ($model->giveNum) && ($model->member_id)) {
+            if (($model->cardNo) && ($model->giveNum) && ($model->member_id) && ($model->member->mobile)) {
                 // 如果会员存在
-                Yii::$app->debris->p($model->cardNo);
-                Yii::$app->debris->p($model->endNo);
-                Yii::$app->debris->p($model->member->mobile);
-                // Yii::$app->tinyShopService->card->give($model->member_id, $model->cardNo, $model->endNo);
+                // Yii::$app->debris->p($model); 
+                Yii::$app->tinyShopService->card->give($model->member_id, $model->cardNo, $model->endNo);
             }
             return $this->redirect(['index']);
         }
