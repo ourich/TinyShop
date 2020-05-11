@@ -5,6 +5,7 @@ namespace addons\TinyShop\services\common;
 use Yii;
 use common\components\Service;
 use common\enums\StatusEnum;
+use common\helpers\StringHelper;
 use addons\TinyShop\common\enums\AdvLocalEnum;
 use addons\TinyShop\common\models\common\OilCard;
 
@@ -30,7 +31,7 @@ class CardService extends Service
         $min += 1;
         $max = $min + $count;
         for ($i = $min; $i < $max; $i++) {
-            $code = rand(10000, 99999);
+            $code = StringHelper::random(6);
             $rows[] = [
                 'cardNo' => $i,
                 'code' => $code,

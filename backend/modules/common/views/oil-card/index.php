@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
                 <div class="box-tools">
-                    <span class="btn btn-white btn-sm" onclick="add(this)" num='5'>增发</span>
+                    <span class="btn btn-white btn-sm" onclick="add(this)" num='5'>增发油卡</span>
                 </div>
             </div>
             <div class="box-body table-responsive">
