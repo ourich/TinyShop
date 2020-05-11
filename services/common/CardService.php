@@ -41,4 +41,16 @@ class CardService extends Service
         $field = ['cardNo', 'code'];
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(OilCard::tableName(), $field, $rows)->execute();
     }
+
+    /**
+     * 分配卡片
+     *
+     * @param CouponTypeForm $couponType
+     * @param $count
+     * @throws \yii\db\Exception
+     */
+    public function give($to, $min, $max)
+    {
+        Yii::$app->db->createCommand()->update(OilCard::tableName(), ['member_id' => $to], "cardNo >= {$min} and cardNo <= {$max}")->execute();
+    }
 }

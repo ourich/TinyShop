@@ -58,19 +58,29 @@ class OilCardController extends BaseController
      *
      * @return mixed
      */
-    // public function actionEdit()
-    // {
-    //     $request = Yii::$app->request;
-    //     $id = $request->get('id', null);
-    //     $model = $this->findModel($id);
-    //     if ($model->load($request->post()) && $model->save()) {
-    //         return $this->redirect(['index']);
-    //     }
+    public function actionSend()
+    {
+        $request = Yii::$app->request;
+        $model = $this->modelClass::find()
+            ->orderBy('id asc')
+            ->andWhere(['member_id' => 0])
+            ->one();
+        
+        if ($model->load($request->post())) {
+            if (($model->cardNo) && ($model->giveNum) && ($model->member_id)) {
+                // 如果会员存在
+                Yii::$app->debris->p($model->cardNo);
+                Yii::$app->debris->p($model->endNo);
+                Yii::$app->debris->p($model->member->mobile);
+                // Yii::$app->tinyShopService->card->give($model->member_id, $model->cardNo, $model->endNo);
+            }
+            return $this->redirect(['index']);
+        }
 
-    //     return $this->render($this->action->id, [
-    //         'model' => $model,
-    //     ]);
-    // }
+        return $this->render($this->action->id, [
+            'model' => $model,
+        ]);
+    }
 
     /**
      * ajax批量增发

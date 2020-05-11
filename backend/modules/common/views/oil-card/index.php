@@ -17,6 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
                 <div class="box-tools">
+                    <?= Html::create(['send'], '分配油卡') ?>
+                    <?= Html::create(['print'], '导出油卡') ?>
                     <span class="btn btn-white btn-sm" onclick="add(this)" num='5'>增发油卡</span>
                 </div>
             </div>
@@ -36,10 +38,26 @@ $this->params['breadcrumbs'][] = $this->title;
             'code',
             //'status',
             //'type',
-            'member_id',
-            'user',
+            // 'member_id',
+            [
+                'attribute' => 'member_id',
+                'value' => 'member.mobile',
+            ],
+            [
+                'attribute' => 'user',
+                'value' => 'user.mobile',
+            ],
+            [
+                'attribute' => 'end_at',
+                'filter' => false, //不显示搜索框
+                'value' => function ($model) {
+                    return $model->end_at ? Yii::$app->formatter->asDatetime($model->end_at) : '---';
+                },
+                'format' => 'raw',
+            ],
+            // 'user',
             // 'created_at',
-            'end_at',
+            // 'end_at:datetime',
             // [
             //     'class' => 'yii\grid\ActionColumn',
             //     'header' => '操作',
