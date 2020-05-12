@@ -57,6 +57,7 @@ class IndexController extends OnAuthController
             ],
             'adv' => Yii::$app->tinyShopService->adv->getListByLocals([
                 AdvLocalEnum::INDEX_TOP,
+                AdvLocalEnum::INDEX_THR,
                 AdvLocalEnum::INDEX_HOT,
                 AdvLocalEnum::INDEX_NEW,
                 AdvLocalEnum::INDEX_RECOMMEND

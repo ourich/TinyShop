@@ -13,6 +13,7 @@ use common\enums\StatusEnum;
 class AdvLocalEnum extends BaseEnum
 {
     const INDEX_TOP = 'index_top';
+    const INDEX_THR = 'index_thr';
     const INDEX_NEW = 'index_new';
     const INDEX_RECOMMEND = 'index_recommend';
     const INDEX_HOT = 'index_hot';
@@ -25,6 +26,7 @@ class AdvLocalEnum extends BaseEnum
     {
         return [
             self::INDEX_TOP => '首页顶部轮播广告图',
+            self::INDEX_THR => '首页魔方',
             self::INDEX_NEW => '首页新品广告图',
             self::INDEX_RECOMMEND => '首页推荐广告图',
             self::INDEX_HOT => '首页热门广告图',
@@ -40,6 +42,10 @@ class AdvLocalEnum extends BaseEnum
         return [
             self::INDEX_TOP => [
                 'name' => self::getValue(self::INDEX_TOP),
+                'multiple' => StatusEnum::ENABLED, // 轮播多图
+            ],
+            self::INDEX_THR => [
+                'name' => self::getValue(self::INDEX_THR),
                 'multiple' => StatusEnum::ENABLED, // 轮播多图
             ],
             self::INDEX_NEW => [
