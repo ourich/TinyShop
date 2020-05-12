@@ -7,8 +7,8 @@ use yii\widgets\ActiveForm;
 /* @var $model addons\TinyShop\common\models\common\OilCard */
 /* @var $form yii\widgets\ActiveForm */
 
-$this->title = '分配油卡';
-$this->params['breadcrumbs'][] = ['label' => '分配油卡', 'url' => ['index']];
+$this->title = '导出油卡';
+$this->params['breadcrumbs'][] = ['label' => '导出油卡', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-lg-12">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">分配油卡</h3>
+                <h3 class="box-title">导出油卡</h3>
             </div>
             <div class="box-body">
                 <?php $form = ActiveForm::begin([
@@ -25,14 +25,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]); ?>
                 <div class="col-sm-12">
-                    <?= $form->field($model, 'member_id')->label('会员ID')->textInput() ?>
-                    <?= $form->field($model, 'giveNum')->textInput(); ?>
+                    <?= $form->field($model, 'giveNum')->label('导出数量')->textInput(); ?>
                     <?= $form->field($model, 'cardNo')->label('起始卡号')->textInput()->hint('系统自动识别的还未分配的卡号起点'); ?>
                     <?= $form->field($model, 'endNo')->textInput(['readonly' => 'readonly'])->hint('根据起点和数量计算出的终点'); ?>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 text-center">
-                        <button class="btn btn-primary" type="submit">执行分配</button>
+                        <button class="btn btn-primary" type="submit">确认导出</button>
                         <span class="btn btn-white" onclick="history.go(-1)">返回</span>
                     </div>
                 </div>

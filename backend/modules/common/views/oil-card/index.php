@@ -102,9 +102,9 @@ $this->params['breadcrumbs'][] = $this->title;
             },
             success: function (data) {
                 if (data.code === 200) {
-                    rfAffirm(data.message);
+                    rfSuccess(data.message);
                 } else {
-                    rfAffirm(data.message);
+                    rfSuccess(data.message);
                 }
             }
         });

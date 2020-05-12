@@ -9,6 +9,8 @@ use common\models\base\SearchModel;
 use addons\TinyShop\merchant\forms\OilCardForm;
 use common\helpers\ResultHelper;
 use backend\controllers\BaseController;
+use common\helpers\ExcelHelper;
+use common\helpers\Url;
 
 /**
 * OilCard
@@ -51,6 +53,49 @@ class OilCardController extends BaseController
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+        ]);
+    }
+
+    /**
+     * 导出
+     *
+     * @return mixed
+     */
+    public function actionPrint()
+    {
+        $request = Yii::$app->request;
+        $model = $this->modelClass::find()
+            ->orderBy('id asc')
+            ->andWhere(['member_id' => 0])
+            ->one();
+        //创建时候该字段有默认值
+        $model->giveNum='5';
+        if ($model->load($request->post())) {
+            if (($model->cardNo) && ($model->giveNum) && ($model->endNo)) {
+
+                // [名称, 字段名, 类型, 类型规则]
+                $header = [
+                    ['卡号', 'cardNo'], // 规则不填默认text
+                    ['密码', 'code', 'function', function($model){
+                        return 'http://rf.com/html5/tiny-shop/index?code=' . $model['code'];
+                    }],
+                ];
+
+                $list = $this->modelClass::find()
+                    ->select('cardNo,code')
+                    ->andFilterWhere(['between','cardNo', $model->cardNo, $model->endNo])
+                    ->orderBy('id asc')
+                    ->asArray()
+                    ->all();
+                // 简单使用
+                return ExcelHelper::exportData($list, $header);
+            }
+            
+            return $this->redirect(['index']);
+        }
+
+        return $this->render($this->action->id, [
+            'model' => $model,
         ]);
     }
 
