@@ -35,10 +35,11 @@ class CardService extends Service
             $rows[] = [
                 'cardNo' => $i,
                 'code' => $code,
+                'status' => 1,
             ];
         }
 
-        $field = ['cardNo', 'code'];
+        $field = ['cardNo', 'code', 'status'];
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(OilCard::tableName(), $field, $rows)->execute();
     }
 
@@ -52,5 +53,18 @@ class CardService extends Service
     public function give($to, $min, $max)
     {
         Yii::$app->db->createCommand()->update(OilCard::tableName(), ['member_id' => $to], "cardNo >= {$min} and cardNo <= {$max}")->execute();
+    }
+
+    /**
+     * 根据推广码查询
+     *
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByPromoCode($promo_code)
+    {
+        return OilCard::find()
+            ->where(['code' => $promo_code, 'status' => StatusEnum::ENABLED])
+            ->one();
     }
 }
