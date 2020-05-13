@@ -48,13 +48,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 ),
             ],
             [
-                'attribute' => 'user.mobile',
-                'label'=> '领用人',
+                'attribute' => 'user',
+                'value' => 'user0.mobile',
                 'filter' => false, //不显示搜索框
-                // 'filter' => Html::activeTextInput($searchModel, 'user.mobile', [
-                //         'class' => 'form-control'
-                //     ]
-                // ),
             ],
             [
                 'attribute' => 'end_at',

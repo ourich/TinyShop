@@ -82,6 +82,7 @@ class CardService extends Service
             ->one();
         $model->status = StatusEnum::DISABLED;
         $model->user = $user;
+        $model->end_at = time();
         if ($model->save()) {
             $member = Yii::$app->services->member->get($user);
             // 充值

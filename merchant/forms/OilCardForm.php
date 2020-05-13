@@ -45,7 +45,7 @@ class OilCardForm extends OilCard
     {
         return $this->hasOne(Member::class, ['id' => 'member_id']);
     }
-    public function getUser()
+    public function getUser0()
     {
         return $this->hasOne(Member::class, ['id' => 'user']);
     }
