@@ -53,7 +53,7 @@ class CardService extends Service
      */
     public function give($to, $min, $max)
     {
-        Yii::$app->db->createCommand()->update(OilCard::tableName(), ['member_id' => $to], "cardNo >= {$min} and cardNo <= {$max}")->execute();
+        return Yii::$app->db->createCommand()->update(OilCard::tableName(), ['member_id' => $to], "cardNo >= {$min} and cardNo <= {$max}")->execute();
     }
 
     /**
