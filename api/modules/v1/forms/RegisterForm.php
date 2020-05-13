@@ -10,6 +10,7 @@ use common\models\member\Member;
 use common\models\common\SmsLog;
 use common\models\validators\SmsCodeValidator;
 use addons\TinyShop\common\enums\AccessTokenGroupEnum;
+use common\enums\StatusEnum;
 
 /**
  * Class RegisterForm
@@ -86,9 +87,12 @@ class RegisterForm extends Model
     public function promoCodeVerify($attribute)
     {
         if ($this->promo_code) {
-            $this->_parent = Yii::$app->services->member->findByPromoCode($this->promo_code);
+            $this->_parent = Yii::$app->tinyShopService->card->findByPromoCode($this->promo_code);
             if (!$this->_parent) {
-                throw new UnprocessableEntityHttpException('找不到推广员');
+                throw new UnprocessableEntityHttpException('卡号不存在');
+            }
+            if ($this->_parent->status != StatusEnum::ENABLED) {
+                throw new UnprocessableEntityHttpException('该卡已激活，请勿重复操作');
             }
         }
     }

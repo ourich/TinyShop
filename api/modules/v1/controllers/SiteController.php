@@ -163,7 +163,7 @@ class SiteController extends OnAuthController
         $member->promo_code = '';
         $member->merchant_id = !empty($this->getMerchantId()) ? $this->getMerchantId() : 0;
         $member->password_hash = Yii::$app->security->generatePasswordHash($model->password);
-        $member->pid = $parent ? $parent->id : 0;
+        $member->pid = $parent ? $parent->member_id : 0;
         if (!$member->save()) {
             return ResultHelper::json(422, $this->getError($member));
         }

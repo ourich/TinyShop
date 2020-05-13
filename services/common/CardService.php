@@ -64,7 +64,7 @@ class CardService extends Service
     public function findByPromoCode($promo_code)
     {
         return OilCard::find()
-            ->where(['code' => $promo_code, 'status' => StatusEnum::ENABLED])
+            ->where(['code' => $promo_code])
             ->one();
     }
 }
