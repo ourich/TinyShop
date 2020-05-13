@@ -8,6 +8,7 @@ use common\enums\StatusEnum;
 use common\helpers\StringHelper;
 use addons\TinyShop\common\enums\AdvLocalEnum;
 use addons\TinyShop\common\models\common\OilCard;
+use common\models\forms\CreditsLogForm;
 
 /**
  * Class CardService
@@ -66,5 +67,32 @@ class CardService extends Service
         return OilCard::find()
             ->where(['code' => $promo_code])
             ->one();
+    }
+
+    /**
+     * 注册人获得卡余额，更新卡片信息
+     *
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function useCard($user, $promo_code)
+    {
+        $model = OilCard::find()
+            ->where(['code' => $promo_code])
+            ->one();
+        $model->status = StatusEnum::DISABLED;
+        $model->user = $user;
+        if ($model->save()) {
+            $member = Yii::$app->services->member->get($user);
+            // 充值
+            Yii::$app->services->memberCreditsLog->incrInt(new CreditsLogForm([
+                'member' => $member,
+                'pay_type' => 100,
+                'num' => 100,
+                'credit_group' => 'manager',
+                'remark' => "激活卡片",
+                'map_id' => 0,
+            ]));
+        }
     }
 }
