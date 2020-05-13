@@ -69,7 +69,7 @@ class OilCardController extends BaseController
             ->andWhere(['member_id' => 0])
             ->one();
         //创建时候该字段有默认值
-        $model->giveNum='5';
+        $model->giveNum='10000';
         if ($model->load($request->post())) {
             if (($model->cardNo) && ($model->giveNum) && ($model->endNo)) {
 
