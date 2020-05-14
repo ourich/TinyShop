@@ -35,6 +35,7 @@ class OilCard extends \yii\db\ActiveRecord
         return [
             [['status', 'type', 'member_id', 'user', 'cardNo', 'created_at', 'end_at'], 'integer'],
             [['code'], 'string', 'max' => 10],
+            [['img'], 'string', 'max' => 250],
         ];
     }
 
@@ -51,6 +52,7 @@ class OilCard extends \yii\db\ActiveRecord
             'user' => '使用者',
             'cardNo' => '卡号',
             'code' => '密码',
+            'img' => '二维码',
             'created_at' => '创建时间',
             'end_at' => '使用时间',
         ];

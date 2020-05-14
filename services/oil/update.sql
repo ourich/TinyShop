@@ -30,6 +30,7 @@ CREATE TABLE rf_oil_stations (
 
 ALTER TABLE `rf_member` ADD `oil_token_time` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT 'tk有效期';
 ALTER TABLE `rf_member` ADD `oil_token` varchar(60) DEFAULT '' COMMENT '团油身份';
+ALTER TABLE `rf_member` ADD `oil_token` varchar(60) DEFAULT '' COMMENT '团油身份';
 
 CREATE TABLE rf_oil_order (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
@@ -74,6 +75,7 @@ CREATE TABLE rf_oil_card (
   `user` int(11) UNSIGNED DEFAULT '0' COMMENT '使用者',
   `cardNo` int(11) UNSIGNED DEFAULT '0' COMMENT '卡号',
   `code` varchar(10) DEFAULT '' COMMENT '密码',
+  `img` varchar(250) DEFAULT '' COMMENT '二维码',
   `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '创建时间',
   `end_at` int(11) UNSIGNED DEFAULT '0' COMMENT '使用时间',
     PRIMARY KEY (`id`)

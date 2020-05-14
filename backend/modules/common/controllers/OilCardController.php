@@ -109,8 +109,8 @@ class OilCardController extends BaseController
         $id = $request->get('id', null);
         $model = $this->findModel($id);
         $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
-        $min += 1;
-        $model->cardNo = $min ?? '100000001';
+        $model->cardNo = $min ?? '100000000';
+        $model->cardNo += 1;
         
         if ($model->load($request->post())) {
             //检查收款人是否存在
@@ -143,9 +143,8 @@ class OilCardController extends BaseController
         $id = $request->get('id', null);
         $model = $this->findModel($id);
         $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
-        $min += 1;
-        $model->cardNo = $min ?? '100000001';
-        $model->mobiler_begin = '100000001';
+        $model->cardNo = '100000000';
+        $model->mobiler_begin = '100000000';
         
         if ($model->load($request->post())) {
             //检查收款人是否存在
