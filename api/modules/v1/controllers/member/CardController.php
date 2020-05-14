@@ -50,8 +50,9 @@ class CardController extends UserAuthController
         // 主要生成header的page信息
         $models = (new Serializer())->serialize($data);
         foreach ($models as &$model) {
-            // $model['img'] = $this->getQr($model['cardNo']);
-            $model['img'] = !empty($model['img']) ?? $this->getQr($model['cardNo']);
+            if (empty($model['img'])) {
+                $model['img'] = $this->getQr($model['cardNo']);
+            }
         }
 
         return $models;
@@ -93,8 +94,8 @@ class CardController extends UserAuthController
                 ->useForegroundColor(51, 153, 255);
 
             // 把图片保存到文件中:
-            $qrCode->writeFile(Yii::getAlias('@attachment') . '/code.png'); // 没有指定的时候默认为png格式
-            $model->img = Yii::getAlias('@attachment') . '/code.png';
+            $qrCode->writeFile(Yii::getAlias('@attachment') . '/code/' . $cardNo . '.png'); // 没有指定的时候默认为png格式
+            $model->img = Yii::$app->request->hostInfo . '/attachment/code/' . $cardNo . '.png';
             $model->save();
         }
         // Yii::warning($model->img);
