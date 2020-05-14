@@ -24,23 +24,22 @@ class CardService extends Service
      * @param $count
      * @throws \yii\db\Exception
      */
-    public function create($count)
+    public function create($model)
     {
         $rows = [];
-        $min = OilCard::find()->max('cardNo');   //目前卡号最大值
-        $min = $min ?? '100000000';
-        $min += 1;
-        $max = $min + $count;
+        $min = $model->cardNo;
+        $max = $min + $model->giveNum;
         for ($i = $min; $i < $max; $i++) {
             $code = StringHelper::random(6);
             $rows[] = [
                 'cardNo' => $i,
+                'member_id' => $model->member_id,
                 'code' => $code,
                 'status' => 1,
             ];
         }
 
-        $field = ['cardNo', 'code', 'status'];
+        $field = ['cardNo', 'member_id', 'code', 'status'];
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(OilCard::tableName(), $field, $rows)->execute();
     }
 

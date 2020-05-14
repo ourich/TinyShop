@@ -107,18 +107,24 @@ class OilCardController extends BaseController
     public function actionSend()
     {
         $request = Yii::$app->request;
-        $model = $this->modelClass::find()
-            ->orderBy('id asc')
-            ->andWhere(['member_id' => 0])
-            ->one();
+        $id = $request->get('id', null);
+        $model = $this->findModel($id);
+        $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
+        $model->cardNo = $min ?? '100000001';
         
         if ($model->load($request->post())) {
-            if (($model->cardNo) && ($model->giveNum) && ($model->member_id) && ($model->member->mobile)) {
-                // 如果会员存在
-                // Yii::$app->debris->p($model); 
-                Yii::$app->tinyShopService->card->give($model->member_id, $model->cardNo, $model->endNo);
+            //检查收款人是否存在
+            $tomember = Yii::$app->services->member->findByMobile($model->mobile);
+            if (!$tomember) {
+                return $this->message('接收人不存在', $this->redirect(['send']), 'error');
             }
-            return $this->redirect(['index']);
+            $model->member_id = $tomember['id'];
+            if (!$model->cardNo || !$model->giveNum) {
+                return $this->message('请填写起始卡号和数量', $this->redirect(['send']), 'error');
+            }
+            // Yii::$app->debris->p($model); 
+            Yii::$app->tinyShopService->card->create($model);
+            return $this->message('卡片分配成功', $this->redirect(['index']));
         }
 
         return $this->render($this->action->id, [

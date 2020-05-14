@@ -25,10 +25,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]); ?>
                 <div class="col-sm-12">
-                    <?= $form->field($model, 'member_id')->label('会员ID')->textInput() ?>
+                    <?= $form->field($model, 'mobile')->textInput()->hint('持有人的手机号');  ?>
                     <?= $form->field($model, 'giveNum')->textInput(); ?>
                     <?= $form->field($model, 'cardNo')->label('起始卡号')->textInput()->hint('系统自动识别的还未分配的卡号起点'); ?>
-                    <?= $form->field($model, 'endNo')->textInput(['readonly' => 'readonly'])->hint('根据起点和数量计算出的终点'); ?>
+                    <?= $form->field($model, 'endNo')->textInput(['readonly' => 'readonly'])->hint('点击此框自动计算截止卡号'); ?>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 text-center">
