@@ -11,6 +11,7 @@ use common\helpers\ResultHelper;
 use backend\controllers\BaseController;
 use common\helpers\ExcelHelper;
 use common\helpers\Url;
+use common\enums\StatusEnum;
 
 /**
 * OilCard
@@ -108,6 +109,7 @@ class OilCardController extends BaseController
         $id = $request->get('id', null);
         $model = $this->findModel($id);
         $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
+        $min += 1;
         $model->cardNo = $min ?? '100000001';
         
         if ($model->load($request->post())) {
@@ -123,6 +125,53 @@ class OilCardController extends BaseController
             // Yii::$app->debris->p($model); 
             Yii::$app->tinyShopService->card->create($model);
             return $this->message('卡片分配成功', $this->redirect(['index']));
+        }
+
+        return $this->render($this->action->id, [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * 卡片交换
+     *
+     * @return mixed
+     */
+    public function actionChange()
+    {
+        $request = Yii::$app->request;
+        $id = $request->get('id', null);
+        $model = $this->findModel($id);
+        $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
+        $min += 1;
+        $model->cardNo = $min ?? '100000001';
+        $model->mobiler_begin = '100000001';
+        
+        if ($model->load($request->post())) {
+            //检查收款人是否存在
+            $mobile = Yii::$app->services->member->findByMobile($model->mobile);
+            $mobiler = Yii::$app->services->member->findByMobile($model->mobiler);
+            if (!$mobile || !$mobiler) {
+                return $this->message('手机号错误', $this->redirect(['send']), 'error');
+            }
+            $model->member_id = $mobile['id'];
+            if (!$model->cardNo || !$model->endNo || !$model->mobiler_begin || !$model->mobiler_end) {
+                return $this->message('请填写起始卡号和数量', $this->redirect(['send']), 'error');
+            }
+            // Yii::$app->debris->p($model); 
+            //检查归属权和使用状态
+            $list = $this->modelClass::find()
+                ->select('cardNo')
+                ->Where(['between','cardNo', $model->cardNo, $model->endNo])
+                ->andWhere(['or', ['<>', 'member_id', $model->member_id], ['status' => StatusEnum::DISABLED]])
+                ->asArray()
+                ->all();
+            if ($list) {
+                throw new NotFoundHttpException('包含不属于他或者已激活的卡');
+            }
+            Yii::$app->tinyShopService->card->give($mobiler['id'], $model->cardNo, $model->endNo);   //扣减库存
+            Yii::$app->tinyShopService->card->give($model->member_id, $model->mobiler_begin, $model->mobiler_end);   //重新分配给他
+            return $this->message('卡片交换成功', $this->redirect(['index']));
         }
 
         return $this->render($this->action->id, [

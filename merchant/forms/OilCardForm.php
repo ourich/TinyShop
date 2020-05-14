@@ -20,11 +20,14 @@ class OilCardForm extends OilCard
     public $giveNum = 0;
     public $endNo = 0;
     public $mobile = 0;
+    public $mobiler = 0;
+    public $mobiler_begin = 0;
+    public $mobiler_end = 0;
 
     public function rules()
     {
         $rule = parent::rules();
-        $rule[] = [['defaultCount', 'reissuenNum', 'giveNum', 'endNo', 'mobile'], 'integer', 'min' => 0];
+        $rule[] = [['defaultCount', 'reissuenNum', 'giveNum', 'endNo', 'mobile', 'mobiler', 'mobiler_begin', 'mobiler_end'], 'integer', 'min' => 0];
 
         return $rule;
     }
@@ -40,6 +43,9 @@ class OilCardForm extends OilCard
             'giveNum' => '分配数量',
             'endNo' => '截止卡号',
             'mobile' => '持有人',
+            'mobiler' => '交换对象',
+            'mobiler_begin' => '实体卡起',
+            'mobiler_end' => '实体卡止',
         ]);
     }
 

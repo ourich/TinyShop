@@ -19,7 +19,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="box-tools">
                     <?= Html::create(['send'], '分配油卡') ?>
                     <?= Html::create(['print'], '导出油卡') ?>
-                    <span class="btn btn-white btn-sm" onclick="add(this)" num='10000'>增发油卡</span>
+                    <?= Html::create(['change'], '交换油卡') ?>
+                    <!-- <span class="btn btn-white btn-sm" onclick="add(this)" num='10000'>增发油卡</span> -->
                 </div>
             </div>
             <div class="box-body table-responsive">
