@@ -64,34 +64,32 @@ class OilCardController extends BaseController
     public function actionPrint()
     {
         $request = Yii::$app->request;
-        $model = $this->modelClass::find()
-            ->orderBy('id asc')
-            ->andWhere(['member_id' => 0])
-            ->one();
+        $id = $request->get('id', null);
+        $model = $this->findModel($id);
+        $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
+        $model->cardNo = $min ?? '100000001';
         //创建时候该字段有默认值
         $model->giveNum='10000';
         if ($model->load($request->post())) {
-            if (($model->cardNo) && ($model->giveNum) && ($model->endNo)) {
-
-                // [名称, 字段名, 类型, 类型规则]
-                $header = [
-                    ['卡号', 'cardNo'], // 规则不填默认text
-                    ['密码', 'code', 'function', function($model){
-                        return 'http://rf.com/' . 'pages/public/register?promo_code=' . $model['code'];
-                    }],
-                ];
-
-                $list = $this->modelClass::find()
-                    ->select('cardNo,code')
-                    ->andFilterWhere(['between','cardNo', $model->cardNo, $model->endNo])
-                    ->orderBy('id asc')
-                    ->asArray()
-                    ->all();
-                // 简单使用
-                return ExcelHelper::exportData($list, $header);
+            if (!$model->cardNo || !$model->endNo || !$model->giveNum) {
+                return $this->message('请填写完整', $this->redirect(['send']), 'error');
             }
-            
-            return $this->redirect(['index']);
+            // [名称, 字段名, 类型, 类型规则]
+            $header = [
+                ['卡号', 'cardNo'], // 规则不填默认text
+                ['密码', 'code', 'function', function($model){
+                    return 'http://rf.com/' . 'pages/public/register?promo_code=' . $model['code'];
+                }],
+            ];
+
+            $list = $this->modelClass::find()
+                ->select('cardNo,code')
+                ->andFilterWhere(['between','cardNo', $model->cardNo, $model->endNo])
+                ->orderBy('id asc')
+                ->asArray()
+                ->all();
+            // 简单使用
+            return ExcelHelper::exportData($list, $header);
         }
 
         return $this->render($this->action->id, [
