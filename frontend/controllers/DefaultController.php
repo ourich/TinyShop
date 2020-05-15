@@ -29,16 +29,17 @@ class DefaultController extends BaseController
         print_r('<pre>');
         $mobile = '13098878085';
         $gasId = 'ZG000003987';
+        // $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasId, $mobile);
 
 
 
-        $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasId, $mobile);
-        Yii::$app->debris->p($response);
-
-
-
-
+        Yii::$app->tinyShopService->member->creatByOld();
         
+
+
+
+
+        // Yii::$app->debris->p($response);
         die();
         // return $this->render('index',[]);
     }

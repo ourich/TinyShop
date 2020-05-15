@@ -27,10 +27,14 @@ CREATE TABLE rf_oil_stations (
         PRIMARY KEY (`id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='油站表';
 
-
+-- 团油身份
 ALTER TABLE `rf_member` ADD `oil_token_time` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT 'tk有效期';
 ALTER TABLE `rf_member` ADD `oil_token` varchar(60) DEFAULT '' COMMENT '团油身份';
-ALTER TABLE `rf_member` ADD `oil_token` varchar(60) DEFAULT '' COMMENT '团油身份';
+--老系统资料
+ALTER TABLE `rf_member` ADD `old_id` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '老系统ID';
+ALTER TABLE `rf_member` ADD `agentid` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '老推荐人';
+ALTER TABLE `rf_member` ADD `credit1` decimal(10,2) DEFAULT '0' COMMENT '老优惠金';
+ALTER TABLE `rf_member` ADD `credit2` decimal(10,2) DEFAULT '0' COMMENT '老余额';
 
 CREATE TABLE rf_oil_order (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
