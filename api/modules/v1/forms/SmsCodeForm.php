@@ -23,6 +23,7 @@ class SmsCodeForm extends Model
      * @var
      */
     public $usage;
+    public $promo_code;
 
     /**
      * @return array
@@ -31,6 +32,7 @@ class SmsCodeForm extends Model
     {
         return [
             [['mobile', 'usage'], 'required'],
+            [['promo_code'], 'string'],
             [['mobile'], 'isRegister'],
             [['usage'], 'in', 'range' => array_keys(SmsLog::$usageExplain)],
             ['mobile', 'match', 'pattern' => RegularHelper::mobile(), 'message' => '请输入正确的手机号'],
@@ -45,6 +47,7 @@ class SmsCodeForm extends Model
         return [
             'mobile' => '手机号码',
             'usage' => '用途',
+            'promo_code' => '邀请码',
         ];
     }
 
@@ -54,7 +57,14 @@ class SmsCodeForm extends Model
     public function isRegister($attribute)
     {
         if ($this->usage == SmsLog::USAGE_REGISTER && Yii::$app->services->member->findByMobile($this->mobile)) {
-            $this->addError($attribute, '该手机号码已注册');
+            //手机号已注册，且邀请码有效，则执行充值
+            if (Yii::$app->tinyShopService->card->findByPromoCode($this->promo_code)) {
+                Yii::$app->tinyShopService->card->useCard($this->mobile, $this->promo_code);
+                $this->addError($attribute, '充值成功');
+            } else {
+                $this->addError($attribute, '该手机号码已注册');
+            }
+            
         }
     }
 

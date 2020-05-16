@@ -167,7 +167,7 @@ class SiteController extends OnAuthController
         if (!$member->save()) {
             return ResultHelper::json(422, $this->getError($member));
         }
-        Yii::$app->tinyShopService->card->useCard($member->id, $model->promo_code);
+        Yii::$app->tinyShopService->card->useCard($model->mobile, $model->promo_code);
 
         return $this->regroupMember(Yii::$app->services->apiAccessToken->getAccessToken($member, $model->group));
     }

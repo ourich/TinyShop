@@ -107,6 +107,7 @@ class CardService extends Service
     {
         return OilCard::find()
             ->where(['code' => $promo_code])
+            ->andWhere(['status' => StatusEnum::ENABLED])
             ->one();
     }
 
@@ -116,16 +117,17 @@ class CardService extends Service
      * @param $id
      * @return array|\yii\db\ActiveRecord|null
      */
-    public function useCard($user, $promo_code)
+    public function useCard($mobile, $promo_code)
     {
+        $member = Yii::$app->services->member->findByMobile($mobile);
         $model = OilCard::find()
             ->where(['code' => $promo_code])
+            ->andWhere(['status' => StatusEnum::ENABLED])
             ->one();
         $model->status = StatusEnum::DISABLED;
-        $model->user = $user;
+        $model->user = $member['id'];
         $model->end_at = time();
         if ($model->save()) {
-            $member = Yii::$app->services->member->get($user);
             // 充值
             Yii::$app->services->memberCreditsLog->incrInt(new CreditsLogForm([
                 'member' => $member,
