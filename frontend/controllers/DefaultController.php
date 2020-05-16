@@ -76,15 +76,9 @@ class DefaultController extends BaseController
      */
     public function actionUp()
     {
-        print_r('1-----'.time());
         $model = new OilStations();
         $response = Yii::$app->tinyShopService->czb->queryGasInfoListOilNoNew();
         $result = $response['result'];
-        print_r('<pre>');
-        // print_r($result);
-        print_r('2-----'.time());
-
-
 
         //批量更新,并将需要批量插入的数据放入数组中 
         $count = 0;
@@ -120,8 +114,6 @@ class DefaultController extends BaseController
           //     break;
           // }
         }
-        print_r('<pre>');
-        print_r('3-----'.time());
 
         //再执行批量插入
         if (isset($data)) 
@@ -131,9 +123,6 @@ class DefaultController extends BaseController
                $data)
                ->execute();
         }
-        print_r('<pre>');
-        print_r('4-----'.time());
-        print_r('4-----'.$count);
 
         die();
         // return $this->render('index');
