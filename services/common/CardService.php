@@ -63,9 +63,19 @@ class CardService extends Service
      */
     public function changeByOrder($from, $to, $num)
     {
-        return OilCard::find()
-            ->where(['code' => $promo_code])
-            ->one();
+        //先从V5的卡库里取出X张卡【未印刷的】
+        $cards =  OilCard::find()
+            ->where(['member_id' => $from])
+            ->where(['status' => StatusEnum::ENABLED])
+            ->where(['print' => StatusEnum::ENABLED])
+            ->orderBy('id desc')
+            ->asArray()
+            ->limit($num)
+            ->all();
+        //把这些卡分配给购买人
+        $cardids = ArrayHelper::getColumn($cards, 'id');
+        $ids=implode(',',$cardids);
+        return Yii::$app->db->createCommand()->update(OilCard::tableName(), ['member_id' => $to], "id in {$ids}")->execute();
     }
 
     /**
