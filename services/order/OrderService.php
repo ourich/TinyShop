@@ -669,6 +669,13 @@ class OrderService extends \common\components\Service
             if ($member['current_level'] <= $send_level) {
                 continue;   //跳过此人
             }
+            //如果是V5，检查库存是否足够，不够，则继续往上找
+            if ($member['current_level'] == 6) {
+                $num_card = Yii::$app->tinyShopService->card->countCard($member['id']);
+                if ($num_card < $num) {
+                    continue;   //跳过此人
+                }
+            }
             $commission_shop = $member['level0']['commission_shop'] - $send_money; 
             $get_money = round($pay_money * $commission_shop /100, 2);
             Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([

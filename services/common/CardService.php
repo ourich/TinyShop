@@ -79,6 +79,23 @@ class CardService extends Service
     }
 
     /**
+     * 检查电子卡库存
+     * @param  [type] $from [description]
+     * @param  [type] $to   [description]
+     * @param  [type] $num  [description]
+     * @return [type]       [description]
+     */
+    public function countCard($member_id)
+    {
+        //先从V5的卡库里取出X张卡【未印刷的】
+      return  $cards =  OilCard::find()
+            ->where(['member_id' => $member_id])
+            ->where(['status' => StatusEnum::ENABLED])
+            ->where(['print' => StatusEnum::ENABLED])
+            ->count();
+    }
+
+    /**
      * 根据推广码查询
      *
      * @param $id
