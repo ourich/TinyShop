@@ -40,7 +40,7 @@ class DefaultController extends BaseController
 
 
         // Yii::$app->debris->p($response);
-        die(0);
+        die('hello');
         // return $this->render('index',[]);
     }
     public function actionOrder()
