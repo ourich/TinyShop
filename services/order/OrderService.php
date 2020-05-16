@@ -164,7 +164,8 @@ class OrderService extends \common\components\Service
         $order->is_virtual == StatusEnum::ENABLED && Yii::$app->tinyShopService->orderProductVirtual->create($order);
 
         // 分销
-        $this->distribution($order);
+        // $this->distribution($order);
+        $this->jiCha($order);
     }
 
     /**
@@ -635,6 +636,48 @@ class OrderService extends \common\components\Service
             $member = Yii::$app->services->member->get($order->buyer_id);
             Yii::$app->tinyShopService->productCommissionRate->createDistribute($commission, $order, $member);
         }
+    }
+
+    /**
+     * 级差
+     *
+     * @param Order $order
+     * @param Member $member
+     * @throws UnprocessableEntityHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function jiCha(Order $order)
+    {
+        $pay_money = $order->pay_money;     //实际付款金额
+        $order_sn = $order->order_sn;     //订单编号
+        $member = Yii::$app->services->member->get($order->buyer_id);
+        $send_level = $member['current_level']; 
+        $send_money = $member['level0']['commission_shop']; 
+        //第一个V1能拿直推奖
+        if ($member['current_level'] <= 2) {
+            $send_level = 0; 
+            $send_money = 0;
+        }
+        //循环读取各个上级资料，根据各自等级的提成比例，进行发放
+        while (!empty($member['pid'])) {
+            $member = Yii::$app->services->member->get($member['pid']);
+            if ($member['current_level'] <= $send_level) {
+                continue;   //跳过此人
+            }
+            $commission_shop = $member['level0']['commission_shop'] - $send_money; 
+            $get_money = round($pay_money * $commission_shop /100, 2);
+            Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                'member' => $member,
+                'num' => $get_money,
+                'credit_group' => 'orderCommission',
+                'map_id' => $order_id,
+                'remark' => '购卡奖励：'.$order_sn,
+            ]));
+            //重置已发放的比例
+            $send_level = $member['current_level']; 
+            $send_money = $member['level0']['commission_shop']; 
+        }
+
     }
 
     /**
