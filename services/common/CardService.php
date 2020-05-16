@@ -56,6 +56,19 @@ class CardService extends Service
     }
 
     /**
+     * 虚拟卡转移
+     *
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function changeByOrder($from, $to, $num)
+    {
+        return OilCard::find()
+            ->where(['code' => $promo_code])
+            ->one();
+    }
+
+    /**
      * 根据推广码查询
      *
      * @param $id

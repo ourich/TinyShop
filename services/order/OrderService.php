@@ -648,6 +648,11 @@ class OrderService extends \common\components\Service
      */
     public function jiCha(Order $order)
     {
+        $orderProducts = Yii::$app->tinyShopService->orderProduct->findByOrderId($order->id);
+        $num = 0;
+        foreach ($orderProducts as $value) {
+            $num += $value['num'] * 100;
+        }
         $pay_money = $order->pay_money;     //实际付款金额
         $order_sn = $order->order_sn;     //订单编号
         $member = Yii::$app->services->member->get($order->buyer_id);
@@ -676,6 +681,10 @@ class OrderService extends \common\components\Service
             //重置已发放的比例
             $send_level = $member['current_level']; 
             $send_money = $member['level0']['commission_shop']; 
+            //如果是V5，则转移库存
+            if ($member['current_level'] == 6) {
+                Yii::$app->tinyShopService->card->changeByOrder($member['id'], $order->buyer_id, $num);
+            }
         }
 
     }
