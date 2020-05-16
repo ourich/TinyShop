@@ -76,7 +76,7 @@ class CzbService extends Service
      * @param  array   $extraParam  [description]
      * @return [type]               [description]
      */
-    public function platformOrderInfoV2($extraParam = [], $pageIndex = 1, $pageSize = 10)
+    public function platformOrderInfoV2($extraParam = [], $pageIndex = 1, $pageSize = 100)
     {
         return $this->gas->platformOrderInfoV2($this->config['channelId'], $pageIndex, $pageSize, $extraParam)->result();
     }

@@ -46,7 +46,7 @@ class DefaultController extends BaseController
     public function actionOrder()
     {
         $response = Yii::$app->tinyShopService->czb->platformOrderInfoV2();
-        Yii::$app->debris->p($response);
+        // Yii::$app->debris->p($response);
         if ($response['code'] == 200) {
             $result = $response['result'];
             foreach ($result as $value) {
