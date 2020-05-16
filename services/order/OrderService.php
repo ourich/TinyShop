@@ -651,7 +651,9 @@ class OrderService extends \common\components\Service
         $orderProducts = Yii::$app->tinyShopService->orderProduct->findByOrderId($order->id);
         $num = 0;
         foreach ($orderProducts as $value) {
-            $num += $value['num'] * 100;
+            if ($value['Product']['is_card'] == 1) {
+                $num += $value['num'] * 100;
+            }
         }
         $pay_money = $order->pay_money;     //实际付款金额
         $order_sn = $order->order_sn;     //订单编号
@@ -669,8 +671,8 @@ class OrderService extends \common\components\Service
             if ($member['current_level'] <= $send_level) {
                 continue;   //跳过此人
             }
-            //如果是V5，检查库存是否足够，不够，则继续往上找
-            if ($member['current_level'] == 6) {
+            //如果买的是油卡，而且是V5，检查库存是否足够，不够，则继续往上找
+            if ($member['current_level'] == 6 && $num > 0) {
                 $num_card = Yii::$app->tinyShopService->card->countCard($member['id']);
                 // Yii::warning('--------会员'. $member['mobile'] . '----' . $num_card);
                 if ($num_card < $num) {
@@ -690,7 +692,7 @@ class OrderService extends \common\components\Service
             $send_level = $member['current_level']; 
             $send_money = $member['level0']['commission_shop']; 
             //如果是V5，则转移库存
-            if ($member['current_level'] == 6) {
+            if ($member['current_level'] == 6 && $num > 0) {
                 Yii::$app->tinyShopService->card->changeByOrder($member['id'], $order->buyer_id, $num);
             }
         }

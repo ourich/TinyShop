@@ -113,6 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'is_hot')->checkbox(); ?>
                     <?= $form->field($model, 'is_recommend')->checkbox(); ?>
                     <?= $form->field($model, 'is_new')->checkbox(); ?>
+                    <?= $form->field($model, 'is_card')->checkbox(); ?>
                     <?= $form->field($model, 'product_status')->radioList($productStatusExplain); ?>
                 </div>
                 <!-- /.tab-pane -->
