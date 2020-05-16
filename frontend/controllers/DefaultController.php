@@ -33,14 +33,14 @@ class DefaultController extends BaseController
 
 
 
-        Yii::$app->tinyShopService->member->creatByOld();
+        // Yii::$app->tinyShopService->member->creatByOld();
         
 
 
 
 
         // Yii::$app->debris->p($response);
-        die();
+        die(0);
         // return $this->render('index',[]);
     }
     public function actionOrder()
