@@ -72,6 +72,8 @@ class IndexController extends OnAuthController
                 'copyright_companyname' => $config['copyright_companyname'] ?? '',
                 'copyright_url' => $config['copyright_url'] ?? '',
                 'copyright_desc' => $config['copyright_desc'] ?? '',
+                'show_cate' => 0,
+                'show_magic' => 0,
             ]
         ];
     }
