@@ -37,7 +37,7 @@ class SiteController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['login', 'refresh', 'mobile-login', 'sms-code', 'register', 'up-pwd'];
+    protected $authOptional = ['login', 'refresh', 'mobile-login', 'sms-code', 'register', 'up-pwd', 'down'];
 
     /**
      * 登录根据用户信息返回accessToken
@@ -56,6 +56,18 @@ class SiteController extends OnAuthController
 
         // 返回数据验证失败
         return ResultHelper::json(422, $this->getError($model));
+    }
+
+    public function actionDown()
+    {
+        $platform = Yii::$app->request->post('platform');
+        // return $platform;
+        if ($platform == 'ios') {
+            return 'https://www.baidu.com/';
+        } else {
+            return 'https://www.taobao.com/';
+        }
+        
     }
 
     /**
