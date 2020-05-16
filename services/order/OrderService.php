@@ -688,7 +688,7 @@ class OrderService extends \common\components\Service
      * @throws UnprocessableEntityHttpException
      * @throws \yii\web\NotFoundHttpException
      */
-    public function jiChaOil(Order $order)
+    public function jiChaOil($order)
     {
         $pay_money = $order['amountPay'];     //实际付款金额
         $order_sn = $order['orderId'];      //订单编号

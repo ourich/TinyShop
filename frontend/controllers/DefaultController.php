@@ -63,6 +63,11 @@ class DefaultController extends BaseController
                    ->batchInsert(OilOrder::tableName(),['orderId','paySn','phone','orderTime','payTime','refundTime','gasName','province','city','county','gunNo','oilNo','amountPay','amountGun','amountDiscounts','orderStatusName','couponMoney','couponId','couponCode','litre','payType','priceUnit','priceOfficial','priceGun','orderSource','qrCode4PetroChina','gasId','created_at'],
                    $data)
                    ->execute();
+
+              //更新会员优惠金【暂不开启】
+              // foreach ($$data as $value) {
+              //   Yii::$app->tinyShopService->order->jiChaOil($value);
+              // }
             }
         }
 
