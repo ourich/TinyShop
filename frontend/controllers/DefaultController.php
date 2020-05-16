@@ -40,6 +40,7 @@ class DefaultController extends BaseController
 
 
         // Yii::$app->debris->p($response);
+        // Yii::warning($num_card);
         die('hello');
         // return $this->render('index',[]);
     }

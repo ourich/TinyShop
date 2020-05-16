@@ -12,6 +12,7 @@ ALTER TABLE `rf_member` ADD `agentid` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '�
 ALTER TABLE `rf_member` ADD `credit1` decimal(10,2) DEFAULT '0' COMMENT '老优惠金';
 ALTER TABLE `rf_member` ADD `credit2` decimal(10,2) DEFAULT '0' COMMENT '老余额';
 --分润参数
+ALTER TABLE `rf_oil_card` ADD `print` INT( 3 ) UNSIGNED DEFAULT '0' COMMENT '是否打印';
 ALTER TABLE `rf_member_level` ADD `invit` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '直推人数';
 ALTER TABLE `rf_member_level` ADD `commission_shop` decimal(10,4) DEFAULT '0' COMMENT '消费分润';
 ALTER TABLE `rf_member_level` ADD `commission_oil` decimal(10,4) DEFAULT '0' COMMENT '加油分润';

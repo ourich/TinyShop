@@ -672,6 +672,7 @@ class OrderService extends \common\components\Service
             //如果是V5，检查库存是否足够，不够，则继续往上找
             if ($member['current_level'] == 6) {
                 $num_card = Yii::$app->tinyShopService->card->countCard($member['id']);
+                // Yii::warning('--------会员'. $member['mobile'] . '----' . $num_card);
                 if ($num_card < $num) {
                     continue;   //跳过此人
                 }

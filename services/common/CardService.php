@@ -9,6 +9,7 @@ use common\helpers\StringHelper;
 use addons\TinyShop\common\enums\AdvLocalEnum;
 use addons\TinyShop\common\models\common\OilCard;
 use common\models\forms\CreditsLogForm;
+use common\helpers\ArrayHelper;
 
 /**
  * Class CardService
@@ -66,8 +67,8 @@ class CardService extends Service
         //先从V5的卡库里取出X张卡【未印刷的】
         $cards =  OilCard::find()
             ->where(['member_id' => $from])
-            ->where(['status' => StatusEnum::ENABLED])
-            ->where(['print' => StatusEnum::ENABLED])
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->andWhere(['print' => StatusEnum::DISABLED])
             ->orderBy('id desc')
             ->asArray()
             ->limit($num)
@@ -75,7 +76,8 @@ class CardService extends Service
         //把这些卡分配给购买人
         $cardids = ArrayHelper::getColumn($cards, 'id');
         $ids=implode(',',$cardids);
-        return Yii::$app->db->createCommand()->update(OilCard::tableName(), ['member_id' => $to], "id in {$ids}")->execute();
+        
+        Yii::$app->db->createCommand()->update(OilCard::tableName(), ['member_id' => $to], "id in ($ids)")->execute();
     }
 
     /**
@@ -90,8 +92,8 @@ class CardService extends Service
         //先从V5的卡库里取出X张卡【未印刷的】
       return  $cards =  OilCard::find()
             ->where(['member_id' => $member_id])
-            ->where(['status' => StatusEnum::ENABLED])
-            ->where(['print' => StatusEnum::ENABLED])
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->andWhere(['print' => StatusEnum::DISABLED])
             ->count();
     }
 
