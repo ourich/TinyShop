@@ -79,7 +79,7 @@ class OilCardController extends BaseController
             $header = [
                 ['卡号', 'cardNo'], // 规则不填默认text
                 ['密码', 'code', 'function', function($model){
-                    return 'http://rf.com/' . 'pages/public/register?promo_code=' . $model['code'];
+                    return 'http://h5.jiangsuwxw.com' . '/pages/public/register?promo_code=' . $model['code'];
                 }],
             ];
 
