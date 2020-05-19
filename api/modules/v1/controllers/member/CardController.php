@@ -88,7 +88,7 @@ class CardController extends UserAuthController
             throw new NotFoundHttpException('卡片不存在');
         }
         if (!$model->img) {
-            $text = 'http://h5.jiangsuwxw.com' . '/pages/public/register?promo_code=' . $model->code;
+            $text = 'https://h5.jiangsuwxw.com' . '/pages/public/register?promo_code=' . $model->code;
             $qrCode = (new QrCode($text))
                 ->setSize(250)
                 ->setMargin(5)
