@@ -10,6 +10,9 @@ use common\enums\StatusEnum;
 use common\helpers\AddonHelper;
 use api\controllers\OnAuthController;
 use addons\TinyShop\common\models\SettingForm;
+use yii\data\ActiveDataProvider;
+use yii\rest\Serializer;
+use common\models\member\Level;
 
 /**
  * 个人信息
@@ -59,6 +62,35 @@ class MemberController extends OnAuthController
 
         return $member;
     }
+    
+    public function actionTeam()
+    {
+        $id = Yii::$app->request->get('id');
+        if (empty($id)) {
+            $id = Yii::$app->user->identity->member_id;
+        }
+        $data = new ActiveDataProvider([
+            'query' => $this->modelClass::find()
+                ->where(['status' => StatusEnum::ENABLED, 'pid' => $id])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+                ->orderBy('id desc')
+                ->asArray(),
+            'pagination' => [
+                'pageSize' => $this->pageSize,
+                'validatePage' => false,// 超出分页不返回data
+            ],
+        ]);
+        // 主要生成header的page信息
+        $models = (new Serializer())->serialize($data);
+        foreach ($models as &$model) {
+            if (empty($model['img'])) {
+                $model['num'] = $this->teamNum($model['id']);
+                $model['level_name'] = $this->levelName($model['current_level']);
+            }
+        }
+
+        return $models;
+    }
 
     /**
      * 更新
@@ -106,5 +138,17 @@ class MemberController extends OnAuthController
         }
 
         return $model;
+    }
+    protected function teamNum($id)
+    {
+        $model = Member::find()->where(['pid' => $id])->count();
+
+        return $model;
+    }
+    protected function levelName($current_level)
+    {
+        $model = Level::find()->where(['id' => $current_level])->one();
+
+        return $model->name ?? '普通会员';
     }
 }
