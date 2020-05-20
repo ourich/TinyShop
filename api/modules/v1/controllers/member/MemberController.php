@@ -36,7 +36,7 @@ class MemberController extends OnAuthController
 
         $member = $this->modelClass::find()
             ->where(['id' => $member_id])
-            ->with(['account'])
+            ->with(['account', 'level0'])
             ->asArray()
             ->one();
 
@@ -47,6 +47,7 @@ class MemberController extends OnAuthController
         // 订单数量统计
         $member['order_synthesize_num'] = Yii::$app->tinyShopService->order->getOrderCountGroupByMemberId($member_id);
         $member['promoter'] = '';
+        $member['level_name'] = $member['level0']['name'];
 
         // 开启分销商
         $setting = new SettingForm();
