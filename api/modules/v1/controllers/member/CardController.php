@@ -58,6 +58,19 @@ class CardController extends UserAuthController
         return $models;
     }
 
+    public function actionNum()
+    {
+        if (!($model = $this->modelClass::find()->where([
+                'member_id' => Yii::$app->user->identity->member_id,
+                'status' => StatusEnum::ENABLED,
+            ])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->count())) {
+            throw new NotFoundHttpException('您的卡库是空的哦');
+        }
+
+        return $model;
+
+    }
+
     /**
      * 卡片转出初始化
      * @return [type] [description]
