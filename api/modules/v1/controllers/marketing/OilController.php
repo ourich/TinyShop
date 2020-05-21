@@ -87,6 +87,12 @@ class OilController extends OnAuthController
         // $data = (new Serializer())->serialize($data);
         $gasIds = ArrayHelper::getColumn($data, 'gasId');
         $gasIds=implode(',',$gasIds);
+
+        if ($member['oil_token_time'] < time()) {
+            $token = Yii::$app->tinyShopService->czb->login($mobile);
+            $user = Member::findOne($member['id']);
+            Member::updateAll(['oil_token'=>$token['result']['token'],'oil_token_time'=>time() + 21*24*3600],['id'=>$member['id']]);
+        }
         $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, $mobile);
         $results = $response['result'];
         // return $results;
