@@ -27,23 +27,21 @@ class DefaultController extends BaseController
     public function actionIndex()
     {
         print_r('<pre>');
-        $mobile = '13098878085';
+        $mobile = 'wap_user_1_13924041319';
         $gasId = 'ZG000003987';
-        $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasId, $mobile);
+        // $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasId, $mobile); 
 
-
-
-        // Yii::$app->tinyShopService->member->creatByOld();
-        
-
-
-
-
-        Yii::$app->debris->p($response);
+        // Yii::$app->debris->p($cards);
         // Yii::warning($num_card);
         die('hello');
-        // return $this->render('index',[]);
     }
+
+    public function actionMove()
+    {
+        $count = Yii::$app->tinyShopService->member->creatByOld();
+        die($count);
+    }
+
     public function actionOrder()
     {
         $response = Yii::$app->tinyShopService->czb->platformOrderInfoV2();

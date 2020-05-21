@@ -44,6 +44,26 @@ class CardService extends Service
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(OilCard::tableName(), $field, $rows)->execute();
     }
 
+    public function createFor($member_id, $giveNum)
+    {
+        $rows = [];
+        $min = OilCard::find()->max('cardNo');   //目前卡号最大值
+        $min += 1;   //分配起始卡号
+        $max = $min + $giveNum;
+        for ($i = $min; $i < $max; $i++) {
+            $code = StringHelper::random(6);
+            $rows[] = [
+                'cardNo' => $i,
+                'member_id' => $member_id,
+                'code' => $code,
+                'status' => 1,
+            ];
+        }
+
+        $field = ['cardNo', 'member_id', 'code', 'status'];
+        !empty($rows) && Yii::$app->db->createCommand()->batchInsert(OilCard::tableName(), $field, $rows)->execute();
+    }
+
     /**
      * 分配卡片
      *

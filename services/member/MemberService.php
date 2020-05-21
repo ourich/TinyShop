@@ -61,9 +61,9 @@ class MemberService extends Service
                 'status' => 1,
             ];
             $count ++ ;
-            if ($count >= 2) {
-                break;
-            }
+            // if ($count >= 2) {
+            //     break;
+            // }
         }
         $field = ['old_id', 'agentid', 'mobile', 'current_level', 'nickname', 'password_hash', 'credit1', 'credit2', 'status'];
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(Member::tableName(), $field, $rows)->execute();
@@ -98,6 +98,13 @@ class MemberService extends Service
                     'remark' => "迁移老系统优惠金",
                     'map_id' => 0,
                 ]));
+            }
+            //分配卡片
+            $mobile = 'wap_user_1_'.$row['mobile'];
+            $sql = "SELECT COUNT(*) FROM `ims_ewei_shop_adv` WHERE `openid`='".$mobile."' ";
+            $cards_num=Yii::$app->db->createCommand($sql)->queryScalar(); 
+            if ($cards_num > 0) {
+                Yii::$app->tinyShopService->card->createFor($model->id, $cards_num);
             }
 
             
