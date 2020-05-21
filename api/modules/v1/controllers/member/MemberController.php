@@ -83,10 +83,9 @@ class MemberController extends OnAuthController
         // 主要生成header的page信息
         $models = (new Serializer())->serialize($data);
         foreach ($models as &$model) {
-            if (empty($model['img'])) {
-                $model['num'] = $this->teamNum($model['id']);
-                $model['level_name'] = $this->levelName($model['current_level']);
-            }
+            $model['num'] = $this->teamNum($model['id']);
+            $model['level_name'] = $this->levelName($model['current_level']);
+            $model['created_at'] = Yii::$app->formatter->asDatetime($model['created_at']);
         }
 
         return $models;
@@ -147,7 +146,7 @@ class MemberController extends OnAuthController
     }
     protected function levelName($current_level)
     {
-        $model = Level::find()->where(['id' => $current_level])->one();
+        $model = Level::find()->where(['level' => $current_level])->one();
 
         return $model->name ?? '普通会员';
     }
