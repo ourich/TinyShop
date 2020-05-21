@@ -136,22 +136,22 @@ class SiteController extends OnAuthController
         }
 
         // 测试
-        $code = rand(1000, 9999);
-        $log = new SmsLog();
-        $log = $log->loadDefaultValues();
-        $log->attributes = [
-            'mobile' => $model->mobile,
-            'code' => $code,
-            'member_id' => 0,
-            'usage' => $model->usage,
-            'error_code' => 200,
-            'error_msg' => 'ok',
-            'error_data' => '',
-        ];
-        $log->save();
+        // $code = rand(1000, 9999);
+        // $log = new SmsLog();
+        // $log = $log->loadDefaultValues();
+        // $log->attributes = [
+        //     'mobile' => $model->mobile,
+        //     'code' => $code,
+        //     'member_id' => 0,
+        //     'usage' => $model->usage,
+        //     'error_code' => 200,
+        //     'error_msg' => 'ok',
+        //     'error_data' => '',
+        // ];
+        // $log->save();
 
-        return $code;
-        // return $model->send();
+        // return $code;
+        return $model->send();
     }
 
     /**
