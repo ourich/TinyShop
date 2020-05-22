@@ -94,3 +94,17 @@ CREATE TABLE rf_oil_card (
     PRIMARY KEY (`id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='卡片';
 
+CREATE TABLE rf_oil_delivery (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `status` int(3) UNSIGNED DEFAULT '0' COMMENT '状态',
+  `type` int(3) UNSIGNED DEFAULT '0' COMMENT '类型',
+  `member_id` int(11) UNSIGNED DEFAULT '0' COMMENT '持有人',
+  `cardNo` int(11) UNSIGNED DEFAULT '0' COMMENT '起始卡号',
+  `cardNum` int(11) UNSIGNED DEFAULT '0' COMMENT '数量',
+  `name` varchar(10) DEFAULT '' COMMENT '姓名',
+  `mobile` int(11) UNSIGNED DEFAULT '0' COMMENT '电话',
+  `address` varchar(250) DEFAULT '' COMMENT '收货地址',
+  `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='卡片';
+
