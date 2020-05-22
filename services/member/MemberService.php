@@ -68,6 +68,8 @@ class MemberService extends Service
         $field = ['old_id', 'agentid', 'mobile', 'current_level', 'nickname', 'password_hash', 'credit1', 'credit2', 'status'];
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(Member::tableName(), $field, $rows)->execute();
 
+        echo $count;
+
         //全部执行完后，再更新资料，推荐人，余额，积分
         // $newusers = ArrayHelper::getColumn($rows, 'mobile');
         
@@ -101,7 +103,7 @@ class MemberService extends Service
             }
             //分配卡片
             $mobile = 'wap_user_1_'.$row['mobile'];
-            $sql = "SELECT COUNT(*) FROM `ims_ewei_shop_adv` WHERE `openid`='".$mobile."' ";
+            $sql = "SELECT COUNT(*) FROM `ims_ewei_shop_adv` WHERE `openid`='".$mobile."' and enabled = 0 ";
             $cards_num=Yii::$app->db->createCommand($sql)->queryScalar(); 
             if ($cards_num > 0) {
                 Yii::$app->tinyShopService->card->createFor($model->id, $cards_num);
@@ -116,7 +118,6 @@ class MemberService extends Service
             }
             
         }
-
-        return $count;
+        
     }
 }

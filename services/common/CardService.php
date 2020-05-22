@@ -48,6 +48,7 @@ class CardService extends Service
     {
         $rows = [];
         $min = OilCard::find()->max('cardNo');   //目前卡号最大值
+        $min = $min ?? '100000000';
         $min += 1;   //分配起始卡号
         $max = $min + $giveNum;
         for ($i = $min; $i < $max; $i++) {
