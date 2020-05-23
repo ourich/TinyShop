@@ -36,6 +36,7 @@ class OilDelivery extends \yii\db\ActiveRecord
         return [
             [['status', 'type', 'member_id', 'cardNo', 'cardNum', 'mobile', 'created_at'], 'integer'],
             [['name'], 'string', 'max' => 10],
+            [['reply'], 'string', 'max' => 20],
             [['address'], 'string', 'max' => 250],
         ];
     }
@@ -52,6 +53,7 @@ class OilDelivery extends \yii\db\ActiveRecord
             'member_id' => '持有人',
             'cardNo' => '起始卡号',
             'cardNum' => '数量',
+            'reply' => '快递单号',
             'name' => '姓名',
             'mobile' => '电话',
             'address' => '收货地址',

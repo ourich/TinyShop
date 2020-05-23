@@ -102,7 +102,8 @@ CREATE TABLE rf_oil_delivery (
   `cardNo` int(11) UNSIGNED DEFAULT '0' COMMENT '起始卡号',
   `cardNum` int(11) UNSIGNED DEFAULT '0' COMMENT '数量',
   `name` varchar(10) DEFAULT '' COMMENT '姓名',
-  `mobile` int(11) UNSIGNED DEFAULT '0' COMMENT '电话',
+  `reply` varchar(20) DEFAULT '' COMMENT '快递单号',
+  `mobile` varchar(20) DEFAULT '' COMMENT '电话',
   `address` varchar(250) DEFAULT '' COMMENT '收货地址',
   `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '创建时间',
     PRIMARY KEY (`id`)

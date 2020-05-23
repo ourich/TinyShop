@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Oil Deliveries';
+$this->title = '提货申请';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -17,7 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
                 <div class="box-tools">
-                    <?= Html::create(['edit']) ?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -31,30 +30,37 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 
             'id',
-            'status',
-            'type',
+            // 'status',
+            // 'type',
             'member_id',
-            'cardNo',
+            // 'cardNo',
             'cardNum',
             'name',
             'mobile',
             'address',
-            'created_at',
+            // 'created_at',
+            'reply',
             [
+                // 'label' => '创建时间',
+                'attribute' => 'created_at',
+                'filter' => false, //不显示搜索框
+                'format' => ['date', 'php:Y-m-d H:i:s'],
+            ],
+            [
+                'header' => "操作",
                 'class' => 'yii\grid\ActionColumn',
-                'header' => '操作',
                 'template' => '{edit} {status} {delete}',
                 'buttons' => [
-                'edit' => function($url, $model, $key){
-                        return Html::edit(['edit', 'id' => $model->id]);
-                },
-               'status' => function($url, $model, $key){
-                        return Html::status($model['status']);
-                  },
-                'delete' => function($url, $model, $key){
-                        return Html::delete(['delete', 'id' => $model->id]);
-                },
-                ]
+                    'edit' => function ($url, $model, $key) {
+                        return Html::edit(['ajax-edit', 'id' => $model['id']], '快递单号', [
+                            'data-toggle' => 'modal',
+                            'data-target' => '#ajaxModal',
+                        ]);
+                    },
+                    'delete' => function ($url, $model, $key) {
+                        return Html::delete(['destroy', 'id' => $model->id]);
+                    },
+                ],
             ]
     ]
     ]); ?>
