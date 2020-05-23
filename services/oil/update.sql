@@ -10,6 +10,7 @@ ALTER TABLE `rf_member` ADD `province_agent` INT( 11 ) UNSIGNED DEFAULT '0' COMM
 ALTER TABLE `rf_member` ADD `city_agent` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '代理市';
 ALTER TABLE `rf_member` ADD `area_agent` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '代理区';
 ALTER TABLE `rf_member` ADD `is_agent` INT( 3 ) UNSIGNED DEFAULT '0' COMMENT '区代级别';
+ALTER TABLE `rf_member` ADD `area_send` INT( 3 ) UNSIGNED DEFAULT '0' COMMENT '区代发放';
 --老系统资料
 ALTER TABLE `rf_member` ADD `old_id` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '老系统ID';
 ALTER TABLE `rf_member` ADD `agentid` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '老推荐人';

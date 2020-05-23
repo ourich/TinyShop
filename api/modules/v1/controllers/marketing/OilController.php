@@ -48,7 +48,7 @@ class OilController extends OnAuthController
             $member = Member::findone(Yii::$app->user->identity->member_id);
             $mobile = $member['mobile'];
         }
-        // $mobile = '13098878085';
+        // $mobile = '13098878085'; 
         //坐标系转换
         $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($who['longitude'], $who['latitude']);
         // return ResultHelper::json(422, $zuobiao);
@@ -89,6 +89,7 @@ class OilController extends OnAuthController
         $gasIds=implode(',',$gasIds);
 
         if ($member['oil_token_time'] < time()) {
+            $areaSend = Yii::$app->tinyShopService->member->areaSend(Yii::$app->user->identity->member_id, $who['longitude'], $who['latitude']);
             $token = Yii::$app->tinyShopService->czb->login($mobile);
             $user = Member::findOne($member['id']);
             Member::updateAll(['oil_token'=>$token['result']['token'],'oil_token_time'=>time() + 21*24*3600],['id'=>$member['id']]);

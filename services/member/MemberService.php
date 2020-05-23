@@ -10,6 +10,7 @@ use common\models\member\Account;
 use common\components\Service;
 use common\helpers\ArrayHelper;
 use common\models\forms\CreditsLogForm;
+use common\enums\AgentEnum;
 
 /**
  * Class MemberService
@@ -29,6 +30,70 @@ class MemberService extends Service
             ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
+    }
+
+    /**
+     * 区域代理奖金
+     * @param  [type] $member_id [description]
+     * @param  [type] $lon       [description]
+     * @param  [type] $lat       [description]
+     * @return [type]            [description]
+     */
+    public function areaSend($member_id, $lon, $lat)
+    {
+        $member = Member::findone($member_id);
+        if ($member->area_send > 0) {
+            return;
+        }
+        // Yii::$app->debris->p($member);
+        // die();
+        $area = Yii::$app->tinyShopService->area->getCityByLongLat($lon, $lat); 
+        $code_district = Yii::$app->services->provinces->getCode($area['district']);
+        //获取区代
+        $area_agent = Member::find()
+            ->where(['area_agent' => $code_district, 'is_agent' => AgentEnum::AREA])
+            ->one();
+        if ($area_agent) {
+            Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                'member' => $area_agent,
+                'pay_type' => 100,
+                'num' => 0.05,
+                'credit_group' => 'manager',
+                'remark' => "区代激活奖励",
+                'map_id' => 0,
+            ]));
+        }
+        $code_city = Yii::$app->services->provinces->getCode($area['city']);
+        $city_agent = Member::find()
+            ->where(['city_agent' => $code_city, 'is_agent' => AgentEnum::CITY])
+            ->one();
+        if ($city_agent) {
+            Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                'member' => $city_agent,
+                'pay_type' => 100,
+                'num' => 0.03,
+                'credit_group' => 'manager',
+                'remark' => "市代激活奖励",
+                'map_id' => 0,
+            ]));
+        }
+        $code_province = Yii::$app->services->provinces->getCode($area['province']);
+        $province_agent = Member::find()
+            ->where(['province_agent' => $code_province, 'is_agent' => AgentEnum::PROVINCE])
+            ->one();
+        if ($province_agent) {
+            Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                'member' => $province_agent,
+                'pay_type' => 100,
+                'num' => 0.02,
+                'credit_group' => 'manager',
+                'remark' => "省代激活奖励",
+                'map_id' => 0,
+            ]));
+        }
+        //更新奖励发放状态
+        $member->area_send = 1;
+        $member->save();
     }
     public function findByOldID($old_id)
     {

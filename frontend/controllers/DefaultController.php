@@ -26,13 +26,17 @@ class DefaultController extends BaseController
     */
     public function actionIndex()
     {
-        print_r('<pre>');
         $mobile = 'wap_user_1_13924041319';
         $gasId = 'ZG000003987';
-        // $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasId, $mobile); 
+        $lon = '114.431413';
+        $lat = '30.407874';
+        // $response = Yii::$app->tinyShopService->member->areaSend(3, $lon, $lat); 
+        // $code_province = Yii::$app->services->provinces->getCode($response['province']);
 
-        // Yii::$app->debris->p($cards);
+        Yii::$app->debris->p($response);
         // Yii::warning($num_card);
+        // print_r('<pre>');
+        // var_dump($response);
         die('hello');
     }
 
