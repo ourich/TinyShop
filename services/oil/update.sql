@@ -6,6 +6,10 @@
 -- 团油身份
 ALTER TABLE `rf_member` ADD `oil_token_time` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT 'tk有效期';
 ALTER TABLE `rf_member` ADD `oil_token` varchar(60) DEFAULT '' COMMENT '团油身份';
+ALTER TABLE `rf_member` ADD `province_agent` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '代理省';
+ALTER TABLE `rf_member` ADD `city_agent` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '代理市';
+ALTER TABLE `rf_member` ADD `area_agent` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '代理区';
+ALTER TABLE `rf_member` ADD `is_agent` INT( 3 ) UNSIGNED DEFAULT '0' COMMENT '区代级别';
 --老系统资料
 ALTER TABLE `rf_member` ADD `old_id` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '老系统ID';
 ALTER TABLE `rf_member` ADD `agentid` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '老推荐人';
