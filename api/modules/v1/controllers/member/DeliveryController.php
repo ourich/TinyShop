@@ -34,7 +34,7 @@ class DeliveryController extends UserAuthController
     {
         return new ActiveDataProvider([
             'query' => $this->modelClass::find()
-                ->where(['status' => StatusEnum::ENABLED, 'member_id' => Yii::$app->user->identity->member_id])
+                ->where(['member_id' => Yii::$app->user->identity->member_id])
                 ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
                 ->orderBy('id desc'),
             'pagination' => [
