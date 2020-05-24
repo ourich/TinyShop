@@ -132,6 +132,35 @@ class OilCardController extends BaseController
         ]);
     }
 
+    public function actionFenpei()
+    {
+        $request = Yii::$app->request;
+        $id = $request->get('id', null);
+        $model = $this->findModel($id);
+        $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
+        $model->cardNo = $min ?? '100000000';
+        $model->cardNo += 1;
+        
+        if ($model->load($request->post())) {
+            //检查收款人是否存在
+            $tomember = Yii::$app->services->member->findByMobile($model->mobile);
+            if (!$tomember) {
+                return $this->message('持有人不存在', $this->redirect(['send']), 'error');
+            }
+            $model->member_id = $tomember['id'];
+            if (!$model->cardNo || !$model->giveNum || !$model->endNo) {
+                return $this->message('请填写起始卡号和数量', $this->redirect(['send']), 'error');
+            }
+            // Yii::$app->debris->p($model); 
+            Yii::$app->tinyShopService->card->give($model->member_id, $model->cardNo, $model->endNo);
+            return $this->message('卡片分配成功', $this->redirect(['index']));
+        }
+
+        return $this->render($this->action->id, [
+            'model' => $model,
+        ]);
+    }
+
     /**
      * 卡片交换
      *

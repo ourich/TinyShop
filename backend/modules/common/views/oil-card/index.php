@@ -20,6 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::create(['send'], '分配生成') ?>
                     <?= Html::create(['print'], '导出印刷') ?>
                     <?= Html::create(['change'], '交换预留') ?>
+                    <?= Html::create(['fenpei'], '重新分配') ?>
                     <!-- <span class="btn btn-white btn-sm" onclick="add(this)" num='10000'>增发油卡</span> -->
                 </div>
             </div>
