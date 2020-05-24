@@ -723,6 +723,9 @@ class OrderService extends \common\components\Service
         $pay_money = $order['amountPay'];     //实际付款金额
         $order_sn = $order['orderId'];      //订单编号
         $member = Yii::$app->services->member->findByMobile($order['phone']);
+        if (!$member) {
+            return;
+        }
         $send_level = $member['current_level']; 
         $send_money = $member['level0']['commission_oil']; 
         //第一个V1能拿直推奖
@@ -743,7 +746,7 @@ class OrderService extends \common\components\Service
                 'num' => $get_money,
                 'credit_group' => 'orderCommission',
                 'map_id' => $order_id,
-                'remark' => '购卡奖励：'.$order_sn,
+                'remark' => '加油分润：'.$order_sn,
             ]));
             //重置已发放的比例
             $send_level = $member['current_level']; 
