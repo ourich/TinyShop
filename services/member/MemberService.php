@@ -33,6 +33,29 @@ class MemberService extends Service
     }
 
     /**
+     * 根据直推V1的人数升级
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
+    public function updateLevel($id)
+    {
+        $childs = Member::find()
+            ->where(['pid' => $id, 'status' => StatusEnum::ENABLED])
+            ->andWhere(['>', 'current_level', 1])
+            ->count();
+        // return $childs;
+        $member = Member::findone($id);
+        $levels = Yii::$app->services->memberLevel->findAll();
+        foreach ($levels as $level) {
+            if ($childs >= $level->invit && $member->current_level < $level->level  && $member->current_level > 1) {
+                $member->current_level = $level->level;
+                $member->save();
+                break;
+            }
+        }
+    }
+
+    /**
      * 区域代理奖金
      * @param  [type] $member_id [description]
      * @param  [type] $lon       [description]

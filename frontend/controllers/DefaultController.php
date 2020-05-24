@@ -10,6 +10,7 @@ use common\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
 use addons\TinyShop\common\models\common\OilStations;
 use addons\TinyShop\common\models\common\OilOrder;
+use common\models\member\Member;
 
 /**
  * 默认控制器
@@ -30,8 +31,10 @@ class DefaultController extends BaseController
         $gasId = 'ZG000003987';
         $lon = '114.431413';
         $lat = '30.407874';
-        // $response = Yii::$app->tinyShopService->member->areaSend(3, $lon, $lat); 
+        $response = Yii::$app->tinyShopService->member->updateLevel(2); 
+        
         // $code_province = Yii::$app->services->provinces->getCode($response['province']);
+        // $member = Member::findone(1);
 
         Yii::$app->debris->p($response);
         // Yii::warning($num_card);

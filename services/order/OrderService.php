@@ -657,17 +657,23 @@ class OrderService extends \common\components\Service
         }
         $pay_money = $order->pay_money;     //实际付款金额
         $order_sn = $order->order_sn;     //订单编号
-        $member = Yii::$app->services->member->get($order->buyer_id);
-        $send_level = $member['current_level']; 
-        $send_money = $member['level0']['commission_shop']; 
+        $member = Member::findone($order->buyer_id);  //购买后，自己升级到V1，整条线跟着升级 
+        if ($member->current_level < 2 && $num > 0) {
+            $member->current_level = 2;
+            $member->save();
+        }
+        $send_level = $member['current_level'] ?? 0; 
+        $send_money = $member['level0']['commission_shop'] ?? 0; 
         //第一个V1能拿直推奖
         if ($member['current_level'] <= 2) {
             $send_level = 0; 
             $send_money = 0;
         }
+        $card_sended = 0;   //卡片是否转移
         //循环读取各个上级资料，根据各自等级的提成比例，进行发放
         while (!empty($member['pid'])) {
             $member = Yii::$app->services->member->get($member['pid']);
+            Yii::$app->tinyShopService->member->updateLevel($member['id']); //上级升级
             if ($member['current_level'] <= $send_level) {
                 continue;   //跳过此人
             }
@@ -693,8 +699,13 @@ class OrderService extends \common\components\Service
             $send_money = $member['level0']['commission_shop']; 
             //如果是V5，则转移库存
             if ($member['current_level'] == 6 && $num > 0) {
+                $card_sended = 1;
                 Yii::$app->tinyShopService->card->changeByOrder($member['id'], $order->buyer_id, $num);
             }
+        }
+        //循环完后，如果卡片未转移（V5不存在），则创建新卡分配给他
+        if ($card_sended == 0) {
+            Yii::$app->tinyShopService->card->createFor($order->buyer_id, $num);
         }
 
     }
