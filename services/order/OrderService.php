@@ -651,7 +651,8 @@ class OrderService extends \common\components\Service
         $orderProducts = Yii::$app->tinyShopService->orderProduct->findByOrderId($order->id);
         $num = 0;
         foreach ($orderProducts as $value) {
-            if ($value['Product']['is_card'] == 1) {
+            $Product = Yii::$app->tinyShopService->product->findById($value['product_id']);
+            if ($Product['is_card'] == 1) {
                 $num += $value['num'] * 100;
             }
         }
