@@ -63,9 +63,9 @@ class SiteController extends OnAuthController
         $platform = Yii::$app->request->post('platform');
         // return $platform;
         if ($platform == 'ios') {
-            return 'https://www.baidu.com/';
+            return 'https://urls.men/2yqjy';
         } else {
-            return 'https://www.taobao.com/';
+            return 'https://urls.men/2yqjy';
         }
         
     }
