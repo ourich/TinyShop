@@ -13,6 +13,7 @@ use addons\TinyShop\common\models\SettingForm;
 use yii\data\ActiveDataProvider;
 use yii\rest\Serializer;
 use common\models\member\Level;
+use common\enums\AgentEnum;
 
 /**
  * 个人信息
@@ -51,6 +52,24 @@ class MemberController extends OnAuthController
         $member['order_synthesize_num'] = Yii::$app->tinyShopService->order->getOrderCountGroupByMemberId($member_id);
         $member['promoter'] = '';
         $member['level_name'] = $member['level0']['name'];
+        if ($member['is_agent'] > 0) {
+            $province_agent = Yii::$app->services->provinces->getName($member['province_agent']);
+            $city_agent = Yii::$app->services->provinces->getName($member['city_agent']);
+            $area_agent = Yii::$app->services->provinces->getName($member['area_agent']);
+            switch ($member['is_agent']) {
+                case AgentEnum::PROVINCE:
+                    $member['area_name'] = $province_agent;
+                    break;
+                case AgentEnum::CITY:
+                    $member['area_name'] = $province_agent.' '.$city_agent;
+                    break;
+                
+                default:
+                    $member['area_name'] = $province_agent.' '.$city_agent.' '.$area_agent;
+                    break;
+            }
+            # code...
+        }
 
         // 开启分销商
         $setting = new SettingForm();
