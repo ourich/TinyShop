@@ -33,7 +33,7 @@ class OilCard extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'type', 'member_id', 'user', 'cardNo', 'created_at', 'end_at'], 'integer'],
+            [['status', 'type', 'member_id', 'user', 'cardNo', 'created_at', 'print', 'end_at'], 'integer'],
             [['code'], 'string', 'max' => 10],
             [['img'], 'string', 'max' => 250],
         ];
@@ -55,6 +55,7 @@ class OilCard extends \yii\db\ActiveRecord
             'img' => '二维码',
             'created_at' => '创建时间',
             'end_at' => '使用时间',
+            'print' => '实体卡',
         ];
     }
 }

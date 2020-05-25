@@ -12,6 +12,7 @@ use backend\controllers\BaseController;
 use common\helpers\ExcelHelper;
 use common\helpers\Url;
 use common\enums\StatusEnum;
+use addons\TinyShop\common\models\common\OilCard;
 
 /**
 * OilCard
@@ -91,6 +92,29 @@ class OilCardController extends BaseController
                 ->all();
             // 简单使用
             return ExcelHelper::exportData($list, $header);
+        }
+
+        return $this->render($this->action->id, [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionShiti()
+    {
+        $request = Yii::$app->request;
+        $id = $request->get('id', null);
+        $model = $this->findModel($id);
+        $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
+        $model->cardNo = $min ?? '100000001';
+        //创建时候该字段有默认值
+        $model->giveNum='10000';
+        if ($model->load($request->post())) {
+            if (!$model->cardNo || !$model->endNo || !$model->giveNum) {
+                return $this->message('请填写完整', $this->redirect(['send']), 'error');
+            }
+            // [名称, 字段名, 类型, 类型规则]
+            Yii::$app->db->createCommand()->update(OilCard::tableName(), ['print' => 1], "cardNo >= {$model->cardNo} and cardNo <= {$model->endNo}")->execute();
+            return $this->message('实体卡标记成功', $this->redirect(['index']));
         }
 
         return $this->render($this->action->id, [

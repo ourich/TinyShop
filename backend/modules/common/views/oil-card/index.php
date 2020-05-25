@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="box-tools">
                     <?= Html::create(['send'], '分配生成') ?>
                     <?= Html::create(['print'], '导出印刷') ?>
+                    <?= Html::create(['shiti'], '印刷标记') ?>
                     <?= Html::create(['change'], '交换预留') ?>
                     <?= Html::create(['fenpei'], '重新分配') ?>
                     <!-- <span class="btn btn-white btn-sm" onclick="add(this)" num='10000'>增发油卡</span> -->
@@ -41,6 +42,14 @@ $this->params['breadcrumbs'][] = $this->title;
             //'status',
             //'type',
             // 'member_id', 
+            [
+                'attribute' => 'print',
+                // 'filter' => false, //不显示搜索框
+                'value' => function ($model) {
+                    return $model->print ? '是' : '否';
+                },
+                'format' => 'raw',
+            ],
             [
                 'attribute' => 'member.mobile',
                 'label'=> '持有人',
