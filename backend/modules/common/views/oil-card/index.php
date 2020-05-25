@@ -49,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->print ? '是' : '否';
                 },
                 'format' => 'raw',
+                'headerOptions' => ['class' => 'col-md-1'],
             ],
             [
                 'attribute' => 'member.mobile',
