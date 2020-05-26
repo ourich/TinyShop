@@ -32,6 +32,19 @@ class MemberService extends Service
             ->one();
     }
 
+    public function findByPhone($phone)
+    {
+        $phone = explode("****", $phone);
+        $begin = $phone['0'].'%';
+        $end = '%'.$phone['1'];
+        return Member::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['like', 'mobile', $begin, false])
+            ->andWhere(['like', 'mobile', $end, false])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
     /**
      * 根据直推V1的人数升级
      * @param  [type] $id [description]

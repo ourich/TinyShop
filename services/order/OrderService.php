@@ -721,7 +721,7 @@ class OrderService extends \common\components\Service
     {
         $pay_money = $order['amountPay'];     //实际付款金额
         $order_sn = $order['orderId'];      //订单编号
-        $member = Yii::$app->services->member->findByMobile($order['phone']);
+        $member = Yii::$app->tinyShopService->member->findByPhone($order['phone']);
         if (!$member) {
             return;
         }
