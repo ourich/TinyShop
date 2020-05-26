@@ -145,7 +145,7 @@ class MemberService extends Service
         // 绑定推荐关系agentid=old_id
 
         // 查询多条
-        $sql = "SELECT `id`,`agentid`,`mobile`,`agentlevel`,`nickname`,`credit1`,`credit2` FROM `ims_ewei_shop_member`";
+        $sql = "SELECT `id`,`agentid`,`mobile`,`agentlevel`,`nickname`,`credit1`,`credit2` FROM `ims_ewei_shop_member` where uid = 0 order by id asc limit 100";
         $users=Yii::$app->db->createCommand($sql)->queryAll();
         $rows = [];
         $count = 0;
@@ -154,9 +154,10 @@ class MemberService extends Service
                 'old_id' => $user['id'],
                 'agentid' => $user['agentid'],
                 'mobile' => $user['mobile'],
+                'username' => $user['mobile'],
                 'current_level' => $user['agentlevel'] +1,
                 'nickname' => $user['nickname'],
-                'password_hash' => Yii::$app->security->generatePasswordHash('123456'),
+                'password_hash' => '$2y$13$Jd5wXHXUyayfSP694pbRiOo.yblbIFTsnIsrz3SuAt4kLohYzEvFa',
                 'credit1' => $user['credit1'],
                 'credit2' => $user['credit2'],
                 'status' => 1,
@@ -166,8 +167,13 @@ class MemberService extends Service
             //     break;
             // }
         }
-        $field = ['old_id', 'agentid', 'mobile', 'current_level', 'nickname', 'password_hash', 'credit1', 'credit2', 'status'];
+        Yii::$app->debris->p($rows);
+        // die();
+        $field = ['old_id', 'agentid', 'mobile', 'username', 'current_level', 'nickname', 'password_hash', 'credit1', 'credit2', 'status'];
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(Member::tableName(), $field, $rows)->execute();
+        $ids = ArrayHelper::getColumn($rows, 'old_id');
+        $ids=implode(',',$ids);
+        Yii::$app->db->createCommand()->update('ims_ewei_shop_member', ['uid' => 1], "id in ($ids)")->execute();
 
         echo $count;
 
@@ -203,12 +209,12 @@ class MemberService extends Service
                 ]));
             }
             //分配卡片
-            // $mobile = 'wap_user_1_'.$row['mobile'];
-            // $sql = "SELECT COUNT(*) FROM `ims_ewei_shop_adv` WHERE `openid`='".$mobile."' and enabled = 0 ";
-            // $cards_num=Yii::$app->db->createCommand($sql)->queryScalar(); 
-            // if ($cards_num > 0) {
-            //     Yii::$app->tinyShopService->card->createFor($model->id, $cards_num);
-            // }
+            $mobile = 'wap_user_1_'.$row['mobile'];
+            $sql = "SELECT COUNT(*) FROM `ims_ewei_shop_adv` WHERE `openid`='".$mobile."' and enabled = 0 ";
+            $cards_num=Yii::$app->db->createCommand($sql)->queryScalar(); 
+            if ($cards_num > 0) {
+                Yii::$app->tinyShopService->card->createFor($model->id, $cards_num);
+            }
             $model->area_send = 1;
             
             //根据agentid找到老会员ID
