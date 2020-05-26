@@ -725,17 +725,15 @@ class OrderService extends \common\components\Service
         if (!$member) {
             return;
         }
-        $send_level = $member['current_level']; 
-        $send_money = $member['level0']['commission_oil']; 
-        //第一个V1能拿直推奖
+        $send_level = $member['current_level'] ?? 0;
+        $send_money = 0;
         if ($member['current_level'] <= 2) {
-            $send_level = 0; 
-            $send_money = 0;
+            $send_level = 0;    //第一个V1能拿直推奖
         }
         //循环读取各个上级资料，根据各自等级的提成比例，进行发放
         while (!empty($member['pid'])) {
             $member = Yii::$app->services->member->get($member['pid']);
-            if ($member['current_level'] <= $send_level) {
+            if ($member['current_level'] <= $send_level || $member['current_level'] < 2) {
                 continue;   //跳过此人
             }
             $commission_oil = $member['level0']['commission_oil'] - $send_money; 
