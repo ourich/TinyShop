@@ -203,12 +203,12 @@ class MemberService extends Service
                 ]));
             }
             //分配卡片
-            $mobile = 'wap_user_1_'.$row['mobile'];
-            $sql = "SELECT COUNT(*) FROM `ims_ewei_shop_adv` WHERE `openid`='".$mobile."' and enabled = 0 ";
-            $cards_num=Yii::$app->db->createCommand($sql)->queryScalar(); 
-            if ($cards_num > 0) {
-                Yii::$app->tinyShopService->card->createFor($model->id, $cards_num);
-            }
+            // $mobile = 'wap_user_1_'.$row['mobile'];
+            // $sql = "SELECT COUNT(*) FROM `ims_ewei_shop_adv` WHERE `openid`='".$mobile."' and enabled = 0 ";
+            // $cards_num=Yii::$app->db->createCommand($sql)->queryScalar(); 
+            // if ($cards_num > 0) {
+            //     Yii::$app->tinyShopService->card->createFor($model->id, $cards_num);
+            // }
             $model->area_send = 1;
             
             //根据agentid找到老会员ID
