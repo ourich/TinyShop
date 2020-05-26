@@ -209,7 +209,7 @@ class MemberService extends Service
             if ($cards_num > 0) {
                 Yii::$app->tinyShopService->card->createFor($model->id, $cards_num);
             }
-
+            $model->area_send = 1;
             
             //根据agentid找到老会员ID
             if ($model->agentid > 0) {
