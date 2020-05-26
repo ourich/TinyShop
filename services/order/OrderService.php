@@ -663,19 +663,17 @@ class OrderService extends \common\components\Service
             $member->current_level = 2;
             $member->save();
         }
-        $send_level = $member['current_level'] ?? 0; 
-        // $send_money = $member['level0']['commission_shop'] ?? 0; 
-        //第一个V1能拿直推奖
-        if ($member['current_level'] <= 2) {
-            $send_level = 0;
-        }
+        $send_level = $member['current_level'] ?? 0;
         $send_money = 0;
-        $card_sended = 0;   //卡片是否转移
+        $card_sended = 0;   //卡片是否转移 
+        if ($member['current_level'] <= 2) {
+            $send_level = 0;    //第一个V1能拿直推奖
+        }
         //循环读取各个上级资料，根据各自等级的提成比例，进行发放
         while (!empty($member['pid'])) {
             $member = Yii::$app->services->member->get($member['pid']);
             Yii::$app->tinyShopService->member->updateLevel($member['id']); //上级升级
-            if ($member['current_level'] <= $send_level) {
+            if ($member['current_level'] <= $send_level || $member['current_level'] < 2) {
                 continue;   //跳过此人
             }
             //如果买的是油卡，而且是V5，检查库存是否足够，不够，则继续往上找
