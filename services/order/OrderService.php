@@ -725,6 +725,15 @@ class OrderService extends \common\components\Service
         if (!$member) {
             return;
         }
+        //扣减优惠金
+        $youhui = $order['amountDiscounts'] > 0 ? $order['amountDiscounts'] : $order['couponMoney'];
+        Yii::$app->services->memberCreditsLog->decrInt(new CreditsLogForm([
+            'member' => $member->id,
+            'num' => $youhui,
+            'credit_group' => 'orderOil',
+            'map_id' => $order_sn,
+            'remark' => '加油抵扣：'.$order_sn,
+        ]));
         $send_level = $member['current_level'] ?? 0;
         $send_money = 0;
         if ($member['current_level'] <= 2) {
@@ -742,7 +751,7 @@ class OrderService extends \common\components\Service
                 'member' => $member,
                 'num' => $get_money,
                 'credit_group' => 'orderCommission',
-                'map_id' => $order_id,
+                'map_id' => $order_sn,
                 'remark' => '加油分润：'.$order_sn,
             ]));
             //重置已发放的比例
