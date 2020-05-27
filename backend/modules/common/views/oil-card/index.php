@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
                 <div class="box-tools">
-                    <?= Html::create(['send'], '分配生成') ?>
+                    <!-- <?= Html::create(['send'], '分配生成') ?> -->
                     <?= Html::create(['print'], '导出印刷') ?>
                     <?= Html::create(['shiti'], '印刷标记') ?>
                     <?= Html::create(['change'], '交换预留') ?>
