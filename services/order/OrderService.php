@@ -652,10 +652,11 @@ class OrderService extends \common\components\Service
         $num = 0;
         foreach ($orderProducts as $value) {
             $Product = Yii::$app->tinyShopService->product->findById($value['product_id']);
-            if ($Product['is_card'] == 1) {
-                $num += $value['num'] * 100;
+            if ($Product->is_card === 1) {
+                $num += $value['num'];
             }
         }
+        $num *= 100;
         $pay_money = $order->pay_money;     //实际付款金额
         $order_sn = $order->order_sn;     //订单编号
         $member = Member::findone($order->buyer_id);  //购买后，自己升级到V1，整条线跟着升级 
