@@ -657,6 +657,9 @@ class OrderService extends \common\components\Service
             }
         }
         $num *= 100;
+        if ($num == 0) {
+            return;
+        }
         $pay_money = $order->pay_money;     //实际付款金额
         $order_sn = $order->order_sn;     //订单编号
         $member = Member::findone($order->buyer_id);  //购买后，自己升级到V1，整条线跟着升级 
@@ -670,6 +673,8 @@ class OrderService extends \common\components\Service
         if ($member['current_level'] <= 2) {
             $send_level = 0;    //第一个V1能拿直推奖
         }
+        // Yii::$app->debris->p($num);
+        // die();
         //循环读取各个上级资料，根据各自等级的提成比例，进行发放
         while (!empty($member['pid'])) {
             $member = Yii::$app->services->member->get($member['pid']);
