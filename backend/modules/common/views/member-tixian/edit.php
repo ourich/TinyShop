@@ -2,6 +2,9 @@
 
 use common\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\enums\PayTypeEnum;
+use common\enums\StatusEnum;
+use addons\TinyShop\common\enums\TixianStatusEnum;
 
 /* @var $this yii\web\View */
 /* @var $model addons\TinyShop\common\models\common\MemberTixian */
@@ -25,12 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]); ?>
                 <div class="col-sm-12">
-                    <?= $form->field($model, 'status')->dropDownList([]) ?>
-                    <?= $form->field($model, 'type')->textInput() ?>
                     <?= $form->field($model, 'member_id')->textInput() ?>
                     <?= $form->field($model, 'money')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'fee')->textInput(['maxlength' => true]) ?>
-                    <?= $form->field($model, 'account')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'type')->dropDownList(PayTypeEnum::thirdParty()) ?>
                     <?= $form->field($model, 'account_img')->widget(\common\widgets\webuploader\Files::class, [
                             'type' => 'images',
                             'theme' => 'default',
@@ -44,8 +45,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]
                     ]); ?>
                     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'account')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'bank_name')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'status')->radioList(TixianStatusEnum::getMap()); ?>
                     <?= $form->field($model, 'remark')->textarea() ?>
                 </div>
                 <div class="form-group">

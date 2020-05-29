@@ -5,6 +5,7 @@ use common\helpers\Url;
 use yii\grid\GridView;
 use common\enums\PayTypeEnum;
 use common\enums\StatusEnum;
+use addons\TinyShop\common\enums\TixianStatusEnum;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -67,12 +68,19 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => '状态',
                 'value' => function ($model) {
-                    if ($model->status == StatusEnum::ENABLED) {
-                        return '<span class="label label-primary">支付成功</span>';
+                    if ($model->status == TixianStatusEnum::PAYED) {
+                        return '<span class="label label-primary">已打款</span>';
+                    }elseif ($model->status == TixianStatusEnum::BOHUI) {
+                        return '<span class="label label-danger">已驳回</span>';
                     } else {
-                        return '<span class="label label-danger">未支付</span>';
+                        return '<span class="label label-default">待处理</span>';
                     }
                 },
+                'filter' => Html::activeDropDownList($searchModel, 'status', TixianStatusEnum::getMap(), [
+                        'prompt' => '全部',
+                        'class' => 'form-control'
+                    ]
+                ),
                 'format' => 'raw',
             ],
             // 'created_at',

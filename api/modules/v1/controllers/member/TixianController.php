@@ -69,7 +69,7 @@ class TixianController extends UserAuthController
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        !is_array($model->covers) && $model->covers = Json::decode($model->covers);
+        !is_array($model->account_img) && $model->account_img = Json::decode($model->account_img);
 
         return $model;
     }
