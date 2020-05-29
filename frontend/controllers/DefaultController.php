@@ -72,7 +72,7 @@ class DefaultController extends BaseController
                    ->execute();
 
               //更新会员优惠金【暂不开启】
-              foreach ($$data as $value) {
+              foreach ($data as $value) {
                 Yii::$app->tinyShopService->order->jiChaOil($value);
               }
             }
