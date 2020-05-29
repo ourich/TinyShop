@@ -3,11 +3,13 @@
 use common\helpers\Html;
 use common\helpers\Url;
 use yii\grid\GridView;
+use common\enums\PayTypeEnum;
+use common\enums\StatusEnum;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Member Tixians';
+$this->title = '提现申请';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -23,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-body table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'tableOptions' => ['class' => 'table table-hover'],
         'columns' => [
             [
@@ -31,18 +34,53 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 
             'id',
-            'status',
-            'type',
-            'member_id',
+            [
+                'attribute' => 'member.mobile',
+                'label'=> '持有人',
+                'filter' => Html::activeTextInput($searchModel, 'member.mobile', [
+                        'class' => 'form-control'
+                    ]
+                ),
+            ],
+            [
+                'label' => '提现渠道',
+                'value' => function ($model) {
+                    return PayTypeEnum::getValue($model->type);
+                },
+                'filter' => Html::activeDropDownList($searchModel, 'type', PayTypeEnum::thirdParty(), [
+                        'prompt' => '全部',
+                        'class' => 'form-control'
+                    ]
+                ),
+                'format' => 'raw',
+            ],
+            // 'type',
             'money',
             'fee',
-            'account',
-            'account_img',
-            'name',
-            'bank_name',
+            // 'account',
+            // 'account_img',
+            // 'name',
+            // 'bank_name',
             'mobile',
             'remark',
-            'created_at',
+            // 'status',
+            [
+                'label' => '状态',
+                'value' => function ($model) {
+                    if ($model->status == StatusEnum::ENABLED) {
+                        return '<span class="label label-primary">支付成功</span>';
+                    } else {
+                        return '<span class="label label-danger">未支付</span>';
+                    }
+                },
+                'format' => 'raw',
+            ],
+            // 'created_at',
+            [
+                'attribute' => 'created_at',
+                'filter' => false, //不显示搜索框
+                'format' => ['date', 'php:Y-m-d H:i:s'],
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '操作',
@@ -50,13 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                 'edit' => function($url, $model, $key){
                         return Html::edit(['edit', 'id' => $model->id]);
-                },
-               'status' => function($url, $model, $key){
-                        return Html::status($model['status']);
-                  },
-                'delete' => function($url, $model, $key){
-                        return Html::delete(['delete', 'id' => $model->id]);
-                },
+                }
                 ]
             ]
     ]

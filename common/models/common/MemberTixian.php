@@ -3,6 +3,7 @@
 namespace addons\TinyShop\common\models\common;
 
 use Yii;
+use common\models\member\Member;
 
 /**
  * This is the model class for table "{{%member_tixian}}".
