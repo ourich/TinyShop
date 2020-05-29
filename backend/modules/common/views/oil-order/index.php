@@ -53,9 +53,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => '订单时间',
                 'filter' => false, //不显示搜索框
                 'value' => function ($model) {
-                    return "下单时间：" . Yii::$app->formatter->asDatetime($model->orderTime) . '<br>' .
-                        "付款时间：" . Yii::$app->formatter->asDatetime($model->payTime) . '<br>' .
-                        "退款时间：" . Yii::$app->formatter->asDatetime($model->refundTime) . '<br>' ;
+                    return "下单时间：" . $model->orderTime . '<br>' .
+                        "付款时间：" . $model->payTime . '<br>' .
+                        "退款时间：" . $model->refundTime . '<br>' ;
                 },
                 'format' => 'raw',
             ],
