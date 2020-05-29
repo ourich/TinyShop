@@ -10,6 +10,7 @@ use yii\data\ActiveDataProvider;
 use api\controllers\UserAuthController;
 use addons\TinyShop\common\models\common\MemberTixian;
 use common\enums\StatusEnum;
+use common\models\forms\CreditsLogForm;
 
 /**
  * 意见反馈
@@ -52,6 +53,13 @@ class TixianController extends UserAuthController
         /* @var $model \yii\db\ActiveRecord */
         $model = new $this->modelClass();
         $model->attributes = Yii::$app->request->post();
+        Yii::$app->services->memberCreditsLog->decrMoney(new CreditsLogForm([
+            'member' => Yii::$app->services->member->get(Yii::$app->user->identity->member_id),
+            'num' => $model->money,
+            'credit_group' => 'tixian',
+            'map_id' => $model->id,
+            'remark' => '申请提现',
+        ]));
         if (!$model->save()) {
             return ResultHelper::json(422, $this->getError($model));
         }
