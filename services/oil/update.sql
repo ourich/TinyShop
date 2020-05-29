@@ -115,3 +115,20 @@ CREATE TABLE rf_oil_delivery (
     PRIMARY KEY (`id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='卡片';
 
+CREATE TABLE rf_member_tixian (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `status` int(3) UNSIGNED DEFAULT '0' COMMENT '状态',
+  `type` int(3) UNSIGNED DEFAULT '0' COMMENT '平台类型',
+  `member_id` int(11) UNSIGNED DEFAULT '0' COMMENT '用户',
+  `money` decimal(6,2) UNSIGNED DEFAULT '0' COMMENT '金额',
+  `fee` decimal(6,2) UNSIGNED DEFAULT '0' COMMENT '手续费',
+  `account` varchar(250) DEFAULT '' COMMENT '收款账户',
+  `account_img` varchar(250) DEFAULT '' COMMENT '收款码',
+  `name` varchar(10) DEFAULT '' COMMENT '开户姓名',
+  `bank_name` varchar(60) DEFAULT '' COMMENT '开户行',
+  `mobile` varchar(20) DEFAULT '' COMMENT '联系电话',
+  `remark` varchar(250) DEFAULT '' COMMENT '驳回原因',
+  `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='提现';
+
