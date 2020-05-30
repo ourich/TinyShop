@@ -90,6 +90,7 @@ CREATE TABLE rf_oil_card (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '序号',
   `status` int(3) UNSIGNED DEFAULT '0' COMMENT '状态',
   `type` int(3) UNSIGNED DEFAULT '0' COMMENT '类型',
+  `print` int(3) UNSIGNED DEFAULT '0' COMMENT '是否打印',
   `member_id` int(11) UNSIGNED DEFAULT '0' COMMENT '持有人',
   `user` int(11) UNSIGNED DEFAULT '0' COMMENT '使用者',
   `cardNo` int(11) UNSIGNED DEFAULT '0' COMMENT '卡号',
