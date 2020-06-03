@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Gas Stations';
+$this->title = '油站列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -32,9 +32,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'gasId',
-            'gasName',
-            'channelId',
-            'gasType',
+            // 'gasName',
+            [
+                'attribute' => 'gasName',
+                'headerOptions' => ['class' => 'col-md-2'],
+            ],
+            [
+                'attribute' => 'channelId',
+                'label'=> '渠道',
+                'headerOptions' => ['class' => 'col-md-1'],
+                'value' => function ($model) {
+                    return empty($model['channelId']) ? '团油' : '小桔';
+                },
+            ],
+            // 'channelId',
+            // 'gasType',
             //'gasLogoBig',
             'gasLogoSmall',
             'gasAddress',

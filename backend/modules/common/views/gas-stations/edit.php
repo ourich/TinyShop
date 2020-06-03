@@ -7,8 +7,8 @@ use yii\widgets\ActiveForm;
 /* @var $model addons\TinyShop\common\models\gas\GasStations */
 /* @var $form yii\widgets\ActiveForm */
 
-$this->title = 'Gas Stations';
-$this->params['breadcrumbs'][] = ['label' => 'Gas Stations', 'url' => ['index']];
+$this->title = '油站列表';
+$this->params['breadcrumbs'][] = ['label' => '油站列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'gasId')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'gasName')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'channelId')->textInput() ?>
-                    <?= $form->field($model, 'gasType')->textInput() ?>
+                    <!-- <?= $form->field($model, 'gasType')->textInput() ?> -->
                     <?= $form->field($model, 'gasLogoSmall')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'gasAddress')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'cityCode')->textInput() ?>
