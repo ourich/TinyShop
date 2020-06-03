@@ -108,7 +108,7 @@ class DefaultController extends BaseController
             }
         }
 
-        die(count($data));
+        die('OK');
     }
     
 
