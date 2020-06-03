@@ -20,6 +20,15 @@ class DefaultController extends BaseController
     */
     public function actionIndex()
     {
+        //测试入口
+        $mobile = '13098878085';
+        $test = Yii::$app->tinyShopService->czb->login($mobile);
+        p($test);
+        die();
+
+
+
+
         return $this->render('index',[
 
         ]);
