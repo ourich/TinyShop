@@ -1,6 +1,6 @@
 <?php
 
-namespace addons\TinyShop\backend\modules\common\controllers;
+namespace addons\TinyShop\backend\modules\gas\controllers;
 
 use Yii;
 use addons\TinyShop\common\models\gas\GasStations;
@@ -12,7 +12,7 @@ use backend\controllers\BaseController;
 * GasStations
 *
 * Class GasStationsController
-* @package addons\TinyShop\backend\modules\common\controllers
+* @package addons\TinyShop\backend\modules\gas\controllers
 */
 class GasStationsController extends BaseController
 {

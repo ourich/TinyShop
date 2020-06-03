@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'channelId',
             // 'gasType',
             //'gasLogoBig',
-            'gasLogoSmall',
+            // 'gasLogoSmall',
             'gasAddress',
             //'gasAddressLongitude',
             //'gasAddressLatitude',

@@ -15,6 +15,10 @@ return [
             'common' => [
                 'class' => 'addons\TinyShop\backend\modules\common\Module',
             ],
+            // 公共
+            'gas' => [
+                'class' => 'addons\TinyShop\backend\modules\gas\Module',
+            ],
             // 基础
             'base' => [
                 'class' => 'addons\TinyShop\merchant\modules\base\Module',
