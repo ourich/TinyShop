@@ -3,6 +3,7 @@
 namespace addons\TinyShop\common\models\gas;
 
 use Yii;
+use common\models\member\Member;
 
 /**
  * This is the model class for table "{{%gas_card}}".
@@ -39,6 +40,15 @@ class GasCard extends \yii\db\ActiveRecord
             [['code'], 'string', 'max' => 10],
             [['img'], 'string', 'max' => 250],
         ];
+    }
+    public function getMember()
+    {
+        return $this->hasOne(Member::class, ['id' => 'member_id']);
+    }
+    public function getFollower()
+    {
+        return $this->hasOne(Member::class, ['id' => 'user'])->from(Member::tableName().' alias_member1');
+        // return $this->hasOne(Store::className(), ['id' => 'store_id'])->from(Store::tableName().' alias_store1');
     }
 
     /**
