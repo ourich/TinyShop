@@ -132,5 +132,6 @@ class Application extends Service
         'adv' => 'addons\TinyShop\services\common\AdvService',
         // ------------------------ 油站 ------------------------ //
         'czb' => 'addons\TinyShop\services\gas\CzbService',
+        'card' => 'addons\TinyShop\services\gas\CardService',
     ];
 }

@@ -68,8 +68,14 @@ class GasCardController extends BaseController
         $model->give_end = $model->give_begin + $model->give_num -1;   //+1作为本次起始卡号
         //获取的数据，传送给sever处理
         
-        if ($model->load($request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+        if ($model->load($request->post())) {
+            $give_to = Yii::$app->services->member->findByMobile($model->give_to);
+            if (!$give_to) {
+                return $this->message('接收方不存在', $this->redirect(['give']), 'error');
+            }
+            $model->give_to = $give_to['id'];
+            Yii::$app->tinyShopService->card->give($model);
+            return $this->message('分配成功', $this->redirect(['index']));
         }
 
         return $this->render($this->action->id, [

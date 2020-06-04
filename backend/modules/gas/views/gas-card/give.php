@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'give_to')->textInput() ?>
                     <?= $form->field($model, 'give_num')->textInput() ?>
                     <?= $form->field($model, 'give_begin')->textInput() ?>
-                    <?= $form->field($model, 'give_end')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'give_end')->textInput(['readonly' => 'readonly']) ?>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 text-center">
@@ -44,9 +44,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script type="text/javascript">
     $("input[name='GasCardForm[give_begin]']").blur(function () {
-        var val = $("input[name='GasCardForm[cardNo]']").val();
-        var num = $("input[name='GasCardForm[giveNum]']").val();
-        var end = Number(val) + Number(num) -1;
-        $("input[name='GasCardForm[endNo]']").val(end);
+        var give_begin = $("input[name='GasCardForm[give_begin]']").val();
+        var give_num = $("input[name='GasCardForm[give_num]']").val();
+        var give_end = Number(give_begin) + Number(give_num) -1;
+        $("input[name='GasCardForm[give_end]']").val(give_end);
     });
 </script>

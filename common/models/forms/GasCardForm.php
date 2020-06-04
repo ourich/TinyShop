@@ -13,6 +13,7 @@ use common\helpers\ArrayHelper;
 class GasCardForm extends GasCard
 {
     public $give_to = '';
+    public $give_from = '';
     public $give_num = '10';
     public $give_begin = '';
     public $give_end = '';
@@ -23,7 +24,7 @@ class GasCardForm extends GasCard
     public function rules()
     {
         $rule = parent::rules();
-        $rule[] = [['give_to', 'give_num', 'give_begin', 'give_end'], 'integer', 'min' => 0];
+        $rule[] = [['give_to', 'give_from', 'give_num', 'give_begin', 'give_end'], 'integer', 'min' => 0];
 
         return $rule;
     }
@@ -32,6 +33,7 @@ class GasCardForm extends GasCard
     {
         return ArrayHelper::merge(parent::attributeLabels(), [
             'give_to' => '分配对象',
+            'give_from' => '原持有人',
             'give_num' => '分配数量',
             'give_begin' => '起始卡号',
             'give_end' => '截止卡号',
