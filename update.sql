@@ -41,6 +41,40 @@ CREATE TABLE rf_gas_card (
     PRIMARY KEY (`id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='油卡表';
 
+CREATE TABLE rf_gas_order (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `status` int(3) UNSIGNED DEFAULT '0' COMMENT '状态',
+  `from` int(3) UNSIGNED DEFAULT '0' COMMENT '渠道',
+    `orderId` varchar(60) DEFAULT '' COMMENT '订单号',
+    `paySn` varchar(50) DEFAULT '' COMMENT '支付号',
+    `phone` varchar(20) DEFAULT '' COMMENT '手机号',
+    `orderTime` varchar(30) DEFAULT '' COMMENT '生成时间',
+    `payTime` varchar(30) DEFAULT '' COMMENT '支付时间',
+    `refundTime` varchar(30) DEFAULT '' COMMENT '退款时间',
+    `gasName` varchar(150) DEFAULT '' COMMENT '油站名称',
+    `province` varchar(15) DEFAULT '' COMMENT '省名称',
+    `city` varchar(15) DEFAULT '' COMMENT '市名称',
+    `county` varchar(15) DEFAULT '' COMMENT '县名称',
+    `gunNo` int(10) UNSIGNED DEFAULT '0' COMMENT '枪号',
+    `oilNo` varchar(15) DEFAULT '' COMMENT '油号',
+    `amountPay` decimal(6,2) DEFAULT '0' COMMENT '实付',
+    `amountGun` decimal(6,2) DEFAULT '0' COMMENT '总金额',
+    `amountDiscounts` decimal(6,2) DEFAULT '0' COMMENT '优惠金额',
+    `orderStatusName` varchar(15) DEFAULT '' COMMENT '订单状态',
+    `couponMoney` decimal(6,2) DEFAULT '0' COMMENT '优惠券金额',
+    `couponId` int(10) UNSIGNED DEFAULT '0' COMMENT '优惠券编号',
+    `couponCode` varchar(30) DEFAULT '' COMMENT '优惠券Code',
+    `litre` varchar(20) DEFAULT '' COMMENT '升数',
+    `payType` varchar(10) DEFAULT '' COMMENT '支付方式',
+    `priceUnit` varchar(15) DEFAULT '' COMMENT '最终单价',
+    `priceOfficial` varchar(15) DEFAULT '' COMMENT '国标价',
+    `priceGun` varchar(15) DEFAULT '' COMMENT '枪价',
+    `orderSource` varchar(50) DEFAULT '' COMMENT '渠道编码',
+    `qrCode4PetroChina` varchar(50) DEFAULT '' COMMENT '渠道编码',
+    `gasId` varchar(50) DEFAULT '' COMMENT '油站ID',
+    `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '同步时间',
+    PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='加油订单';
 
 
 
@@ -86,62 +120,14 @@ ALTER TABLE `rf_member` ADD `agentid` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '�
 ALTER TABLE `rf_member` ADD `credit1` decimal(10,2) DEFAULT '0' COMMENT '老优惠金';
 ALTER TABLE `rf_member` ADD `credit2` decimal(10,2) DEFAULT '0' COMMENT '老余额';
 --分润参数
-ALTER TABLE `rf_oil_card` ADD `print` INT( 3 ) UNSIGNED DEFAULT '0' COMMENT '是否打印';
 ALTER TABLE `rf_addon_shop_product` ADD `is_card` INT( 3 ) UNSIGNED DEFAULT '0' COMMENT '是否油卡';
 ALTER TABLE `rf_member_level` ADD `invit` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '直推人数';
 ALTER TABLE `rf_member_level` ADD `commission_shop` decimal(10,4) DEFAULT '0' COMMENT '消费分润';
 ALTER TABLE `rf_member_level` ADD `commission_oil` decimal(10,4) DEFAULT '0' COMMENT '加油分润';
 
 
-CREATE TABLE rf_oil_order (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `status` int(3) UNSIGNED DEFAULT '0' COMMENT '状态',
-  `from` int(3) UNSIGNED DEFAULT '0' COMMENT '渠道',
-    `orderId` varchar(60) DEFAULT '' COMMENT '订单号',
-    `paySn` varchar(50) DEFAULT '' COMMENT '支付号',
-    `phone` varchar(20) DEFAULT '' COMMENT '手机号',
-    `orderTime` varchar(30) DEFAULT '' COMMENT '生成时间',
-    `payTime` varchar(30) DEFAULT '' COMMENT '支付时间',
-    `refundTime` varchar(30) DEFAULT '' COMMENT '退款时间',
-    `gasName` varchar(150) DEFAULT '' COMMENT '油站名称',
-    `province` varchar(15) DEFAULT '' COMMENT '省名称',
-    `city` varchar(15) DEFAULT '' COMMENT '市名称',
-    `county` varchar(15) DEFAULT '' COMMENT '县名称',
-    `gunNo` int(10) UNSIGNED DEFAULT '0' COMMENT '枪号',
-    `oilNo` varchar(15) DEFAULT '' COMMENT '油号',
-    `amountPay` decimal(6,2) DEFAULT '0' COMMENT '实付',
-    `amountGun` decimal(6,2) DEFAULT '0' COMMENT '总金额',
-    `amountDiscounts` decimal(6,2) DEFAULT '0' COMMENT '优惠金额',
-    `orderStatusName` varchar(15) DEFAULT '' COMMENT '订单状态',
-    `couponMoney` decimal(6,2) DEFAULT '0' COMMENT '优惠券金额',
-    `couponId` int(10) UNSIGNED DEFAULT '0' COMMENT '优惠券编号',
-    `couponCode` varchar(30) DEFAULT '' COMMENT '优惠券Code',
-    `litre` varchar(20) DEFAULT '' COMMENT '升数',
-    `payType` varchar(10) DEFAULT '' COMMENT '支付方式',
-    `priceUnit` varchar(15) DEFAULT '' COMMENT '最终单价',
-    `priceOfficial` varchar(15) DEFAULT '' COMMENT '国标价',
-    `priceGun` varchar(15) DEFAULT '' COMMENT '枪价',
-    `orderSource` varchar(50) DEFAULT '' COMMENT '渠道编码',
-    `qrCode4PetroChina` varchar(50) DEFAULT '' COMMENT '渠道编码',
-    `gasId` varchar(50) DEFAULT '' COMMENT '油站ID',
-    `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '同步时间',
-    PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='加油订单';
 
-CREATE TABLE rf_oil_card (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `status` int(3) UNSIGNED DEFAULT '0' COMMENT '状态',
-  `type` int(3) UNSIGNED DEFAULT '0' COMMENT '类型',
-  `print` int(3) UNSIGNED DEFAULT '0' COMMENT '是否打印',
-  `member_id` int(11) UNSIGNED DEFAULT '0' COMMENT '持有人',
-  `user` int(11) UNSIGNED DEFAULT '0' COMMENT '使用者',
-  `cardNo` int(11) UNSIGNED DEFAULT '0' COMMENT '卡号',
-  `code` varchar(10) DEFAULT '' COMMENT '密码',
-  `img` varchar(250) DEFAULT '' COMMENT '二维码',
-  `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '创建时间',
-  `end_at` int(11) UNSIGNED DEFAULT '0' COMMENT '使用时间',
-    PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='卡片';
+
 
 CREATE TABLE rf_oil_delivery (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '序号',
