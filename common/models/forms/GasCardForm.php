@@ -13,8 +13,8 @@ use common\helpers\ArrayHelper;
 class GasCardForm extends GasCard
 {
     public $give_to = '';
-    public $give_num = '';
-    public $give_begin = '20000000';
+    public $give_num = '10';
+    public $give_begin = '';
     public $give_end = '';
 
     /**

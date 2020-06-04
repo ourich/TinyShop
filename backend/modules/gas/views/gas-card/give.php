@@ -7,8 +7,8 @@ use yii\widgets\ActiveForm;
 /* @var $model addons\TinyShop\common\models\gas\GasCard */
 /* @var $form yii\widgets\ActiveForm */
 
-$this->title = 'Gas Card';
-$this->params['breadcrumbs'][] = ['label' => 'Gas Cards', 'url' => ['index']];
+$this->title = '分配卡片';
+$this->params['breadcrumbs'][] = ['label' => '油卡列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-lg-12">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">基本信息</h3>
+                <h3 class="box-title">分配卡片</h3>
             </div>
             <div class="box-body">
                 <?php $form = ActiveForm::begin([
@@ -25,11 +25,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]); ?>
                 <div class="col-sm-12">
-                    <?= $form->field($model, 'print')->dropDownList([]) ?>
-                    <?= $form->field($model, 'member_id')->textInput() ?>
-                    <?= $form->field($model, 'user')->textInput() ?>
-                    <?= $form->field($model, 'cardNo')->textInput() ?>
-                    <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'give_to')->textInput() ?>
+                    <?= $form->field($model, 'give_num')->textInput() ?>
+                    <?= $form->field($model, 'give_begin')->textInput() ?>
+                    <?= $form->field($model, 'give_end')->textInput(['maxlength' => true]) ?>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 text-center">
@@ -42,3 +41,12 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $("input[name='GasCardForm[give_begin]']").blur(function () {
+        var val = $("input[name='GasCardForm[cardNo]']").val();
+        var num = $("input[name='GasCardForm[giveNum]']").val();
+        var end = Number(val) + Number(num) -1;
+        $("input[name='GasCardForm[endNo]']").val(end);
+    });
+</script>

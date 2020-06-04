@@ -63,6 +63,11 @@ class GasCardController extends BaseController
         $request = Yii::$app->request;
         $id = $request->get('id', null);
         $model = $this->findModel($id);
+        $min = $this->modelClass::find()->max('cardNo');   //目前卡号最大值
+        $model->give_begin = $min ? $min+1 : '10000001';   //+1作为本次起始卡号
+        $model->give_end = $model->give_begin + $model->give_num -1;   //+1作为本次起始卡号
+        //获取的数据，传送给sever处理
+        
         if ($model->load($request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
