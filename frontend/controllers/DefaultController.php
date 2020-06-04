@@ -5,6 +5,7 @@ namespace addons\TinyShop\frontend\controllers;
 use Yii;
 use common\controllers\AddonsController;
 use addons\TinyShop\common\models\gas\GasStations;
+use addons\TinyShop\common\models\gas\GasOrder;
 
 /**
  * 默认控制器
@@ -43,21 +44,51 @@ class DefaultController extends BaseController
     public function actionOrder()
     {
         $response = Yii::$app->tinyShopService->czb->platformOrderInfoV2();
+        // p($response);
+        // die();
         
         if ($response['code'] == 200) {
             $result = $response['result'];
             foreach ($result as $value) {
-                if (OilOrder::find()->where(['orderId' => $value['orderId']])->one()) {
+                if (GasOrder::find()->where(['orderId' => $value['orderId']])->one()) {
                     continue; //如果存在，则跳过
                 }
-                $value['created_at'] = time();
-                $data[] = $value;
+                $data[] = [
+                  'orderId' => $value['orderId'],
+                  'paySn' => $value['paySn'],
+                  'phone' => $value['phone'],
+                  'orderTime' => $value['orderTime'],
+                  'payTime' => $value['payTime'],
+                  'refundTime' => $value['refundTime'],
+                  'gasName' => $value['gasName'],
+                  'province' => $value['province'],
+                  'city' => $value['city'],
+                  'county' => $value['county'],
+                  'gunNo' => $value['gunNo'],
+                  'oilNo' => $value['oilNo'],
+                  'amountPay' => $value['amountPay'],
+                  'amountGun' => $value['amountGun'],
+                  'amountDiscounts' => $value['amountDiscounts'],
+                  'orderStatusName' => $value['orderStatusName'],
+                  'couponMoney' => $value['couponMoney'],
+                  'couponId' => $value['couponId'],
+                  'couponCode' => $value['couponCode'],
+                  'litre' => $value['litre'],
+                  'payType' => $value['payType'],
+                  'priceUnit' => $value['priceUnit'],
+                  'priceOfficial' => $value['priceOfficial'],
+                  'priceGun' => $value['priceGun'],
+                  'orderSource' => $value['orderSource'],
+                  'qrCode4PetroChina' => $value['qrCode4PetroChina'],
+                  'gasId' => $value['gasId'],
+                  'created_at' => time(),
+                ];
             }
             //再执行批量插入
             if (isset($data)) 
             {
               Yii::$app->db->createCommand()
-                   ->batchInsert(OilOrder::tableName(),['orderId','paySn','phone','orderTime','payTime','refundTime','gasName','province','city','county','gunNo','oilNo','amountPay','amountGun','amountDiscounts','orderStatusName','couponMoney','couponId','couponCode','litre','payType','priceUnit','priceOfficial','priceGun','orderSource','qrCode4PetroChina','gasId','created_at'],
+                   ->batchInsert(GasOrder::tableName(),['orderId','paySn','phone','orderTime','payTime','refundTime','gasName','province','city','county','gunNo','oilNo','amountPay','amountGun','amountDiscounts','orderStatusName','couponMoney','couponId','couponCode','litre','payType','priceUnit','priceOfficial','priceGun','orderSource','qrCode4PetroChina','gasId','created_at'],
                    $data)
                    ->execute();
 
@@ -68,7 +99,7 @@ class DefaultController extends BaseController
             }
         }
 
-        die(count($data));
+        die('OK');
     }
 
     /**
