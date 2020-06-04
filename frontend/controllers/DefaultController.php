@@ -112,11 +112,10 @@ class DefaultController extends BaseController
         if ($response['code'] != 200) {
             return;
         }
-        $model = new GasStations();
         $result = $response['result'];
         foreach($result as $v)
         {
-          if ($model->find()->where(['gasId' => $v['gasId']])->one()) {
+          if (GasStations::find()->where(['gasId' => $v['gasId']])->one()) {
               continue; //如果存在，则跳过
           }
 
@@ -150,6 +149,6 @@ class DefaultController extends BaseController
                $data)
                ->execute();
         }
-        die($count);
+        die('OK');
     }
 }
