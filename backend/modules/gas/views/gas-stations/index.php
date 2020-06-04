@@ -60,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'countyName',
             //'isInvoice',
             'companyId',
-            'created_at',
+            'created_at:datetime',
             //'status',
             [
                 'class' => 'yii\grid\ActionColumn',

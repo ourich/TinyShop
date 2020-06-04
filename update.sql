@@ -26,6 +26,21 @@ CREATE TABLE rf_gas_stations (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='油站表';
 
+CREATE TABLE rf_gas_card (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `status` int(3) UNSIGNED DEFAULT '0' COMMENT '状态',
+  `type` int(3) UNSIGNED DEFAULT '0' COMMENT '类型',
+  `print` int(3) UNSIGNED DEFAULT '0' COMMENT '是否打印',
+  `member_id` int(11) UNSIGNED DEFAULT '0' COMMENT '持有人',
+  `user` int(11) UNSIGNED DEFAULT '0' COMMENT '使用者',
+  `cardNo` int(11) UNSIGNED DEFAULT '0' COMMENT '卡号',
+  `code` varchar(10) DEFAULT '' COMMENT '密码',
+  `img` varchar(250) DEFAULT '' COMMENT '二维码',
+  `created_at` int(11) UNSIGNED DEFAULT '0' COMMENT '创建时间',
+  `end_at` int(11) UNSIGNED DEFAULT '0' COMMENT '使用时间',
+    PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='油卡表';
+
 
 
 
