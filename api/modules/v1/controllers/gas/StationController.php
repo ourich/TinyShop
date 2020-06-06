@@ -95,6 +95,47 @@ class StationController extends OnAuthController
     }
 
     /**
+     * @param $id
+     * @return mixed|\yii\db\ActiveRecord
+     * @throws NotFoundHttpException
+     */
+    public function actionDetail($id, $longitude, $latitude)
+    {
+        if (Yii::$app->user->isGuest) {
+            return ResultHelper::json(422, '请先登陆');
+        }
+        $member = Yii::$app->tinyShopService->member->findById(Yii::$app->user->identity->member_id);
+        //坐标系转换
+        $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($longitude, $latitude);
+        
+        $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($id, $member['mobile']);
+        if ($response['code'] != 200) {
+            throw new NotFoundHttpException('请求的数据不存在');
+        }
+        $result = $response['result'];
+        $station = GasStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude,gasLogoSmall')->where(['gasId'=>$id])->one();
+        $juli = $this->getDistance($latitude, $longitude, $station['gasAddressLatitude'], $station['gasAddressLongitude']);
+        $stations = ArrayHelper::merge(['juli' => $juli], $station);
+        return $this->regroupShow($result[0], $stations, $member['mobile']);
+    }
+
+    //计算经纬度距离  km单位
+    public function getDistance($lat1, $lng1, $lat2, $lng2)
+    {
+        $earthRadius = 6367; //地区半径6367km
+        $lat1 = ($lat1 * pi()) / 180;
+        $lng1 = ($lng1 * pi()) / 180;
+        $lat2 = ($lat2 * pi()) / 180;
+        $lng2 = ($lng2 * pi()) / 180;
+        $calcLongitude      = $lng2 - $lng1;
+        $calcLatitude       = $lat2 - $lat1;
+        $stepOne            = pow(sin($calcLatitude / 2), 2) + cos($lat1) * cos($lat2) * pow(sin($calcLongitude / 2), 2);
+        $stepTwo            = 2 * asin(min(1, sqrt($stepOne)));
+        $calculatedDistance = $earthRadius * $stepTwo;
+        return round($calculatedDistance, 1);
+    }
+
+    /**
      * 重组显示
      *
      * @param $model
@@ -102,14 +143,12 @@ class StationController extends OnAuthController
      */
     public function regroupShow($model, $stations, $mobile)
     {
-        // 是否可领取 
-        // $other = OilStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude,gasLogoSmall')->where(['gasId'=>$model['gasId']])->one();
         $model['gasName'] = mb_substr($model['gasName'], 0, 15, 'utf-8');
         $model['gasAddress'] = $stations['gasAddress'];
         $model['gasAddressLongitude'] = $stations['gasAddressLongitude'];
         $model['gasAddressLatitude'] = $stations['gasAddressLatitude'];
         $model['gasLogoSmall'] = $stations['gasLogoSmall'];
-        $model['juli'] = $stations['juli'];
+        $model['juli'] = round($stations['juli'], 1);
         $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
         $model['gunNos'] = ArrayHelper::getColumn($model['oilPriceList'], 'gunNos');
         $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
@@ -147,37 +186,7 @@ class StationController extends OnAuthController
         }
     }
 
-    /**
-     * @param $id
-     * @return mixed|\yii\db\ActiveRecord
-     * @throws NotFoundHttpException
-     */
-    public function actionView($id)
-    {
-        // 关联我已领取的优惠券
-        $with = [];
-        if (!Yii::$app->user->isGuest) {
-            $with = ['myGet' => function(ActiveQuery $query) {
-                return $query->andWhere(['member_id' => Yii::$app->user->identity->member_id]);
-            }];
-        }
-
-        $model = $this->modelClass::find()
-            ->where([
-                'id' => $id,
-                'merchant_id' => $this->getMerchantId(),
-                'status' => StatusEnum::ENABLED,
-            ])
-            ->with(ArrayHelper::merge($with, ['usableProduct']))
-            ->asArray()
-            ->one();
-
-        if (!$model) {
-            throw new NotFoundHttpException('请求的数据不存在');
-        }
-
-        return Yii::$app->tinyShopService->marketingCouponType->regroupShow($model);
-    }
+   
 
     /**
      * 权限验证
