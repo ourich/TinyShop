@@ -36,7 +36,7 @@ class StationController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['index', 'view'];
+    protected $authOptional = [];
 
     /**
      * @return mixed|ActiveDataProvider
