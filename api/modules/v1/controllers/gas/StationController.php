@@ -43,9 +43,6 @@ class StationController extends OnAuthController
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->isGuest) {
-            return ResultHelper::json(422, '请先登陆');
-        }
         $member = Yii::$app->tinyShopService->member->findById(Yii::$app->user->identity->member_id);
         if ($member['oil_token_time'] < time()) {
             // $areaSend = Yii::$app->tinyShopService->member->areaSend(Yii::$app->user->identity->member_id, $who['longitude'], $who['latitude']);
