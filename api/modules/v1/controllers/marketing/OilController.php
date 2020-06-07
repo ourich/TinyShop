@@ -36,16 +36,13 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['index', 'view', 'Detail'];
+    protected $authOptional = [];
 
     /**
      * @return mixed|ActiveDataProvider
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->isGuest) {
-            return ResultHelper::json(422, '请先登陆');
-        }
         $who = Yii::$app->request->get();
         if (!Yii::$app->user->isGuest) {
             $member = Member::findone(Yii::$app->user->identity->member_id);
