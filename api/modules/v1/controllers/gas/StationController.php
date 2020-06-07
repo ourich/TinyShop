@@ -105,8 +105,7 @@ class StationController extends OnAuthController
             return ResultHelper::json(422, '请先登陆');
         }
         $member = Yii::$app->tinyShopService->member->findById(Yii::$app->user->identity->member_id);
-        //坐标系转换
-        $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($longitude, $latitude);
+        $local = Yii::$app->tinyShopService->czb->WGS84toGCJ02($longitude, $latitude);  //坐标转换
         
         $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($id, $member['mobile']);
         if ($response['code'] != 200) {
@@ -114,7 +113,7 @@ class StationController extends OnAuthController
         }
         $result = $response['result'];
         $station = GasStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude,gasLogoSmall')->where(['gasId'=>$id])->one();
-        $juli = $this->getDistance($latitude, $longitude, $station['gasAddressLatitude'], $station['gasAddressLongitude']);
+        $juli = $this->getDistance($local['lat'], $local['lon'], $station['gasAddressLatitude'], $station['gasAddressLongitude']);
         $stations = ArrayHelper::merge(['juli' => $juli], $station);
         return $this->regroupShow($result[0], $stations, $member['mobile']);
     }
@@ -132,7 +131,7 @@ class StationController extends OnAuthController
         $stepOne            = pow(sin($calcLatitude / 2), 2) + cos($lat1) * cos($lat2) * pow(sin($calcLongitude / 2), 2);
         $stepTwo            = 2 * asin(min(1, sqrt($stepOne)));
         $calculatedDistance = $earthRadius * $stepTwo;
-        return round($calculatedDistance, 1);
+        return $calculatedDistance;
     }
 
     /**
