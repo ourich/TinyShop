@@ -77,6 +77,7 @@ class ConfigController extends OnAuthController
             // 发票
             'order_invoice_tax' => '开票税额',
             'order_invoice_content' => '开票内容',
+            'kefu' => '客服电话',
         ]));
 
         $result = [];
