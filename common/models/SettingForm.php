@@ -45,6 +45,7 @@ class SettingForm extends Model
     public $protocol_recharge;
 
     public $is_open_commission = 0;
+    public $kefu;
 
     /**
      * {@inheritdoc}
@@ -73,7 +74,7 @@ class SettingForm extends Model
                 'min' => 0,
             ],
             [['share_title', 'share_cover', 'copyright_companyname'], 'string', 'max' => 100],
-            [['share_link', 'share_desc', 'evaluate', 'copyright_logo',], 'string', 'max' => 200],
+            [['share_link', 'share_desc', 'evaluate', 'copyright_logo', 'kefu'], 'string', 'max' => 200],
             [['share_link', 'copyright_url'], 'url'],
             [['order_invoice_tax'], 'number', 'min' => 1, 'max' => 100],
             [['order_invoice_content', 'copyright_desc'], 'string', 'max' => 500],
@@ -112,9 +113,10 @@ class SettingForm extends Model
             'buyer_self_lifting' => '开启买家自提',
             'is_delivery_shop' => '开启本地配送',
             'protocol_register' => '注册协议',
-            'protocol_privacy' => '隐私协议',
+            'protocol_privacy' => '隐私政策',
             'protocol_recharge' => '充值协议',
             'is_open_commission' => '开启分销',
+            'kefu' => '客服电话',
         ];
     }
 

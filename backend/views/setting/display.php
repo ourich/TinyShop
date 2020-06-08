@@ -88,6 +88,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <?= $form->field($model, 'copyright_companyname')->textInput(); ?>
                         <?= $form->field($model, 'copyright_url')->textInput(); ?>
                         <?= $form->field($model, 'copyright_desc')->textarea(); ?>
+                        <?= $form->field($model, 'kefu')->textInput(); ?>
                     </div>
                 </div>
                 <div class="box-footer text-center">
