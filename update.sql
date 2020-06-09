@@ -77,13 +77,20 @@ CREATE TABLE rf_gas_order (
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='加油订单';
 
 
+/**
+ * 油卡管理
+ * 分销模块（第二期开发）
+ * 加油分润，购物分润
+ */
+ALTER TABLE `rf_member` ADD `agent_level` INT( 3 ) UNSIGNED DEFAULT '0' COMMENT '分销级别';
 
 
 
 
-
-
-
+--福利板块（第二期开发）
+/**
+ * 会员中心显示任务板块，用户
+ */
 
 
 

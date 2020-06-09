@@ -22,6 +22,20 @@ use common\models\member\Member;
  */
 class GasCard extends \yii\db\ActiveRecord
 {
+    const STATE_UNUNSED = 0;
+    const STATE_GET = 1;
+    const STATE_UNSED = 2;
+    const STATE_PAST_DUE = 3;
+
+    /**
+     * @var array
+     */
+    public static $stateExplain = [
+        self::STATE_UNUNSED => '未领取',
+        self::STATE_GET => '已领取',
+        self::STATE_UNSED => '已使用',
+        self::STATE_PAST_DUE => '已过期',
+    ];
     /**
      * {@inheritdoc}
      */
