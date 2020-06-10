@@ -5,8 +5,9 @@ namespace addons\TinyShop\api\modules\v1\controllers\commission;
 use Yii;
 use yii\data\ActiveDataProvider;
 use api\controllers\UserAuthController;
-use addons\TinyShop\common\models\gas\GasCard;
+use common\models\member\Member;
 use common\enums\StatusEnum;
+use yii\rest\Serializer;
 
 /**
  * 我的优惠券
@@ -20,24 +21,24 @@ class TeamController extends UserAuthController
     /**
      * @var Coupon
      */
-    public $modelClass = GasCard::class;
+    public $modelClass = Member::class;
 
     /**
      * @return ActiveDataProvider
      */
     public function actionIndex()
     {
-        $state = Yii::$app->request->get('state', 1);
+        // $state = Yii::$app->request->get('state', 1);
 
         $where = [
             'and',
-            ['member_id' => Yii::$app->user->identity->member_id],
-            ['status' => $state],
+            ['pid' => Yii::$app->user->identity->member_id],
+            ['status' => StatusEnum::ENABLED],
         ];
 
         $orderBy = 'id desc';
 
-        return new ActiveDataProvider([
+        $data = new ActiveDataProvider([
             'query' => $this->modelClass::find()
                 ->where($where)
                 ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
@@ -48,6 +49,13 @@ class TeamController extends UserAuthController
                 'validatePage' => false,// 超出分页不返回data
             ],
         ]);
+        // 主要生成header的page信息
+        $models = (new Serializer())->serialize($data);
+        foreach ($models as &$model) {
+            $model['childs'] = Yii::$app->tinyShopService->member->countChilds($model['id']);
+        }
+
+        return $models;
     }
 
     /**

@@ -28,7 +28,8 @@ class DefaultController extends BaseController
         $mobile = '13098878085';
         $longitude = '114.431413';
         $latitude = '30.407874';
-        // p($data);
+        $response = Yii::$app->tinyShopService->member->countChilds(2);
+        p($response);
         die();
 
 
