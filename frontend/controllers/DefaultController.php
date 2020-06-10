@@ -28,30 +28,7 @@ class DefaultController extends BaseController
         $mobile = '13098878085';
         $longitude = '114.431413';
         $latitude = '30.407874';
-        $local = Yii::$app->tinyShopService->czb->WGS84toGCJ02($longitude, $latitude);  //坐标转换
-        $slat = $local['lon'];
-        $slng = $local['lat'];
-        $fanwei = 1;
-        $data = new ActiveDataProvider([
-            'query' => GasStations::find()
-                ->select('*, acos(
-                  sin(('.$slng.'*3.1415)/180) * sin((gasAddressLatitude*3.1415)/180) + 
-                  cos(('.$slng.'*3.1415)/180) * cos((gasAddressLatitude*3.1415)/180) * cos(('.$slat.'*3.1415)/180 - (gasAddressLongitude*3.1415)/180)
-                  )*6370.996 AS juli')
-                ->where([
-                    'status' => StatusEnum::ENABLED,
-                ])
-                ->andFilterWhere(['between','gasAddressLongitude', $local['lon'] - $fanwei, $local['lon'] + $fanwei])
-                ->andFilterWhere(['between','gasAddressLatitude', $local['lat'] - $fanwei, $local['lat'] + $fanwei])
-                ->orderBy('juli asc')
-                ->asArray()
-                ->all(),
-            'pagination' => [
-                'pageSize' => $this->pageSize,
-                'validatePage' => false,// 超出分页不返回data
-            ],
-        ]);
-        p($data);
+        // p($data);
         die();
 
 
