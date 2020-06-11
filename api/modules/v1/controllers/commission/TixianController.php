@@ -8,7 +8,7 @@ use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
 use api\controllers\UserAuthController;
-use addons\TinyShop\common\models\common\MemberTixian;
+use addons\TinyShop\common\models\member\MemberTixian;
 use common\enums\StatusEnum;
 use common\models\forms\CreditsLogForm;
 
