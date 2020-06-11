@@ -93,6 +93,19 @@ CREATE TABLE rf_member_tixian (
     PRIMARY KEY (`id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COMMENT='提现';
 
+
+CREATE TABLE `rf_commission_level` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `name` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '等级名称',
+  `status` int(11) DEFAULT '1' COMMENT '状态[-1:删除;0:禁用;1启用]',
+  `detail` varchar(255) COLLATE utf8mb4_bin DEFAULT '' COMMENT '会员介绍',
+  `created_at` int(10) UNSIGNED DEFAULT '0' COMMENT '创建时间',
+  `updated_at` int(10) UNSIGNED DEFAULT '0' COMMENT '修改时间',
+  `invit` int(11) UNSIGNED DEFAULT '0' COMMENT '直推人数',
+  `commission_shop` decimal(10,4) DEFAULT '0.0000' COMMENT '消费分润',
+  `commission_oil` decimal(10,4) DEFAULT '0.0000' COMMENT '加油分润',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='代理等级表';
 /**
  * 油卡管理
  * 分销模块（第二期开发）
