@@ -19,6 +19,10 @@ return [
             'gas' => [
                 'class' => 'addons\TinyShop\backend\modules\gas\Module',
             ],
+            // 分销
+            'commission' => [
+                'class' => 'addons\TinyShop\backend\modules\commission\Module',
+            ],
             // 基础
             'base' => [
                 'class' => 'addons\TinyShop\merchant\modules\base\Module',

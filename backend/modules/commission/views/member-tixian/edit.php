@@ -10,8 +10,8 @@ use addons\TinyShop\common\enums\TixianStatusEnum;
 /* @var $model addons\TinyShop\common\models\common\MemberTixian */
 /* @var $form yii\widgets\ActiveForm */
 
-$this->title = 'Member Tixian';
-$this->params['breadcrumbs'][] = ['label' => 'Member Tixians', 'url' => ['index']];
+$this->title = '详情';
+$this->params['breadcrumbs'][] = ['label' => '提现申请', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
