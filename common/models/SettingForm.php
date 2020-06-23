@@ -46,6 +46,9 @@ class SettingForm extends Model
 
     public $is_open_commission = 0;
     public $kefu;
+    public $commission_province;
+    public $commission_city;
+    public $commission_area;
 
     /**
      * {@inheritdoc}
@@ -73,7 +76,7 @@ class SettingForm extends Model
                 'integer',
                 'min' => 0,
             ],
-            [['share_title', 'share_cover', 'copyright_companyname'], 'string', 'max' => 100],
+            [['share_title', 'share_cover', 'copyright_companyname', 'commission_province', 'commission_city', 'commission_area'], 'string', 'max' => 100],
             [['share_link', 'share_desc', 'evaluate', 'copyright_logo', 'kefu'], 'string', 'max' => 200],
             [['share_link', 'copyright_url'], 'url'],
             [['order_invoice_tax'], 'number', 'min' => 1, 'max' => 100],
@@ -117,6 +120,9 @@ class SettingForm extends Model
             'protocol_recharge' => '充值协议',
             'is_open_commission' => '开启分销',
             'kefu' => '客服电话',
+            'commission_province' => '省代分润',
+            'commission_city' => '市代分润',
+            'commission_area' => '区代分润',
         ];
     }
 
@@ -134,6 +140,9 @@ class SettingForm extends Model
             'after_sale_date' => '订单完成多少天之内可以售后, 不填默认不限',
             'shopping_back_points' => '在什么时间将购物返积分添加到会员账户',
             'order_invoice_tax' => '设置开发票的税率，单位为%',
+            'commission_province' => '设置省代分润的比例，单位为%',
+            'commission_city' => '设置市代分润的比例，单位为%',
+            'commission_area' => '设置区代分润的比例，单位为%',
             'order_invoice_content' => '客户要求开发票时可以选择的内容，逗号分格代表一个选项，例如：办公用品,明细',
         ];
     }
