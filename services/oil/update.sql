@@ -24,6 +24,7 @@ ALTER TABLE `rf_addon_shop_product` ADD `commission` decimal(10,4) DEFAULT '0' C
 ALTER TABLE `rf_member_level` ADD `invit` INT( 11 ) UNSIGNED DEFAULT '0' COMMENT '直推人数';
 ALTER TABLE `rf_member_level` ADD `commission_shop` decimal(10,4) DEFAULT '0' COMMENT '消费分润';
 ALTER TABLE `rf_member_level` ADD `commission_oil` decimal(10,4) DEFAULT '0' COMMENT '加油分润';
+ALTER TABLE `rf_member_level` ADD `commission_pingji` decimal(10,4) DEFAULT '0' COMMENT '平级奖';
 
 
 

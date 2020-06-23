@@ -716,6 +716,71 @@ class OrderService extends \common\components\Service
     }
 
     /**
+     * 普通商品分润
+     * @param  Order  $order [description]
+     * @return [type]        [description]
+     */
+    public function shopjiCha(Order $order)
+    {
+        //加总分润金额
+        $orderProducts = Yii::$app->tinyShopService->orderProduct->findByOrderId($order->id);
+        $_money = 0;
+        foreach ($orderProducts as $value) {
+            $Product = Yii::$app->tinyShopService->product->findById($value['product_id']);
+            $_money += $value['commission'];
+        }
+        if ($_money == 0) {
+            return;
+        }
+        $pay_money = $_money;     //实际付款金额
+        $order_sn = $order->order_sn;     //订单编号
+        $member = Member::findone($order->buyer_id);  //购买后，自己升级到V1，整条线跟着升级 
+        
+        $send_level = $member['current_level'] ?? 0;
+        $send_money = 0;
+        $card_sended = 0;
+        //循环读取各个上级资料，根据各自等级的提成比例，进行发放
+        while (!empty($member['pid'])) {
+            $member = Yii::$app->services->member->get($member['pid']);
+            if ($member['current_level'] < 2) {
+                continue;   //V1以下不参与分润
+            }
+            if ($member['current_level'] <= $send_level && $member['current_level'] < 6) {
+                continue;   //跳过此人
+            }
+            
+            //如果是V5的上级V5，发放平级奖
+            if ($member['current_level'] == 6 && $card_sended == 0) {
+                $card_sended = 1;
+                $commission_shop = $member['level0']['commission_pingji']; 
+                $get_money = round($pay_money * $commission_shop /100, 2);
+                Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                    'member' => $member,
+                    'num' => $get_money,
+                    'credit_group' => 'orderCommission',
+                    'map_id' => $order_id,
+                    'remark' => '平级分润：'.$order_sn,
+                ]));
+                break;
+            }
+            $commission_shop = $member['level0']['commission_shop'] - $send_money; 
+            $get_money = round($pay_money * $commission_shop /100, 2);
+            Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                'member' => $member,
+                'num' => $get_money,
+                'credit_group' => 'orderCommission',
+                'map_id' => $order_id,
+                'remark' => '商城分润：'.$order_sn,
+            ]));
+            //重置已发放的比例
+            $send_level = $member['current_level']; 
+            $send_money = $member['level0']['commission_shop']; 
+            
+        }
+
+    }
+
+    /**
      * 加油级差
      *
      * @param Order $order
