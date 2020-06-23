@@ -190,6 +190,7 @@ class Product extends \common\models\base\BaseModel
                     'marketing_price',
                     'max_use_point',
                     'presell_price',
+                    'commission',
                 ],
                 'number',
                 'min' => 0,
@@ -289,6 +290,7 @@ class Product extends \common\models\base\BaseModel
             'supplier_id' => '供货商',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'commission' => '分润金额',
         ];
     }
 
