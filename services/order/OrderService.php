@@ -658,6 +658,7 @@ class OrderService extends \common\components\Service
         }
         $num *= 100;
         if ($num == 0) {
+            $this->shopjiCha($order);
             return;
         }
         $pay_money = $order->pay_money;     //实际付款金额
@@ -727,13 +728,15 @@ class OrderService extends \common\components\Service
         $_money = 0;
         foreach ($orderProducts as $value) {
             $Product = Yii::$app->tinyShopService->product->findById($value['product_id']);
-            $_money += $value['commission'];
+            $_money += $Product['commission'];
         }
         if ($_money == 0) {
             return;
         }
         $pay_money = $_money;     //实际付款金额
         $order_sn = $order->order_sn;     //订单编号
+        
+        Yii::$app->tinyShopService->member->areaSendShop($order, $pay_money);
         $member = Member::findone($order->buyer_id);  //购买后，自己升级到V1，整条线跟着升级 
         
         $send_level = $member['current_level'] ?? 0;
