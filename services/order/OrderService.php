@@ -766,7 +766,7 @@ class OrderService extends \common\components\Service
                 ]));
                 break;
             }
-            $commission_shop = $member['level0']['commission_shop'] - $send_money; 
+            $commission_shop = $member['level0']['commission'] - $send_money; 
             $get_money = round($pay_money * $commission_shop /100, 2);
             Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
                 'member' => $member,
@@ -777,7 +777,7 @@ class OrderService extends \common\components\Service
             ]));
             //重置已发放的比例
             $send_level = $member['current_level']; 
-            $send_money = $member['level0']['commission_shop']; 
+            $send_money = $member['level0']['commission']; 
             
         }
 
