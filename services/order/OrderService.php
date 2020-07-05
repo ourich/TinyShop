@@ -752,8 +752,18 @@ class OrderService extends \common\components\Service
                 continue;   //跳过此人
             }
             
+            $commission_shop = $member['level0']['commission'] - $send_money; 
+            $get_money = round($pay_money * $commission_shop /100, 2);
+            Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                'member' => $member,
+                'num' => $get_money,
+                'credit_group' => 'orderCommission',
+                'map_id' => $order_id,
+                'remark' => '商城分润：'.$order_sn,
+            ]));
+
             //如果是V5的上级V5，发放平级奖
-            if ($member['current_level'] == 6 && $card_sended == 0) {
+            if ($member['current_level'] == 6 && $card_sended == 0 && $send_level == 6) {
                 $card_sended = 1;
                 $commission_shop = $member['level0']['commission_pingji']; 
                 $get_money = round($pay_money * $commission_shop /100, 2);
@@ -766,15 +776,6 @@ class OrderService extends \common\components\Service
                 ]));
                 break;
             }
-            $commission_shop = $member['level0']['commission'] - $send_money; 
-            $get_money = round($pay_money * $commission_shop /100, 2);
-            Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
-                'member' => $member,
-                'num' => $get_money,
-                'credit_group' => 'orderCommission',
-                'map_id' => $order_id,
-                'remark' => '商城分润：'.$order_sn,
-            ]));
             //重置已发放的比例
             $send_level = $member['current_level']; 
             $send_money = $member['level0']['commission']; 
