@@ -46,6 +46,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <?= $form->field($model, 'commission_province')->textInput(); ?>
                         <?= $form->field($model, 'commission_city')->textInput(); ?>
                         <?= $form->field($model, 'commission_area')->textInput(); ?>
+                        <?= $form->field($model, 'gas_province')->textInput(); ?>
+                        <?= $form->field($model, 'gas_city')->textInput(); ?>
+                        <?= $form->field($model, 'gas_area')->textInput(); ?>
                     </div>
                 </div>
                 <div id="tab-2" class="tab-pane">

@@ -140,6 +140,77 @@ class MemberService extends Service
     }
 
     /**
+     * 加油分润
+     * @param  [type] $order  [description]
+     * @param  [type] $_money [description]
+     * @return [type]         [description]
+     */
+    public function areaSendGas($order, $_money)
+    {
+        $config = AddonHelper::getConfig();
+        $commission_province = $config['gas_province'] ?? 0;
+        $commission_city = $config['gas_city'] ?? 0;
+        $commission_area = $config['gas_area'] ?? 0;
+        // $get_money = round($pay_money * $commission_shop /100, 2);
+        
+        if ($commission_area > 0) {
+            $code_district = Yii::$app->services->provinces->getCode($order['county']);
+            //获取区代
+            $area_agent = Member::find()
+                ->where(['area_agent' => $code_district, 'is_agent' => AgentEnum::AREA])
+                ->one();
+            if ($area_agent) {
+                Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                    'member' => $area_agent,
+                    'pay_type' => 100,
+                    'num' => round($_money * $commission_area /100, 2),
+                    'credit_group' => 'manager',
+                    'remark' => "区代加油分润",
+                    'map_id' => 0,
+                ]));
+            }
+        }
+
+        if ($commission_city > 0) {
+            $code_city = Yii::$app->services->provinces->getCode($order['city']);
+            $city_agent = Member::find()
+                ->where(['city_agent' => $code_city, 'is_agent' => AgentEnum::CITY])
+                ->one();
+            if ($city_agent) {
+                Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                    'member' => $city_agent,
+                    'pay_type' => 100,
+                    'num' => round($_money * $commission_city /100, 2),
+                    'credit_group' => 'manager',
+                    'remark' => "市代加油分润",
+                    'map_id' => 0,
+                ]));
+            }
+        }
+        
+        if ($commission_province > 0) {
+            $code_province = Yii::$app->services->provinces->getCode($order['province']);
+            $province_agent = Member::find()
+                ->where(['province_agent' => $code_province, 'is_agent' => AgentEnum::PROVINCE])
+                ->one();
+            // p($province_agent);
+            // die();
+            if ($province_agent) {
+                Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                    'member' => $province_agent,
+                    'pay_type' => 100,
+                    'num' => round($_money * $commission_province /100, 2),
+                    'credit_group' => 'manager',
+                    'remark' => "省代加油分润",
+                    'map_id' => 0,
+                ]));
+            }
+        }
+        
+        
+    }
+
+    /**
      * 区域代理奖金
      * @param  [type] $member_id [description]
      * @param  [type] $lon       [description]

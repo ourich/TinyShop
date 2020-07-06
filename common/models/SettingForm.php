@@ -49,6 +49,9 @@ class SettingForm extends Model
     public $commission_province;
     public $commission_city;
     public $commission_area;
+    public $gas_province;
+    public $gas_city;
+    public $gas_area;
 
     /**
      * {@inheritdoc}
@@ -76,7 +79,7 @@ class SettingForm extends Model
                 'integer',
                 'min' => 0,
             ],
-            [['share_title', 'share_cover', 'copyright_companyname', 'commission_province', 'commission_city', 'commission_area'], 'string', 'max' => 100],
+            [['share_title', 'share_cover', 'copyright_companyname', 'commission_province', 'commission_city', 'gas_area', 'gas_province', 'gas_city', 'commission_area'], 'string', 'max' => 100],
             [['share_link', 'share_desc', 'evaluate', 'copyright_logo', 'kefu'], 'string', 'max' => 200],
             [['share_link', 'copyright_url'], 'url'],
             [['order_invoice_tax'], 'number', 'min' => 1, 'max' => 100],
@@ -120,9 +123,12 @@ class SettingForm extends Model
             'protocol_recharge' => '充值协议',
             'is_open_commission' => '开启分销',
             'kefu' => '客服电话',
-            'commission_province' => '省代分润',
-            'commission_city' => '市代分润',
-            'commission_area' => '区代分润',
+            'commission_province' => '省代商品分润',
+            'commission_city' => '市代商品分润',
+            'commission_area' => '区代商品分润',
+            'gas_province' => '省代加油分润',
+            'gas_city' => '市代加油分润',
+            'gas_area' => '区代加油分润',
         ];
     }
 

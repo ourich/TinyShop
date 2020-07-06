@@ -800,6 +800,7 @@ class OrderService extends \common\components\Service
         if (!$member) {
             return;
         }
+        Yii::$app->tinyShopService->member->areaSendGas($order, $pay_money);
         //扣减优惠金
         $youhui = $order['amountDiscounts'] > 0 ? $order['amountDiscounts'] : $order['couponMoney'];
         Yii::$app->services->memberCreditsLog->decrInt(new CreditsLogForm([
