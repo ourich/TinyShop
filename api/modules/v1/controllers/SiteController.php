@@ -37,7 +37,7 @@ class SiteController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['login', 'refresh', 'mobile-login', 'sms-code', 'register', 'up-pwd', 'down'];
+    protected $authOptional = ['login', 'refresh', 'mobile-login', 'sms-code', 'register', 'up-pwd', 'down', 'recharge'];
 
     /**
      * 登录根据用户信息返回accessToken
@@ -182,6 +182,27 @@ class SiteController extends OnAuthController
         !empty($model->promo_code) && Yii::$app->tinyShopService->card->useCard($model->mobile, $model->promo_code);
 
         return $this->regroupMember(Yii::$app->services->apiAccessToken->getAccessToken($member, $model->group));
+    }
+
+    /**
+     * 充值
+     * @return [type] [description]
+     */
+    public function actionRecharge()
+    {
+        $data = Yii::$app->request->post();
+        if (!$data['mobile']) {
+            throw new NotFoundHttpException('请填写手机号');
+        }
+        //检查收款人是否存在
+        $tomember = Yii::$app->services->member->findByMobile($data['mobile']);
+        if (!$tomember) {
+            throw new NotFoundHttpException('手机号未注册');
+        }
+        !empty($data['promo_code']) && Yii::$app->tinyShopService->card->useCard($data['mobile'], $data['promo_code']);
+
+        return ResultHelper::json(200, '充值成功');
+        
     }
 
     /**
