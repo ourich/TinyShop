@@ -87,10 +87,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="col-sm-6"><?= $form->field($model, 'min_buy')->textInput(); ?></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-3"><?= $form->field($model, 'sales')->textInput(); ?></div>
-                        <div class="col-sm-3"><?= $form->field($model, 'view')->textInput(); ?></div>
-                        <div class="col-sm-3"><?= $form->field($model, 'transmit_num')->textInput(); ?></div>
-                        <div class="col-sm-3"><?= $form->field($model, 'commission')->textInput(); ?></div>
+                        <div class="col-sm-2"><?= $form->field($model, 'sales')->textInput(); ?></div>
+                        <div class="col-sm-2"><?= $form->field($model, 'view')->textInput(); ?></div>
+                        <div class="col-sm-2"><?= $form->field($model, 'transmit_num')->textInput(); ?></div>
+                        <div class="col-sm-2"><?= $form->field($model, 'commission')->textInput(); ?></div>
+                        <div class="col-sm-2"><?= $form->field($model, 'fanxian')->textInput(); ?></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">

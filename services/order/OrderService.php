@@ -659,6 +659,7 @@ class OrderService extends \common\components\Service
         $num *= 100;
         if ($num == 0) {
             $this->shopjiCha($order);
+            $this->fanxian($order);
             return;
         }
         $pay_money = $order->pay_money;     //实际付款金额
@@ -714,6 +715,40 @@ class OrderService extends \common\components\Service
             Yii::$app->tinyShopService->card->createFor($order->buyer_id, $num);
         }
 
+    }
+
+    /**
+     * 自购返现
+     * @param  [type] $order_id [description]
+     * @return [type]           [description]
+     */
+    public function fanxian(Order $order)
+    {
+        //加总分润金额
+        $orderProducts = Yii::$app->tinyShopService->orderProduct->findByOrderId($order->id);
+        $_money = 0;
+        foreach ($orderProducts as $value) {
+            $Product = Yii::$app->tinyShopService->product->findById($value['product_id']);
+            $_money += $Product['fanxian'];
+        }
+        if ($_money == 0) {
+            return;
+        }
+        $pay_money = $_money;     //实际付款金额
+        $order_sn = $order->order_sn;     //订单编号
+
+        $member = Yii::$app->services->member->get($order->buyer_id);
+        $commission_shop = $member['level0']['fanxian'];
+        $get_money = round($pay_money * $commission_shop /100, 2);
+        // p($member);
+        // die();
+        Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+            'member' => $member,
+            'num' => $get_money,
+            'credit_group' => 'orderFanxian',
+            'map_id' => $order_id,
+            'remark' => '自购返现：'.$order_sn,
+        ]));
     }
 
     /**

@@ -33,13 +33,12 @@ class DefaultController extends BaseController
         $lon = '114.431413';
         $lat = '30.407874';
         $order = Yii::$app->tinyShopService->order->findById(7); 
-        // $response = Yii::$app->tinyShopService->order->jiCha($order); 
+        $response = Yii::$app->tinyShopService->order->fanxian($order); 
         
         // $code_province = Yii::$app->services->provinces->getCode($response['province']);
         // $member = Member::findone(1);
         // Yii::warning($num_card);
-        // print_r('<pre>');
-        // var_dump($response);
+        // p($response);
         die('hello');
     }
 

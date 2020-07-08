@@ -26,7 +26,8 @@ ALTER TABLE `rf_member_level` ADD `commission_shop` decimal(10,4) DEFAULT '0' CO
 ALTER TABLE `rf_member_level` ADD `commission_oil` decimal(10,4) DEFAULT '0' COMMENT '加油分润';
 ALTER TABLE `rf_member_level` ADD `commission_pingji` decimal(10,4) DEFAULT '0' COMMENT '平级奖';
 ALTER TABLE `rf_member_level` ADD `commission` decimal(10,4) DEFAULT '0' COMMENT '商品分润';
-
+ALTER TABLE `rf_member_level` ADD `fanxian` decimal(10,4) DEFAULT '0' COMMENT '自购返现';
+ALTER TABLE `rf_addon_shop_product` ADD `fanxian` decimal(10,4) DEFAULT '0' COMMENT '自购返现';
 
 
 CREATE TABLE rf_oil_stations (

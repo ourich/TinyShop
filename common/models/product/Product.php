@@ -191,6 +191,7 @@ class Product extends \common\models\base\BaseModel
                     'max_use_point',
                     'presell_price',
                     'commission',
+                    'fanxian',
                 ],
                 'number',
                 'min' => 0,
@@ -291,6 +292,7 @@ class Product extends \common\models\base\BaseModel
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'commission' => '分润金额',
+            'fanxian' => '自购返现',
         ];
     }
 
