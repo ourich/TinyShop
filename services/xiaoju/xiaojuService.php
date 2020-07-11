@@ -3,6 +3,7 @@
 namespace addons\TinyShop\services\xiaoju;
 
 use common\components\Service;
+use addons\TinyShop\services\xiaoju\header;
 
 /**
  * 车主邦接口
@@ -32,6 +33,15 @@ class xiaojuService extends Service
         //         "base_uri" => $this->config['base_uri'],//可省略
         //     ]);
         // });
+    }
+
+    public function test()
+    {
+        $header = new header;
+        $queryData = array('pageIndex' => 1, 'pageSize' => 100);
+        // $info = curl_xiaoJu('queryStoreList ', $queryData);
+        $info = $header->curl_xiaoJu('queryStoreList ', $queryData);
+        p($info);
     }
 
     /**

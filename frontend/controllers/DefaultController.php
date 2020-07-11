@@ -32,8 +32,9 @@ class DefaultController extends BaseController
         $gasId = 'ZG000003987';
         $lon = '114.431413';
         $lat = '30.407874';
-        $order = Yii::$app->tinyShopService->order->findById(7); 
-        $response = Yii::$app->tinyShopService->order->fanxian($order); 
+        Yii::$app->tinyShopService->xiaoju->test();
+        // $order = Yii::$app->tinyShopService->order->findById(7); 
+        // $response = Yii::$app->tinyShopService->order->fanxian($order); 
         
         // $code_province = Yii::$app->services->provinces->getCode($response['province']);
         // $member = Member::findone(1);

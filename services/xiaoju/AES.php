@@ -1,4 +1,6 @@
 <?php
+namespace addons\TinyShop\services\xiaoju;
+
 class AES {
 
     /**
