@@ -2,8 +2,10 @@
 
 namespace addons\TinyShop\services\xiaoju;
 
+use Yii;
 use common\components\Service;
 use addons\TinyShop\services\xiaoju\header;
+use addons\TinyShop\common\models\common\OilStations;
 
 /**
  * 车主邦接口
@@ -45,12 +47,65 @@ class xiaojuService extends Service
     }
 
     /**
-     * 获取油站全量数据（下一步准备改为异步请求）
+     * 全量油站数据
      * @return [type] [description]
      */
-    public function queryGasInfoListOilNoNew()
+    public function getStoreList()
     {
-        return $this->gas->queryGasInfoListOilNoNew($this->config['channelId'])->result();
+        $header = new header;
+        $total = 0;
+        $pageIndex = 1;
+        // 用已经获取的条数和 totalSize 比较，判断是否结束查询；该接口每天请求一次后，将数据缓存至接入方本地即可 
+        do {
+            $queryData = array('pageIndex' => $pageIndex, 'pageSize' => 10);
+            $info = $header->curl_xiaoJu('queryStoreList ', $queryData);
+            if($info['code']!=0){
+                exit($info['msg']);
+            }
+            $result = $info['data']['storeInfoList'];
+            $totalSize = $info['data']['totalSize'];
+            $total += count($info['data']['storeInfoList']);
+            $pageIndex += 1;
+            //入库前过滤
+            foreach ($result as $v) {
+                if (OilStations::find()->where(['gasId' => $v['storeId']])->one()) {
+                    continue; //如果存在，则跳过
+                }
+                $data[] = [
+                  'gasId' => $v['storeId'],
+                  'gasName' => $v['storeName'],
+                  // 'gasType' => $v['gasType'],
+                  'gasLogoBig' => $v['storeLogo'],
+                  // 'gasLogoSmall' => $v['gasLogoSmall'],
+                  'gasAddress' => $v['address'],    //小桔
+                  'gasAddressLongitude' => $v['lon'],    //小桔
+                  'gasAddressLatitude' => $v['lat'],    //小桔
+                  // 'provinceCode' => $v['provinceCode'],
+                  // 'cityCode' => $v['cityCode'],
+                  // 'countyCode' => $v['countyCode'],
+                  'provinceName' => $v['provinceName'],    //小桔
+                  'cityName' => $v['cityName'], //小桔
+                  // 'countyName' => $v['countyName'],
+                  'isInvoice' => $v['invoiceManner'],
+                  // 'companyId' => $v['companyId'],
+                  'created_at' => time(),
+                  'channelId' => 1,
+                  'status' => 1,
+                ];
+            }
+            //再执行批量插入
+            if (isset($data)) 
+            {
+              Yii::$app->db->createCommand()
+                   ->batchInsert(OilStations::tableName(),['gasId','gasName','gasLogoBig','gasAddress','gasAddressLongitude','gasAddressLatitude','provinceName','cityName','isInvoice','created_at','channelId','status'],
+                   $data)
+                   ->execute();
+            }
+            unset($data);
+            p($pageIndex);
+        } while ($total < $totalSize);
+        
+        die();
     }
 
     /**
@@ -59,9 +114,47 @@ class xiaojuService extends Service
      * @param  string $phone  [description]
      * @return [type]         [description]
      */
-    public function queryPriceByPhone(string $gasIds, string $phone)
+    public function queryStorePrice($storeIdList = [], $mobile = '', $lon = '', $lat = '', $itemName = '92#', $openChannel = 1)
     {
-        return $this->gas->queryPriceByPhone($gasIds, $this->config['channelId'], $phone)->result();
+        $header = new header;
+        $queryData = [
+            'lon' => $lon,
+            'lat' => $lat,
+            'mobile' => $mobile,
+            'openChannel' => 1,
+            'itemName' => $itemName,
+            'storeIdList' => $storeIdList,  //数组
+        ];
+        $info = $header->curl_xiaoJu('queryStorePrice ', $queryData);
+        // p($info);
+        // die();
+    }
+
+    /**
+     * 详情页地址
+     * @param  array   $storeIdList [description]
+     * @param  string  $mobile      [description]
+     * @param  string  $lon         [description]
+     * @param  string  $lat         [description]
+     * @param  string  $itemName    [description]
+     * @param  integer $openChannel [description]
+     * @return [type]               [description]
+     */
+    public function queryEnergyUrl($storeId = '', $mobile = '', $lon = '', $lat = '', $itemName = '92#', $openChannel = 1, $outUserId = '123456')
+    {
+        $header = new header;
+        $queryData = [
+            'lon' => $lon,
+            'lat' => $lat,
+            'mobile' => $mobile,
+            'openChannel' => 1,
+            'itemName' => $itemName,
+            'outUserId' => $outUserId,  //第三方平台UserId
+            'storeId' => $storeId,  //单个ID
+        ];
+        $info = $header->curl_xiaoJu('queryEnergyUrl ', $queryData);
+        // p($info);
+        // die();
     }
     /**
      * 平台授权登录

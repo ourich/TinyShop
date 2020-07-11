@@ -32,7 +32,7 @@ class DefaultController extends BaseController
         $gasId = 'ZG000003987';
         $lon = '114.431413';
         $lat = '30.407874';
-        Yii::$app->tinyShopService->xiaoju->test();
+        Yii::$app->tinyShopService->xiaoju->queryEnergyUrl('5278656542077884420', '13098878085', $lon, $lat, '92#', 1);
         // $order = Yii::$app->tinyShopService->order->findById(7); 
         // $response = Yii::$app->tinyShopService->order->fanxian($order); 
         
