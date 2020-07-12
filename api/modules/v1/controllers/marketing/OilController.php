@@ -14,6 +14,7 @@ use api\controllers\OnAuthController;
 use yii\web\NotFoundHttpException;
 use addons\TinyShop\common\models\common\OilStations;
 use common\models\member\Member;
+use addons\TinyShop\services\xiaoju\header;
 
 /**
  * 优惠券领取列表
@@ -55,7 +56,7 @@ class OilController extends OnAuthController
         // 取出所有数据并缓存
         $fanwei = 5;
         $data_all = $this->modelClass::find()
-            ->select('gasId,gasAddressLongitude,gasAddressLatitude')
+            ->select('gasId,gasAddressLongitude,gasAddressLatitude,channelId')
             ->where(['status' => StatusEnum::ENABLED])
             ->andFilterWhere(['between','gasAddressLongitude', $zuobiao['lon'] - $fanwei, $zuobiao['lon'] + $fanwei])
             ->andFilterWhere(['between','gasAddressLatitude', $zuobiao['lat'] - $fanwei, $zuobiao['lat'] + $fanwei])
@@ -84,23 +85,66 @@ class OilController extends OnAuthController
         }
         $data = $provider->getModels();
         // 主要生成header的page信息
-        // $data = (new Serializer())->serialize($data);
-        $gasIds = ArrayHelper::getColumn($data, 'gasId');
-        $gasIds=implode(',',$gasIds);
+        $data = (new Serializer())->serialize($data);
+        return $data;
 
-        if ($member['oil_token_time'] < time()) {
-            $areaSend = Yii::$app->tinyShopService->member->areaSend(Yii::$app->user->identity->member_id, $who['longitude'], $who['latitude']);
-            $token = Yii::$app->tinyShopService->czb->login($mobile);
-            $user = Member::findOne($member['id']);
-            Member::updateAll(['oil_token'=>$token['result']['token'],'oil_token_time'=>time() + 21*24*3600],['id'=>$member['id']]);
+        //分流
+        foreach ($data as $qudao) {
+            if ($qudao['channelId'] == 1) {
+                $xiaojuIds[] = $qudao['gasId']; //小桔
+            } else {
+                $czbIds[] = $qudao['gasId'];    //车主邦
+            }
+            
         }
-        $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, $mobile);
-        $results = $response['result'];
+        // Yii::error('-------------czb---------'.$czbIds);
+        // Yii::error('-------------xiaoju------'.$xiaojuIds);
+        // die();
+
+        //车主邦价格
+        $results = [];
+        if (!empty($czbIds)) {
+            $gasIds=implode(',',$czbIds);
+            if ($member['oil_token_time'] < time()) {
+                $token = Yii::$app->tinyShopService->czb->login($mobile);
+                $user = Member::findOne($member['id']);
+                Member::updateAll(['oil_token'=>$token['result']['token'],'oil_token_time'=>time() + 21*24*3600],['id'=>$member['id']]);
+            }
+            $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, $mobile);
+            $results = $response['result'];
+            // return $results;
+            
+        }
+        // 小桔实时价格
+        $itemInfoList = [];
+        if (!empty($xiaojuIds)) {
+            $header = new header;
+            $queryData = [
+                'lon' => $zuobiao['lon'],
+                'lat' => $zuobiao['lat'],
+                'mobile' => $mobile,
+                'openChannel' => 1,
+                'itemName' => '92#',
+                'storeIdList' => $xiaojuIds,  //数组
+            ];
+            $info = $header->curl_xiaoJu('queryStorePrice ', $queryData);
+            // return $info;
+            $itemInfoList = $info['data']['itemInfoList'];
+            
+        }
+
+        //合并
+        $results = ArrayHelper::merge($results,$itemInfoList);
+        // Yii::error('-------------xiaoju------'.$results);
         // return $results;
         foreach ($results as &$result) {
             $result = $this->regroupShow($result, $zuobiao['lat'], $zuobiao['lon'], $mobile);
         }
         ArrayHelper::multisort($results,'distance',SORT_ASC);
+
+        $areaSend = Yii::$app->tinyShopService->member->areaSend(Yii::$app->user->identity->member_id, $who['longitude'], $who['latitude']);    //激活奖
+        // Yii::error('-------------测试------'.print_r($results, 1));
+        $results = (new Serializer())->serialize($results);
         return $results;
     }
 
@@ -112,21 +156,32 @@ class OilController extends OnAuthController
      */
     public function regroupShow($model, $latitude, $longitude, $mobile)
     {
-        // 是否可领取 
-        $other = OilStations::find()->select('gasAddress,gasAddressLatitude,gasAddressLongitude,gasLogoSmall')->where(['gasId'=>$model['gasId']])->one();
-        $model['gasName'] = mb_substr($model['gasName'], 0, 15, 'utf-8');
+        $model['gasId'] = $model['gasId'] ?? $model['storeId'];
+        $model['channelId'] = $other['channelId'] ?? 0;
+        $other = OilStations::find()->where(['gasId'=>$model['gasId']])->one();
+        $model['gasName'] = mb_substr($other['gasName'], 0, 15, 'utf-8');
         $model['gasAddress'] = $other['gasAddress'];
         $model['gasAddressLongitude'] = $other['gasAddressLongitude'];
         $model['gasAddressLatitude'] = $other['gasAddressLatitude'];
         $model['gasLogoSmall'] = $other['gasLogoSmall'];
         $model['distance'] = $this->getDistance($latitude, $longitude, $model['gasAddressLatitude'], $model['gasAddressLongitude']);
-        $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
-        $model['gunNos'] = ArrayHelper::getColumn($model['oilPriceList'], 'gunNos');
-        $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
-        $model['priceOfficial'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceOfficial');
-        $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
         $model['mobile'] = $mobile;
+        // Yii::error('-------------测试------'.print_r($model, 1));
+        // write();
+        $model['priceYfq'] = number_format($model['vipPrice'] /100, 2);
+        $model['priceOfficial'] = number_format($model['cityPrice'] /100, 2);
+        $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
         $model['url'] = 'https://open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
+        if ($other['channelId'] == 0) {
+            $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
+            $model['gunNos'] = ArrayHelper::getColumn($model['oilPriceList'], 'gunNos');
+            $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
+            $model['priceOfficial'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceOfficial');
+            $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
+            $model['url'] = 'https://open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
+        }else {
+            # code...
+        }
 
         return $model;
     }
