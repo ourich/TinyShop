@@ -85,8 +85,9 @@ class OilController extends OnAuthController
         }
         $data = $provider->getModels();
         // 主要生成header的page信息
-        $data = (new Serializer())->serialize($data);
-        return $data;
+        // $data = (new Serializer())->serialize($data);
+        // Yii::error('-------------测888试------'.print_r($data, 1));
+        // return $data;
 
         //分流
         foreach ($data as $qudao) {
@@ -116,25 +117,27 @@ class OilController extends OnAuthController
             
         }
         // 小桔实时价格
-        $itemInfoList = [];
-        if (!empty($xiaojuIds)) {
-            $header = new header;
-            $queryData = [
-                'lon' => $zuobiao['lon'],
-                'lat' => $zuobiao['lat'],
-                'mobile' => $mobile,
-                'openChannel' => 1,
-                'itemName' => '92#',
-                'storeIdList' => $xiaojuIds,  //数组
-            ];
-            $info = $header->curl_xiaoJu('queryStorePrice ', $queryData);
-            // return $info;
-            $itemInfoList = $info['data']['itemInfoList'];
+        // $itemInfoList = [];
+        // if (!empty($xiaojuIds)) {
+        //     $header = new header;
+        //     $queryData = [
+        //         'lon' => $zuobiao['lon'],
+        //         'lat' => $zuobiao['lat'],
+        //         'mobile' => $mobile,
+        //         'openChannel' => 1,
+        //         'itemName' => '92#',
+        //         'storeIdList' => $xiaojuIds,  //数组
+        //     ];
+        //     $info = $header->curl_xiaoJu('queryStorePrice ', $queryData);
+        //     // return $info;
+        //     $itemInfoList = $info['data']['itemInfoList'];
             
-        }
+        // }
 
-        //合并
-        $results = ArrayHelper::merge($results,$itemInfoList);
+        // //合并
+        // $results = ArrayHelper::merge($results,$itemInfoList);
+        
+        
         // Yii::error('-------------xiaoju------'.$results);
         // return $results;
         foreach ($results as &$result) {
@@ -143,8 +146,6 @@ class OilController extends OnAuthController
         ArrayHelper::multisort($results,'distance',SORT_ASC);
 
         $areaSend = Yii::$app->tinyShopService->member->areaSend(Yii::$app->user->identity->member_id, $who['longitude'], $who['latitude']);    //激活奖
-        // Yii::error('-------------测试------'.print_r($results, 1));
-        $results = (new Serializer())->serialize($results);
         return $results;
     }
 
