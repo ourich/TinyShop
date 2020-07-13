@@ -117,28 +117,29 @@ class OilController extends OnAuthController
             
         }
         // 小桔实时价格
-        // $itemInfoList = [];
-        // if (!empty($xiaojuIds)) {
-        //     $header = new header;
-        //     $queryData = [
-        //         'lon' => $zuobiao['lon'],
-        //         'lat' => $zuobiao['lat'],
-        //         'mobile' => $mobile,
-        //         'openChannel' => 1,
-        //         'itemName' => '92#',
-        //         'storeIdList' => $xiaojuIds,  //数组
-        //     ];
-        //     $info = $header->curl_xiaoJu('queryStorePrice ', $queryData);
-        //     // return $info;
-        //     $itemInfoList = $info['data']['itemInfoList'];
-            
-        // }
+        $itemInfoList = [];
+        if (!empty($xiaojuIds)) {
+            $xiaoju = new header;
+            $queryData = [
+                'lon' => $zuobiao['lon'],
+                'lat' => $zuobiao['lat'],
+                'mobile' => $mobile,
+                'openChannel' => 1,
+                'itemName' => '92#',
+                'storeIdList' => $xiaojuIds,  //数组
+            ];
+            $info = $xiaoju->curl_xiaoJu('queryStorePrice ', $queryData);
+            // $info = Yii::$app->tinyShopService->xiaoju->queryStorePrice($xiaojuIds, $mobile, $zuobiao['lon'], $zuobiao['lat']);
+            // return $info;
+            $itemInfoList = $info['data']['itemInfoList'];
+            // Yii::error('-------------xiaoju------'.print_r($info, 1));
+        }
 
-        // //合并
-        // $results = ArrayHelper::merge($results,$itemInfoList);
+        //合并
+        $results = ArrayHelper::merge($results,$itemInfoList);
         
         
-        // Yii::error('-------------xiaoju------'.$results);
+        // Yii::error('-------------xiaoju------'.print_r($results, 1));
         // return $results;
         foreach ($results as &$result) {
             $result = $this->regroupShow($result, $zuobiao['lat'], $zuobiao['lon'], $mobile);
@@ -146,6 +147,8 @@ class OilController extends OnAuthController
         ArrayHelper::multisort($results,'distance',SORT_ASC);
 
         $areaSend = Yii::$app->tinyShopService->member->areaSend(Yii::$app->user->identity->member_id, $who['longitude'], $who['latitude']);    //激活奖
+
+        // Yii::error('-------------最终------'.print_r($results, 1));
         return $results;
     }
 
@@ -158,7 +161,6 @@ class OilController extends OnAuthController
     public function regroupShow($model, $latitude, $longitude, $mobile)
     {
         $model['gasId'] = $model['gasId'] ?? $model['storeId'];
-        $model['channelId'] = $other['channelId'] ?? 0;
         $other = OilStations::find()->where(['gasId'=>$model['gasId']])->one();
         $model['gasName'] = mb_substr($other['gasName'], 0, 15, 'utf-8');
         $model['gasAddress'] = $other['gasAddress'];
@@ -173,7 +175,7 @@ class OilController extends OnAuthController
         $model['priceOfficial'] = number_format($model['cityPrice'] /100, 2);
         $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
         $model['url'] = 'https://open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
-        if ($other['channelId'] == 0) {
+        if ($other['channelId'] != 1) {
             $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
             $model['gunNos'] = ArrayHelper::getColumn($model['oilPriceList'], 'gunNos');
             $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
