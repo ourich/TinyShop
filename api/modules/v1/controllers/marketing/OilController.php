@@ -14,7 +14,7 @@ use api\controllers\OnAuthController;
 use yii\web\NotFoundHttpException;
 use addons\TinyShop\common\models\common\OilStations;
 use common\models\member\Member;
-use addons\TinyShop\services\xiaoju\header;
+use addons\TinyShop\services\xiaoju\xiaojuHeader;
 
 /**
  * 优惠券领取列表
@@ -40,9 +40,113 @@ class OilController extends OnAuthController
     protected $authOptional = [];
 
     /**
-     * @return mixed|ActiveDataProvider
+     * 新版油站列表（小桔+团油混合）
+     * @return [type] [description]
      */
     public function actionIndex()
+    {
+        // throw new NotFoundHttpException('请先登录');
+        $data = Yii::$app->request->get();
+        $member = Member::findone(Yii::$app->user->identity->member_id);
+        $mobile = $member['mobile'];
+        if (!$mobile) {
+            throw new NotFoundHttpException('请先登录');
+        }
+        $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($data['longitude'], $data['latitude']);  //GPS转国测坐标
+
+        //限制区域
+        $fanwei = 5;
+        $lon = $zuobiao['lon'];
+        $lat = $zuobiao['lat'];
+
+        $stations = OilStations::find()
+            ->select('gasId,gasAddressLongitude,gasAddressLatitude,channelId')
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['between','gasAddressLongitude', $lon - $fanwei, $lon + $fanwei])
+            ->andFilterWhere(['between','gasAddressLatitude', $lat - $fanwei, $lat + $fanwei])
+            ->orderBy('id desc')
+            ->asArray()
+            ->all();
+        
+        // Yii::error('-------------测试------'.print_r($stations, 1));
+        foreach ($stations as &$station) {
+            $station['distance'] = self::getDistance($lat, $lon, $station['gasAddressLatitude'], $station['gasAddressLongitude']);
+        }
+        // Yii::error('-------------测888试------'.print_r($stations, 1));
+        $stations = new ArrayDataProvider([
+            'allModels' => $stations,
+            'sort' => [
+                'attributes' => ['distance'],        //排序参数，
+                'defaultOrder' => [
+                    'distance' => SORT_ASC,            
+                ]
+            ],
+            'pagination' => [
+                'pageSize' => $this->pageSize,
+                'validatePage' => false,// 超出分页不返回data
+            ],
+        ]);
+        $stations = $stations->getModels();
+        
+        //分流
+        $xiaojuIds = [];
+        $czbIds = [];
+        foreach ($stations as $station) {
+            // $station = $this->reShow($station, $lat, $lon, $mobile);
+            if ($station['channelId'] == 1) {
+                $xiaojuIds[] = $station['gasId']; //小桔
+            } else {
+                $czbIds[] = $station['gasId'];    //车主邦
+            }
+        }
+
+        $results = [];
+        $itemInfoList = [];
+        if (!empty($czbIds)) {
+            $gasIds=implode(',',$czbIds);
+            if ($member['oil_token_time'] < time()) {
+                $token = Yii::$app->tinyShopService->czb->login($mobile);
+                $user = Member::findOne($member['id']);
+                Member::updateAll(['oil_token'=>$token['result']['token'],'oil_token_time'=>time() + 21*24*3600],['id'=>$member['id']]);
+            }
+            $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, $mobile);
+            $results = $response['result'];
+        }
+        // if (!empty($xiaojuIds)) {
+        //     $queryData = [
+        //         'lon' => $lon,
+        //         'lat' => $lat,
+        //         'mobile' => $mobile,
+        //         'openChannel' => 1,
+        //         'itemName' => '92#',
+        //         'storeIdList' => $xiaojuIds,  //数组
+        //     ];
+        //     $xiaoju = new xiaojuHeader();
+        //     $info = $xiaoju->test('queryToken');
+        //     if ($info['code'] == 0) {
+        //         $stations_xiaoju = $info['data']['itemInfoList'];
+        //     }
+        // }
+
+        // Yii::error('-------------排序后小桔------'.print_r($stations_xiaoju, 1));
+        // Yii::error('-------------排序后车主邦------'.print_r($czbIds, 1));
+        // Yii::error('-------------排序后------'.print_r($stations, 1));
+        $results = ArrayHelper::merge($results,$itemInfoList);
+
+        foreach ($results as &$result) {
+            $result = $this->regroupShow($result, $lat, $lon, $mobile);
+        }
+        ArrayHelper::multisort($results,'distance',SORT_ASC);
+
+        return $results;
+    }
+
+    
+
+    /**
+     * @return mixed|ActiveDataProvider
+     */
+    public function actionIndex_bak()
     {
         $who = Yii::$app->request->get();
         if (!Yii::$app->user->isGuest) {
