@@ -75,7 +75,7 @@ class xiaojuService extends Service
                   'gasId' => $v['storeId'],
                   'gasName' => $v['storeName'],
                   // 'gasType' => $v['gasType'],
-                  'gasLogoBig' => $v['storeLogo'],
+                  'gasLogoSmall' => $v['storeLogo'],
                   // 'gasLogoSmall' => $v['gasLogoSmall'],
                   'gasAddress' => $v['address'],    //小桔
                   'gasAddressLongitude' => $v['lon'],    //小桔
@@ -97,7 +97,7 @@ class xiaojuService extends Service
             if (isset($data)) 
             {
               Yii::$app->db->createCommand()
-                   ->batchInsert(OilStations::tableName(),['gasId','gasName','gasLogoBig','gasAddress','gasAddressLongitude','gasAddressLatitude','provinceName','cityName','isInvoice','created_at','channelId','status'],
+                   ->batchInsert(OilStations::tableName(),['gasId','gasName','gasLogoSmall','gasAddress','gasAddressLongitude','gasAddressLatitude','provinceName','cityName','isInvoice','created_at','channelId','status'],
                    $data)
                    ->execute();
             }

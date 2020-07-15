@@ -53,6 +53,7 @@ class OilController extends OnAuthController
             throw new NotFoundHttpException('请先登录');
         }
         $zuobiao = Yii::$app->tinyShopService->czb->WGS84toGCJ02($data['longitude'], $data['latitude']);  //GPS转国测坐标
+        $areaSend = Yii::$app->tinyShopService->member->areaSend(Yii::$app->user->identity->member_id, $data['longitude'], $data['latitude']);    //激活奖
 
         //限制区域
         $fanwei = 5;
@@ -122,7 +123,7 @@ class OilController extends OnAuthController
                 'storeIdList' => $xiaojuIds,  //数组
             ];
             $xiaoju = new xiaojuHeader();
-            $info = $xiaoju->curl_xiaoJu('queryStorePrice ', $queryData);
+            $info = $xiaoju->curl_xiaoJu('queryStorePrice', $queryData);
             if ($info['code'] == 0) {
                 $itemInfoList = $info['data']['itemInfoList'];
             }
@@ -271,15 +272,12 @@ class OilController extends OnAuthController
         $model['gasAddressLongitude'] = $other['gasAddressLongitude'];
         $model['gasAddressLatitude'] = $other['gasAddressLatitude'];
         $model['gasLogoSmall'] = $other['gasLogoSmall'];
-        $model['distance'] = $this->getDistance($latitude, $longitude, $model['gasAddressLatitude'], $model['gasAddressLongitude']);
+        $model['distance'] = $this->getDistance($latitude, $longitude, $other['gasAddressLatitude'], $other['gasAddressLongitude']);
         $model['mobile'] = $mobile;
         // Yii::error('-------------测试------'.print_r($model, 1));
         // write();
-        $model['priceYfq'] = number_format($model['vipPrice'] /100, 2);
-        $model['priceOfficial'] = number_format($model['cityPrice'] /100, 2);
-        $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
-        $model['url'] = 'https://open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
-        if ($other['channelId'] != 1) {
+        
+        if ($other['channelId'] == 0) {
             $model['oilPriceList'] = ArrayHelper::index($model['oilPriceList'], 'oilNo');
             $model['gunNos'] = ArrayHelper::getColumn($model['oilPriceList'], 'gunNos');
             $model['priceYfq'] = ArrayHelper::getValue($model['oilPriceList'], '92.priceYfq');
@@ -287,7 +285,10 @@ class OilController extends OnAuthController
             $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
             $model['url'] = 'https://open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
         }else {
-            # code...
+            $model['priceYfq'] = number_format($model['vipPrice'] /100, 2);
+            $model['priceOfficial'] = number_format($model['cityPrice'] /100, 2);
+            $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
+            $model['url'] = 'https://open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
         }
 
         return $model;
