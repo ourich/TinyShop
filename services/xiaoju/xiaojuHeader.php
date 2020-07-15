@@ -12,7 +12,7 @@ use Yii;
 /**
  * 
  */
-class header
+class xiaojuHeader
 {
 	function __construct()
 	{
@@ -104,7 +104,7 @@ class header
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 		$ret = curl_exec($ch);
 	    $request_header = curl_getinfo( $ch, CURLINFO_HEADER_OUT);
-	    print_r($request_header);
+	    // print_r($request_header);
 		curl_close($ch);
 	//    print_r($ret);exit;
 		$ret=json_decode($ret,true);

@@ -112,21 +112,21 @@ class OilController extends OnAuthController
             $response = Yii::$app->tinyShopService->czb->queryPriceByPhone($gasIds, $mobile);
             $results = $response['result'];
         }
-        // if (!empty($xiaojuIds)) {
-        //     $queryData = [
-        //         'lon' => $lon,
-        //         'lat' => $lat,
-        //         'mobile' => $mobile,
-        //         'openChannel' => 1,
-        //         'itemName' => '92#',
-        //         'storeIdList' => $xiaojuIds,  //数组
-        //     ];
-        //     $xiaoju = new xiaojuHeader();
-        //     $info = $xiaoju->test('queryToken');
-        //     if ($info['code'] == 0) {
-        //         $stations_xiaoju = $info['data']['itemInfoList'];
-        //     }
-        // }
+        if (!empty($xiaojuIds)) {
+            $queryData = [
+                'lon' => $lon,
+                'lat' => $lat,
+                'mobile' => $mobile,
+                'openChannel' => 1,
+                'itemName' => '92#',
+                'storeIdList' => $xiaojuIds,  //数组
+            ];
+            $xiaoju = new xiaojuHeader();
+            $info = $xiaoju->curl_xiaoJu('queryStorePrice ', $queryData);
+            if ($info['code'] == 0) {
+                $itemInfoList = $info['data']['itemInfoList'];
+            }
+        }
 
         // Yii::error('-------------排序后小桔------'.print_r($stations_xiaoju, 1));
         // Yii::error('-------------排序后车主邦------'.print_r($czbIds, 1));
