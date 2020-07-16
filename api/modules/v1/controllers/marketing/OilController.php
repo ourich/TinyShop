@@ -37,15 +37,16 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['notifyCheckUserInfo', 'test'];
-
-    public function actionnotifyCheckUserInfo()
-    {
-        throw new NotFoundHttpException('请先登录');
-    }
+    protected $authOptional = ['test', 'ces'];
     public function actionTest()
     {
-        throw new NotFoundHttpException('请先登录ttt');
+        $data = Yii::$app->request->get();
+        throw new NotFoundHttpException('请先登录'.$data['mobile']);
+    }
+    public function actionCes()
+    {
+        $data = Yii::$app->request->post();
+        throw new NotFoundHttpException('请先XXX登录'.$data['mobile']);
     }
 
     /**
@@ -72,7 +73,7 @@ class OilController extends OnAuthController
         $stations = OilStations::find()
             ->select('gasId,gasAddressLongitude,gasAddressLatitude,channelId')
             ->where(['status' => StatusEnum::ENABLED])
-            ->where(['channelId' => 0)  //只显示团油的
+            ->where(['channelId' => '0'])   //只显示团油的
             ->andFilterWhere(['between','gasAddressLongitude', $lon - $fanwei, $lon + $fanwei])
             ->andFilterWhere(['between','gasAddressLatitude', $lat - $fanwei, $lat + $fanwei])
             ->orderBy('id desc')
