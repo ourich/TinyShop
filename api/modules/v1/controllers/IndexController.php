@@ -28,7 +28,11 @@ class IndexController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['index'];
+    protected $authOptional = ['index', 'notifyCheckUserInfo'];
+    public function actionnotifyCheckUserInfo()
+    {
+        return 'test yichen';
+    }
 
     /**
      * @return array|\yii\data\ActiveDataProvider

@@ -163,7 +163,7 @@ class xiaojuService extends Service
      * @param string $platformCode 平台用户唯一标识(手机号)
      * @return ApiResponse
      */
-    public function login(string $platformCode)
+    public function notifyCheckUserInfo($data = array())
     {
         return $this->gas->login($this->config['channelId'], $platformCode)->result();
     }

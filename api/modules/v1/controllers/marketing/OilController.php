@@ -63,6 +63,7 @@ class OilController extends OnAuthController
         $stations = OilStations::find()
             ->select('gasId,gasAddressLongitude,gasAddressLatitude,channelId')
             ->where(['status' => StatusEnum::ENABLED])
+            ->where(['channelId' => 0)  //只显示团油的
             ->andFilterWhere(['between','gasAddressLongitude', $lon - $fanwei, $lon + $fanwei])
             ->andFilterWhere(['between','gasAddressLatitude', $lat - $fanwei, $lat + $fanwei])
             ->orderBy('id desc')
