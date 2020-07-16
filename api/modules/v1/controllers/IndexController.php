@@ -8,6 +8,7 @@ use common\enums\StatusEnum;
 use api\controllers\OnAuthController;
 use addons\TinyShop\common\enums\AdvLocalEnum;
 use addons\TinyShop\common\models\forms\ProductSearch;
+use common\helpers\ResultHelper;
 
 /**
  * 首页相关
@@ -31,7 +32,8 @@ class IndexController extends OnAuthController
     protected $authOptional = ['index', 'notifyCheckUserInfo'];
     public function actionnotifyCheckUserInfo()
     {
-        return 'test yichen';
+        $data = Yii::$app->request->post();
+        return ResultHelper::json(200, '领取成功'.$data['mobile']);
     }
 
     /**
