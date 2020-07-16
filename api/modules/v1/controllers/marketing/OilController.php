@@ -37,16 +37,17 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['test', 'ces'];
+    protected $authOptional = ['test', 'notifyCheckUserInfo'];
     public function actionTest()
     {
         $data = Yii::$app->request->get();
         throw new NotFoundHttpException('请先登录'.$data['mobile']);
     }
-    public function actionCes()
+    public function actionnotifyCheckUserInfo()
     {
         $data = Yii::$app->request->post();
-        throw new NotFoundHttpException('请先XXX登录'.$data['mobile']);
+        $mobile = $data['mobile'];
+        return ResultHelper::json(200, '到底了'.$mobile);
     }
 
     /**
