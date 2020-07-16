@@ -4,7 +4,7 @@ namespace addons\TinyShop\services\xiaoju;
 
 use Yii;
 use common\components\Service;
-use addons\TinyShop\services\xiaoju\header;
+use addons\TinyShop\services\xiaoju\xiaojuHeader;
 use addons\TinyShop\common\models\common\OilStations;
 
 /**
@@ -39,7 +39,7 @@ class xiaojuService extends Service
 
     public function test()
     {
-        $header = new header;
+        $header = new xiaojuHeader;
         $queryData = array('pageIndex' => 1, 'pageSize' => 100);
         // $info = curl_xiaoJu('queryStoreList ', $queryData);
         $info = $header->curl_xiaoJu('queryStoreList ', $queryData);
@@ -52,7 +52,7 @@ class xiaojuService extends Service
      */
     public function getStoreList()
     {
-        $header = new header;
+        $header = new xiaojuHeader;
         $total = 0;
         $pageIndex = 1;
         // 用已经获取的条数和 totalSize 比较，判断是否结束查询；该接口每天请求一次后，将数据缓存至接入方本地即可 
@@ -116,7 +116,7 @@ class xiaojuService extends Service
      */
     public function queryStorePrice($storeIdList = [], $mobile = '', $lon = '', $lat = '', $itemName = '92#', $openChannel = 1)
     {
-        $header = new header;
+        $header = new xiaojuHeader;
         $queryData = [
             'lon' => $lon,
             'lat' => $lat,
@@ -142,7 +142,7 @@ class xiaojuService extends Service
      */
     public function queryEnergyUrl($storeId = '', $mobile = '', $lon = '', $lat = '', $itemName = '92#', $openChannel = 1, $outUserId = '123456')
     {
-        $header = new header;
+        $header = new xiaojuHeader;
         $queryData = [
             'lon' => $lon,
             'lat' => $lat,
@@ -153,8 +153,8 @@ class xiaojuService extends Service
             'storeId' => $storeId,  //单个ID
         ];
         $info = $header->curl_xiaoJu('queryEnergyUrl ', $queryData);
-        // p($info);
-        // die();
+        p($info);
+        die();
     }
     /**
      * 平台授权登录
@@ -168,29 +168,7 @@ class xiaojuService extends Service
         return $this->gas->login($this->config['channelId'], $platformCode)->result();
     }
 
-    /**
-     * 查询订单
-     * @param  string  $orderSource [description]
-     * @param  integer $pageIndex   [description]
-     * @param  integer $pageSize    [description]
-     * @param  array   $extraParam  [description]
-     * @return [type]               [description]
-     */
-    public function platformOrderInfoV2($extraParam = [], $pageIndex = 1, $pageSize = 100)
-    {
-        return $this->gas->platformOrderInfoV2($this->config['channelId'], $pageIndex, $pageSize, $extraParam)->result();
-    }
-
-    /**
-     * 坐标系转换
-     * @param string $lon [description]
-     * @param string $lat [description]
-     */
-    public function WGS84toGCJ02(string $lon, string $lat)
-    {
-        $Trans = new GpsTransform();
-        return $Trans->WGS84toGCJ02($lon, $lat);
-    }
+    
     
 
 }

@@ -272,6 +272,7 @@ class OilController extends OnAuthController
         $model['gasAddressLongitude'] = $other['gasAddressLongitude'];
         $model['gasAddressLatitude'] = $other['gasAddressLatitude'];
         $model['gasLogoSmall'] = $other['gasLogoSmall'];
+        $model['channelId'] = $other['channelId'];
         $model['distance'] = $this->getDistance($latitude, $longitude, $other['gasAddressLatitude'], $other['gasAddressLongitude']);
         $model['mobile'] = $mobile;
         // Yii::error('-------------测试------'.print_r($model, 1));
@@ -288,7 +289,20 @@ class OilController extends OnAuthController
             $model['priceYfq'] = number_format($model['vipPrice'] /100, 2);
             $model['priceOfficial'] = number_format($model['cityPrice'] /100, 2);
             $model['priceDiscount'] = number_format($model['priceOfficial'] - $model['priceYfq'], 2);
-            $model['url'] = 'https://open.czb365.com/redirection/todo/?platformType=92652519&platformCode=' . $mobile . '&gasId=' . $model['gasId'] . '&gunNo=';
+            $xiaoju = new xiaojuHeader();
+            $queryData = [
+                'lon' => $longitude,
+                'lat' => $latitude,
+                'mobile' => $mobile,
+                'openChannel' => 1,
+                'itemName' => '92#',
+                'outUserId' => Yii::$app->user->identity->member_id,  //第三方平台UserId
+                'storeId' => $model['gasId'],  //单个ID
+            ];
+            $info = $xiaoju->curl_xiaoJu('queryEnergyUrl', $queryData);
+            if ($info['code'] == 0) {
+                $model['url'] = $info['data']['link'];
+            }
         }
 
         return $model;
