@@ -37,7 +37,16 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = [];
+    protected $authOptional = ['notifyCheckUserInfo', 'test'];
+
+    public function actionnotifyCheckUserInfo()
+    {
+        throw new NotFoundHttpException('请先登录');
+    }
+    public function actionTest()
+    {
+        throw new NotFoundHttpException('请先登录ttt');
+    }
 
     /**
      * 新版油站列表（小桔+团油混合）
