@@ -37,8 +37,8 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['test', 'notifyCheckUserInfo'];
-    public function actionTest()
+    protected $authOptional = ['test', 'test-test', 'notifyCheckUserInfo'];
+    public function actionTestTest()
     {
         $data = Yii::$app->request->post();
         return ResultHelper::json(200, '到底了'.$data['mobile']);
