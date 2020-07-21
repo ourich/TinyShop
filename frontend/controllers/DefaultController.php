@@ -12,7 +12,6 @@ use addons\TinyShop\common\models\common\OilStations;
 use addons\TinyShop\common\models\common\OilOrder;
 use common\models\member\Member;
 use common\helpers\AddonHelper;
-use common\helpers\ResultHelper;
 
 /**
  * 默认控制器
@@ -44,15 +43,10 @@ class DefaultController extends BaseController
         die('hello');
     }
 
-    /**
-     * 小桔免登陆
-     * @return [type] [description]
-     */
-    public function actionNotifyCheckUserInfo()
+    public function actionMyTest()
     {
         $data = Yii::$app->request->post();
-        $mobile = $data['mobile'];
-        return ResultHelper::json(200, '到底XXX了'.$mobile);
+        return '真实地址：tiny-shop/default/my-test';
     }
 
     public function actionMove()

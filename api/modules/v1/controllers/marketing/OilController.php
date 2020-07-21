@@ -37,12 +37,17 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['test', 'test-test', 'notifyCheckUserInfo'];
-    public function actionTestTest()
+    protected $authOptional = ['test', 'my-test', 'notifyCheckUserInfo'];
+    public function actionMyTest()
     {
         $data = Yii::$app->request->post();
-        return ResultHelper::json(200, '到底了'.$data['mobile']);
+        return ResultHelper::json(200, '真实地址：api/tiny-shop/v1/marketing/oil/my-test'.$data['mobile']);
     }
+
+    /**
+     * 小桔免登陆
+     * @return [type] [description]
+     */
     public function actionNotifyCheckUserInfo()
     {
         $data = Yii::$app->request->post();
