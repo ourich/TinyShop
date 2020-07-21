@@ -37,7 +37,7 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['test', 'my-test', 'notifyCheckUserInfo'];
+    protected $authOptional = ['test', 'my-test', 'notify-check-user-info'];
     public function actionMyTest()
     {
         $data = Yii::$app->request->post();
@@ -52,7 +52,9 @@ class OilController extends OnAuthController
     {
         $data = Yii::$app->request->post();
         $mobile = $data['mobile'];
-        return ResultHelper::json(200, '到底XXX了'.$mobile);
+        $outUserId = $data['outUserId'];
+        Yii::error('-------------用户信息校验------'.print_r($data, 1));
+        return ResultHelper::json(200, '用户信息校验'.$mobile);
     }
 
     /**
