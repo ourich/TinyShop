@@ -79,7 +79,7 @@ class SettingForm extends Model
                 'integer',
                 'min' => 0,
             ],
-            [['share_title', 'share_cover', 'copyright_companyname', 'commission_province', 'commission_city', 'gas_area', 'gas_province', 'gas_city', 'commission_area'], 'string', 'max' => 100],
+            [['share_title', 'share_cover', 'copyright_companyname', 'commission_province', 'commission_city', 'gas_area', 'gas_province', 'card_city', 'card_area', 'card_province', 'gas_city', 'commission_area'], 'string', 'max' => 100],
             [['share_link', 'share_desc', 'evaluate', 'copyright_logo', 'kefu'], 'string', 'max' => 200],
             [['share_link', 'copyright_url'], 'url'],
             [['order_invoice_tax'], 'number', 'min' => 1, 'max' => 100],
@@ -126,9 +126,12 @@ class SettingForm extends Model
             'commission_province' => '省代商品分润',
             'commission_city' => '市代商品分润',
             'commission_area' => '区代商品分润',
-            'gas_province' => '省代加油分润',
-            'gas_city' => '市代加油分润',
-            'gas_area' => '区代加油分润',
+            'gas_province' => '省代分润（加油）',
+            'gas_city' => '市代分润（加油）',
+            'gas_area' => '区代分润（加油）',
+            'card_province' => '省代分润（油卡）',
+            'card_city' => '市代分润（油卡）',
+            'card_area' => '区代分润（油卡）',
         ];
     }
 

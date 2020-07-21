@@ -656,14 +656,16 @@ class OrderService extends \common\components\Service
                 $num += $value['num'];
             }
         }
-        $num *= 100;
+        $num *= 10; //卡片*10张
+        $this->fanxian($order); //普通订单和油卡订单都返现
         if ($num == 0) {
             $this->shopjiCha($order);
-            $this->fanxian($order);
             return;
         }
         $pay_money = $order->pay_money;     //实际付款金额
         $order_sn = $order->order_sn;     //订单编号
+
+        Yii::$app->tinyShopService->member->areaSendCard($order, $pay_money);
         $member = Member::findone($order->buyer_id);  //购买后，自己升级到V1，整条线跟着升级 
         if ($member->current_level < 2 && $num > 0) {
             $member->current_level = 2;
