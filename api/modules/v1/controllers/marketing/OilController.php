@@ -58,7 +58,7 @@ class OilController extends OnAuthController
             'checkState' => 0,
             'checkMsg' => 'OK',
         ];
-        $outinfo = $xiaoju->jiami($data);
+        $outinfo = $xiaoju->jiami($queryData);
         Yii::error('-------------用户信息校验------'.print_r($data, 1));
         return $outinfo;
     }
