@@ -53,8 +53,14 @@ class OilController extends OnAuthController
         $data = Yii::$app->request->post();
         $xiaoju = new xiaojuHeader();
         $info = $xiaoju->jiemi($data);
-        Yii::error('-------------用户信息11校验------'.print_r($data, 1));
-        return ResultHelper::json(200, '解密：'.$info['mobile']);
+        //拼装返回参数
+        $queryData = [
+            'checkState' => 0,
+            'checkMsg' => 'OK',
+        ];
+        $outinfo = $xiaoju->jiami($data);
+        Yii::error('-------------用户信息校验------'.print_r($data, 1));
+        return $outinfo;
     }
 
     /**

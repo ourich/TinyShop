@@ -38,6 +38,23 @@ class xiaojuHeader
 		// return array('code'=>$ret['code'],'data'=>$dataInfo);
 	}
 
+	public function jiami($data = array())
+	{
+		$data=AES::encrypt(json_encode($data),$this->Ju_dataSecret);
+		$timeStamp=date('YmdHis');
+		$addData = array(
+				'appKey'=>$this->Ju_appkey,
+				'data'=>$data,
+				'timeStamp'=>$timeStamp
+		);
+		ksort($addData);
+		$signStr=$this->Ju_appkey.$data.$timeStamp;
+		$sign=strtoupper(hash_hmac('md5', $signStr, $this->Ju_sigSecret));
+		$data=array_merge($addData,['sig'=>$sign]);
+
+		return array('code'=>0, 'data'=>$data, 'msg'=>'请求成功', 'appKey'=>$this->Ju_appkey, 'sig'=>$sign);
+	}
+
 	//获取小桔的平台密钥
 	function queryToken(){
 		global $Ju_appSecret;
