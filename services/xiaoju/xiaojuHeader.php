@@ -31,6 +31,13 @@ class xiaojuHeader
 		return '777';
 	}
 
+	public function jiemi($ret = array())
+	{
+		$dataInfo=json_decode(AES::decrypt(json_encode($ret['data']),$this->Ju_dataSecret),true);
+		return $dataInfo;
+		// return array('code'=>$ret['code'],'data'=>$dataInfo);
+	}
+
 	//获取小桔的平台密钥
 	function queryToken(){
 		global $Ju_appSecret;
