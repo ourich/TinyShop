@@ -54,7 +54,7 @@ class OilController extends OnAuthController
         $mobile = $data['mobile'];
         $outUserId = $data['outUserId'];
         Yii::error('-------------用户信息11校验------'.print_r($data, 1));
-        return ResultHelper::json(0, '解密：'.$mobile);
+        return ResultHelper::json(200, '解密：'.$mobile);
     }
 
     /**
