@@ -51,10 +51,10 @@ class OilController extends OnAuthController
     public function actionNotifyCheckUserInfo()
     {
         $data = Yii::$app->request->post();
-        $mobile = $data['mobile'];
-        $outUserId = $data['outUserId'];
+        $sig = $data['sig'];
+        $outdata = $data['data'];
         Yii::error('-------------用户信息11校验------'.print_r($data, 1));
-        return ResultHelper::json(200, '解密：'.$mobile);
+        return ResultHelper::json(200, '解密：'.$sig);
     }
 
     /**
