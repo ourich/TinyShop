@@ -78,9 +78,9 @@ class MemberService extends Service
     public function areaSendCard($order, $_money)
     {
         $config = AddonHelper::getConfig();
-        $commission_province = $config['commission_province'] ?? 0;
-        $commission_city = $config['commission_city'] ?? 0;
-        $commission_area = $config['commission_area'] ?? 0;
+        $commission_province = $config['card_province'] ?? 0;
+        $commission_city = $config['card_city'] ?? 0;
+        $commission_area = $config['card_area'] ?? 0;
         // $get_money = round($pay_money * $commission_shop /100, 2);
         
         if ($commission_area > 0) {
