@@ -52,7 +52,7 @@ class xiaojuHeader
 		$sign=strtoupper(hash_hmac('md5', $signStr, $this->Ju_sigSecret));
 		$data=array_merge($addData,['sig'=>$sign]);
 
-		return array('data'=>$data['data'], 'appKey'=>$this->Ju_appkey, 'sig'=>$sign);
+		return array('data'=>$data['data'], 'appKey'=>$this->Ju_appkey, 'sig'=>$sign, 'msg'=>'请求成功', 'code'=>'0');
 	}
 
 	//获取小桔的平台密钥
