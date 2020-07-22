@@ -61,26 +61,6 @@ class OilController extends OnAuthController
         $outinfo = $xiaoju->jiami($queryData);
         // Yii::error('-------------用户信息校验------'.print_r($outinfo, 1));
         return $outinfo;
-        // return ResultHelper::json(200, '请求成功', $outinfo['data']);
-
-        // {
-        //   "code": 200,
-        //   "data": {
-        //     "msg": "请求成功",
-        //     "sig": "5C980A754F50C2975BD8CEAD4E595BA2",
-        //     "code": 0,
-        //     "data": {
-        //       "timeStamp": "20200721115744",
-        //       "sig": "5C980A754F50C2975BD8CEAD4E595BA2",
-        //       "data": "gSIc67EjguyxdA+fI3CLrDp/PcgB+9z13kFQAxvhFiLMbLA390V/D0Qk+cR1HVH2",
-        //       "appKey": "yiqijiayoutest"
-        //     },
-        //     "appKey": "yiqijiayoutest"
-        //   },
-        //   "message": "OK",
-        //   "timestamp": 1595303864
-        // }
-
 
     }
 
