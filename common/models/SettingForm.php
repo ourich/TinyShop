@@ -52,6 +52,9 @@ class SettingForm extends Model
     public $gas_province;
     public $gas_city;
     public $gas_area;
+    public $card_province;
+    public $card_city;
+    public $card_area;
 
     /**
      * {@inheritdoc}
