@@ -15,6 +15,7 @@ use yii\web\NotFoundHttpException;
 use addons\TinyShop\common\models\common\OilStations;
 use common\models\member\Member;
 use addons\TinyShop\services\xiaoju\xiaojuHeader;
+use addons\TinyShop\common\models\common\OilOrder;
 
 /**
  * 优惠券领取列表
@@ -37,7 +38,7 @@ class OilController extends OnAuthController
      *
      * @var array
      */
-    protected $authOptional = ['test', 'my-test', 'notify-check-user-info'];
+    protected $authOptional = ['test', 'my-test', 'notify-check-user-info', 'notify-order-info'];
     public function actionMyTest()
     {
         $data = Yii::$app->request->post();
@@ -57,6 +58,56 @@ class OilController extends OnAuthController
         $queryData = [
             'checkState' => 0,
             'checkMsg' => 'OK',
+        ];
+        $outinfo = $xiaoju->jiami($queryData);
+        // Yii::error('-------------用户信息校验------'.print_r($outinfo, 1));
+        return $outinfo;
+
+    }
+
+    /**
+     * 小桔订单通知
+     * @return [type] [description]
+     */
+    public function actionNotifyOrderInfo()
+    {
+        $data = Yii::$app->request->post();
+        $xiaoju = new xiaojuHeader();
+        $order = $xiaoju->jiemi($data);
+
+        //检查订单是否存在
+        $exist = OilOrder::find()->where(['orderId' => $value['orderId']])->one();
+        if (empty($exist)) {
+            $data[] = [
+              'from' => 1,  //渠道标识
+              'phone' => $value['outUserId'],   //用户ID
+              'orderId' => $value['orderId'],
+              'gasId' => $value['storeId'],
+              'gasName' => $value['storeName'],
+              'city' => $value['cityName'],
+              'gunNo' => $value['gunNo'],
+              'oilNo' => $value['itemName'],
+              'litre' => $value['quantity'],
+              'amountPay' => $value['realMoney'],
+              'amountGun' => $value['totalMoney'],
+              'orderStatusName' => $value['payStatus'],
+              'payTime' => $value['payTime'],
+              'payType' => $value['payType'],
+              // 'orderStatusName' => $value['refundStatus'],  //0未退款 1已退款
+              'refundTime' => $value['refundTime'],
+              'created_at' => time(),
+            ];
+            Yii::$app->db->createCommand()
+                 ->batchInsert(OilOrder::tableName(),['from','phone','orderId','gasId','gasName','city','gunNo','oilNo','litre','amountPay','amountGun','orderStatusName','payTime','payType','refundTime','created_at'],
+                 $data)
+                 ->execute();
+            // Yii::$app->tinyShopService->order->jiChaOil($data);    //更新会员优惠金
+        }
+
+        //拼装返回给小桔的参数
+        $queryData = [
+            'state' => 1,
+            'message' => 'OK',
         ];
         $outinfo = $xiaoju->jiami($queryData);
         // Yii::error('-------------用户信息校验------'.print_r($outinfo, 1));
