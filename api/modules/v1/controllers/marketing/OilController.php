@@ -76,30 +76,30 @@ class OilController extends OnAuthController
         $order = $xiaoju->jiemi($data);
 
         //检查订单是否存在
-        $exist = OilOrder::find()->where(['orderId' => $value['orderId']])->one();
+        $exist = OilOrder::find()->where(['orderId' => $order['orderId']])->one();
         if (empty($exist)) {
-            $data[] = [
+            $oder_data[] = [
               'from' => 1,  //渠道标识
-              'phone' => $value['outUserId'],   //用户ID
-              'orderId' => $value['orderId'],
-              'gasId' => $value['storeId'],
-              'gasName' => $value['storeName'],
-              'city' => $value['cityName'],
-              'gunNo' => $value['gunNo'],
-              'oilNo' => $value['itemName'],
-              'litre' => $value['quantity'],
-              'amountPay' => $value['realMoney'],
-              'amountGun' => $value['totalMoney'],
-              'orderStatusName' => $value['payStatus'],
-              'payTime' => $value['payTime'],
-              'payType' => $value['payType'],
-              // 'orderStatusName' => $value['refundStatus'],  //0未退款 1已退款
-              'refundTime' => $value['refundTime'],
+              'phone' => $order['outUserId'],   //用户ID
+              'orderId' => $order['orderId'],
+              'gasId' => $order['storeId'],
+              'gasName' => $order['storeName'],
+              'city' => $order['cityName'],
+              'gunNo' => $order['gunNo'],
+              'oilNo' => $order['itemName'],
+              'litre' => $order['quantity'],
+              'amountPay' => $order['realMoney'],
+              'amountGun' => $order['totalMoney'],
+              'orderStatusName' => $order['payStatus'],
+              'payTime' => $order['payTime'],
+              'payType' => $order['payType'],
+              // 'orderStatusName' => $order['refundStatus'],  //0未退款 1已退款
+              'refundTime' => $order['refundTime'],
               'created_at' => time(),
             ];
             Yii::$app->db->createCommand()
                  ->batchInsert(OilOrder::tableName(),['from','phone','orderId','gasId','gasName','city','gunNo','oilNo','litre','amountPay','amountGun','orderStatusName','payTime','payType','refundTime','created_at'],
-                 $data)
+                 $oder_data)
                  ->execute();
             // Yii::$app->tinyShopService->order->jiChaOil($data);    //更新会员优惠金
         }
